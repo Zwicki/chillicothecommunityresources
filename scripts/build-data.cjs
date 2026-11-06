@@ -1,0 +1,2767 @@
+const fs = require('fs');
+const path = require('path');
+
+const resources = [
+  // ==================== CRISIS & EMERGENCY HOTLINES ====================
+  {
+    id: 'crisis-988',
+    name: '988 Suicide & Crisis Lifeline',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Crisis Hotline',
+    phone: '988',
+    hours: '24/7/365',
+    availability: 'Call or Text 24/7',
+    description: 'Free, confidential support for anyone in suicidal crisis, mental health distress, or emotional hardship.',
+    bulletPoints: [
+      'Call or text 988 anytime, day or night',
+      'Free, confidential, and immediate connection to trained counselors',
+      'Specialized support for veterans, LGBTQ+ youth, and deaf/hard-of-hearing'
+    ],
+    website: 'https://988lifeline.org',
+    isEmergency: true,
+    tags: ['suicide', 'mental health', 'crisis', 'emergency', 'hotline', 'counseling', 'emotional distress']
+  },
+  {
+    id: 'crisis-ross-county',
+    name: 'Ross County 24-Hour Crisis Hotline',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Crisis Hotline',
+    address: '4449 State Route 159, Chillicothe, OH 45601',
+    phone: '740-773-4357',
+    hours: '24/7',
+    availability: '24 Hours / 7 Days a week',
+    description: 'Local 24-hour crisis intervention, psychiatric triage, and immediate mental health response operated by Scioto Paint Valley Mental Health.',
+    bulletPoints: [
+      'Immediate crisis counseling and risk assessment',
+      'Psychiatric emergency screening and referrals',
+      'Direct dispatch to local crisis stabilization'
+    ],
+    isEmergency: true,
+    tags: ['crisis', 'emergency', 'mental health', 'hotline', 'psychiatric', 'suicide', 'spvmh']
+  },
+  {
+    id: 'crisis-rose-house',
+    name: 'The Rose House (Domestic Violence & Abuse Shelter)',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Domestic Violence',
+    address: 'Chillicothe, OH',
+    phone: '740-637-1610',
+    hours: '24/7',
+    availability: 'Mon-Sun 24 Hours',
+    description: 'Emergency safe shelter, crisis intervention, safety planning, and comprehensive support for victims and survivors of domestic violence in Ross County.',
+    bulletPoints: [
+      '24/7 secure emergency shelter and crisis hotline',
+      'Court advocacy, protection order assistance, and safety planning',
+      'Support groups and trauma-informed survivor care'
+    ],
+    isEmergency: true,
+    tags: ['domestic violence', 'abuse', 'shelter', 'safe house', 'women', 'emergency', 'protection']
+  },
+  {
+    id: 'crisis-211',
+    name: 'Ross County 2-1-1 Information & Referral',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Community Directory',
+    phone: '211',
+    hours: '24/7',
+    availability: 'Dial 211',
+    description: 'Comprehensive information and referral service connecting Ross County residents to essential local health, social services, and utility/disaster assistance.',
+    bulletPoints: [
+      'Free 24/7 helpline connecting to community resources',
+      'Assistance finding shelter, food, healthcare, and utility aid'
+    ],
+    website: 'https://211.org',
+    isEmergency: true,
+    tags: ['211', 'information', 'referral', 'helpline', 'community', 'resources']
+  },
+  {
+    id: 'crisis-child-abuse',
+    name: 'Ross County Child Abuse & Neglect Reporting',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Child Protection',
+    address: '475 Western Ave., Chillicothe, OH 45601',
+    phone: '740-773-2651',
+    hours: '24/7 Reporting',
+    description: 'Operated through Ross County Job & Family Services (Children Services). Immediate reporting and investigation of child abuse and neglect.',
+    bulletPoints: [
+      'Report suspected child physical abuse, sexual abuse, or severe neglect',
+      'Available 24/7 through dispatch'
+    ],
+    isEmergency: true,
+    tags: ['children', 'abuse', 'neglect', 'protective services', 'emergency']
+  },
+  {
+    id: 'crisis-elder-abuse',
+    name: 'Elder Abuse Hotline (Adult Protective Services)',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Elder Protection',
+    phone: '1-855-644-6277',
+    notes: 'Local Ross Co Line: 740-773-2651',
+    hours: 'Mon-Fri 8am-4pm / Emergency 24/7',
+    description: 'Protective services for adults aged 60 and older who are experiencing abuse, neglect, exploitation, or self-neglect.',
+    isEmergency: true,
+    tags: ['elderly', 'seniors', 'abuse', 'neglect', 'adult protective services']
+  },
+  {
+    id: 'crisis-heroin-hopeline',
+    name: 'Heroin Hopeline / Addiction Helpline',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Addiction Crisis',
+    phone: '1-844-427-4747',
+    hours: '24/7',
+    description: 'Toll-free 24-hour crisis and navigation line for individuals and families struggling with opiate addiction and substance use disorders.',
+    isEmergency: true,
+    tags: ['addiction', 'heroin', 'opioids', 'hotline', 'overdose']
+  },
+  {
+    id: 'crisis-trafficking',
+    name: 'Human Trafficking Resource Lines',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Trafficking',
+    phone: '740-779-7434',
+    notes: 'National Hotline: 1-888-373-7888 or text HELP to 233733',
+    hours: '24/7',
+    description: 'Local and national emergency resources to report human trafficking or get immediate safety assistance for victims.',
+    isEmergency: true,
+    tags: ['human trafficking', 'safety', 'hotline', 'exploitation']
+  },
+  {
+    id: 'crisis-veterans',
+    name: 'Veterans Crisis Line & Call Center',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Veterans',
+    phone: '1-877-424-3838',
+    notes: 'Or dial 988 and press 1',
+    hours: '24/7',
+    description: 'Dedicated confidential crisis support for Veterans, Service members, National Guard and Reserve, and their families.',
+    website: 'https://www.veteranscrisisline.net',
+    isEmergency: true,
+    tags: ['veterans', 'military', 'crisis', 'suicide prevention', 'va']
+  },
+  {
+    id: 'police-chillicothe',
+    name: 'Chillicothe Police Department (Non-Emergency)',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Law Enforcement',
+    address: '28 N. Paint St., Chillicothe, OH 45601',
+    phone: '740-773-1191',
+    hours: '24/7',
+    notes: 'For immediate life-threatening emergencies dial 911',
+    tags: ['police', 'law enforcement', 'chillicothe', 'safety']
+  },
+  {
+    id: 'sheriff-ross-county',
+    name: "Ross County Sheriff's Office",
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Law Enforcement',
+    address: '28 N. Paint St., Chillicothe, OH 45601',
+    phone: '740-773-1186',
+    notes: 'Dispatch: 740-773-1185. For immediate life-threatening emergencies dial 911',
+    hours: '24/7',
+    tags: ['sheriff', 'ross county', 'police', 'safety']
+  },
+
+  // ==================== RECOVERY SUPPORT & ADDICTION TREATMENT ====================
+  {
+    id: 'rec-serenity-wellness',
+    name: 'Serenity Wellness LLC - Addiction & Recovery Treatment',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'IOP, Outpatient & Dual-Diagnosis',
+    address: '637 Central Center, Chillicothe, Ohio 45601, United States',
+    phone: '740-771-4226',
+    notes: 'Fax: 740-931-7400 | Email: admin@ohswc.org',
+    hours: 'Monday - Friday (Call for Assessment & Intake)',
+    description: 'Comprehensive addiction recovery services integrating evidence-based care with trauma-informed and faith-based options for concurrent mental health and substance use disorders.',
+    bulletPoints: [
+      'Intensive Outpatient Program (IOP) & standard Outpatient programs',
+      'Dual-diagnosis and concurrent treatment for co-occurring addiction, mental health, and trauma',
+      'Individual counseling, specialized group therapy, and supportive case management',
+      'Trauma-informed and faith-based integration into evidence-based treatment',
+      'Accepts Ohio Medicaid, private health insurance, and self-pay options'
+    ],
+    website: 'https://www.ohioserenitywellness.com/',
+    email: 'admin@ohswc.org',
+    tags: ['serenity wellness', 'iop', 'intensive outpatient', 'outpatient', 'addiction', 'recovery', 'dual-diagnosis', 'trauma', 'faith-based', 'case management', 'central center']
+  },
+  {
+    id: 'rec-rcca-peer',
+    name: 'RCCA Peer Support Team (Ross County Community Action)',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Peer Support',
+    address: '250 N. Woodbridge Ave., Chillicothe, OH 45601',
+    phone: '740-702-7222 ext. 135',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Certified Peer Recovery Supporters walking alongside individuals in recovery, offering lived-experience guidance, navigation, and community connection.',
+    bulletPoints: [
+      'Certified peer recovery support specialists with lived recovery experience',
+      'Assistance finding treatment, housing, and court compliance',
+      'Free and confidential guidance'
+    ],
+    tags: ['peer support', 'recovery', 'rcca', 'community action', 'sobriety']
+  },
+  {
+    id: 'rec-brightview',
+    name: 'BrightView Addiction Treatment Center',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Outpatient Treatment',
+    address: '126 E. 2nd Street, Chillicothe, OH 45601',
+    phone: '833-510-3278',
+    hours: 'Mon-Fri 6:30am-5:00pm, Sat 9:00am-11:00am',
+    description: 'Comprehensive outpatient addiction treatment center combining Medication-Assisted Treatment (MAT), individual/group therapy, and case management.',
+    bulletPoints: [
+      'MAT: Suboxone, buprenorphine, Vivitrol, and Methadone coordination',
+      'Same-day appointments and walk-in assessments welcomed',
+      'Individual counseling, intensive outpatient (IOP), and relapse prevention',
+      'Accepts Ohio Medicaid, Medicare, and commercial insurance'
+    ],
+    website: 'https://www.brightviewhealth.com',
+    tags: ['brightview', 'mat', 'suboxone', 'addiction', 'iop', 'outpatient', 'vivitrol']
+  },
+  {
+    id: 'rec-anchor',
+    name: 'Anchor Addiction & Wellness Center',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Outpatient Treatment',
+    address: '3 Medical Drive, Chillicothe, OH 45601',
+    phone: '740-779-6612',
+    hours: 'Mon-Fri 8:00am - 4:30pm',
+    description: 'Compassionate, evidence-based outpatient substance use disorder treatment and medical stabilization in Ross County.',
+    bulletPoints: [
+      'Outpatient Medication-Assisted Treatment (MAT)',
+      'Individual and group psychotherapy',
+      'Case management and peer recovery support',
+      'Accepts most Ohio Medicaid and commercial plans'
+    ],
+    tags: ['anchor', 'addiction', 'mat', 'substance use', 'medicaid']
+  },
+  {
+    id: 'rec-pinnacle',
+    name: 'Pinnacle Treatment Services of Chillicothe',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Outpatient Treatment',
+    address: '606 Central Center Plaza, Chillicothe, OH 45601',
+    phone: '740-571-4424',
+    hours: 'Mon-Fri 5:30am-12:00pm, Sat 6:00am-9:00am',
+    description: 'Specialized opioid addiction treatment offering Medication-Assisted Treatment (MAT) alongside individual and group counseling.',
+    bulletPoints: [
+      'Daily medication dosing and clinical monitoring',
+      'Comprehensive counseling and relapse prevention groups',
+      'Accepts Medicaid and commercial insurance'
+    ],
+    website: 'https://pinnacletreatment.com',
+    tags: ['pinnacle', 'mat', 'methadone', 'suboxone', 'opioid', 'recovery']
+  },
+  {
+    id: 'rec-hopewell',
+    name: 'Hopewell Health Centers - Chillicothe',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Comprehensive Care',
+    address: '1049 Western Ave., Chillicothe, OH 45601',
+    phone: '740-733-4366',
+    hours: 'Mon-Fri 8:00am - 5:00pm',
+    description: 'Federally Qualified Health Center (FQHC) offering integrated substance use treatment, primary medical care, and behavioral health.',
+    bulletPoints: [
+      'Substance use disorder counseling and MAT',
+      'Primary medical care and dental integration',
+      'Sliding fee scale for uninsured patients; Medicaid accepted'
+    ],
+    website: 'https://www.hopewellhealth.org',
+    tags: ['hopewell', 'fqhc', 'addiction', 'counseling', 'sliding scale']
+  },
+  {
+    id: 'rec-cardinal',
+    name: 'Cardinal Treatment Center',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Treatment Center',
+    address: '436 Western Ave., Chillicothe, OH 45601',
+    phone: '614-285-5111',
+    hours: 'Mon-Fri 9:00am - 5:00pm',
+    description: 'Outpatient addiction recovery program offering clinical assessments, group therapy, and case management.',
+    tags: ['cardinal', 'recovery', 'addiction', 'treatment']
+  },
+  {
+    id: 'rec-safe-haven',
+    name: 'Safe Haven Recovery',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Support Services',
+    address: '160 E. Main St., Chillicothe, OH 45601',
+    phone: '740-702-2200',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Safe, structured recovery environment and support services assisting men and women recovering from drug and alcohol dependency.',
+    tags: ['safe haven', 'recovery', 'support', 'housing', 'sobriety']
+  },
+  {
+    id: 'rec-first-capital',
+    name: 'First Capital Recovery / Landmark',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Recovery Support',
+    address: '242 E. Main St., Chillicothe, OH 45601',
+    phone: '740-773-3272',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Recovery community organization providing peer support, recovery navigation, meetings, and sober living assistance.',
+    tags: ['first capital', 'landmark', 'peer support', 'recovery']
+  },
+  {
+    id: 'rec-path',
+    name: 'PATH Behavioral Healthcare',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Outpatient & IOP',
+    address: '111 W. Water St. & 220 N. Plaza Blvd., Chillicothe, OH 45601',
+    phone: '740-851-6493',
+    hours: 'Mon-Fri 9:00am - 5:00pm',
+    description: 'Comprehensive outpatient mental health and substance abuse counseling, Intensive Outpatient (IOP), and community support.',
+    bulletPoints: [
+      'Intensive Outpatient Program (IOP) and individual therapy',
+      'Dual-diagnosis treatment for co-occurring mental health & addiction',
+      'Peer support and case management services'
+    ],
+    website: 'https://pathbh.com',
+    tags: ['path', 'iop', 'outpatient', 'substance abuse', 'mental health']
+  },
+  {
+    id: 'rec-recovery-council',
+    name: 'Recovery Council',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Recovery Support',
+    address: '38 E. Water St., Chillicothe, OH 45601',
+    phone: '740-851-5307',
+    hours: 'Mon-Fri Office Hours',
+    description: 'Community-based recovery navigation and advocacy for individuals in Ross County seeking sobriety.',
+    tags: ['recovery council', 'advocacy', 'addiction']
+  },
+  {
+    id: 'rec-another-chance',
+    name: 'Another Chance Ministries',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Faith-Based Recovery',
+    address: '84 S. Clinton Rd., Chillicothe, OH 45601',
+    phone: '740-656-8015',
+    hours: 'Call for Schedule',
+    description: 'Faith-based recovery support ministry providing spiritual guidance, encouragement, and accountability for recovery.',
+    tags: ['another chance', 'faith-based', 'ministry', 'recovery']
+  },
+  {
+    id: 'rec-spero-health',
+    name: 'Spero Health Chillicothe',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Outpatient MAT',
+    address: '465 N. Shawnee Lane, Chillicothe, OH 45601',
+    phone: '740-851-5381',
+    hours: 'Mon-Fri 8:30am - 5:00pm',
+    notes: 'Toll-Free: 866-755-4258',
+    description: 'Integrated healthcare model for individuals with substance use disorders, combining physician care, counseling, and recovery support.',
+    bulletPoints: [
+      'Medication-Assisted Treatment (Suboxone, Vivitrol)',
+      'Individual and group therapy',
+      'Assistance with employment, housing, and social services',
+      'Medicaid and most major insurance accepted'
+    ],
+    website: 'https://sperohealth.com',
+    tags: ['spero health', 'mat', 'suboxone', 'vivitrol', 'outpatient']
+  },
+  {
+    id: 'rec-full-circle',
+    name: 'Full Circle Recovery Services',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Recovery Services',
+    address: '536 Mill Street, Chillicothe, OH 45601',
+    phone: '800-829-5461',
+    hours: 'Call for Schedule',
+    description: 'Outpatient substance use disorder and mental health services, IOP, relapse prevention, and family support.',
+    tags: ['full circle', 'outpatient', 'iop', 'addiction']
+  },
+  {
+    id: 'rec-hope-valley',
+    name: 'Hope Valley Recovery',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Residential Treatment',
+    address: '2065 Stoneridge Dr., Circleville, OH 43113',
+    phone: '740-500-1391',
+    hours: 'Mon-Sun 24/7',
+    description: 'Full-service inpatient and residential addiction rehabilitation facility serving South-Central Ohio.',
+    bulletPoints: [
+      '24/7 medically monitored residential addiction treatment',
+      'Individualized clinical treatment plans and trauma counseling',
+      'Aftercare planning and relapse prevention'
+    ],
+    tags: ['hope valley', 'residential', 'inpatient', 'detox', 'rehab']
+  },
+  {
+    id: 'rec-reach',
+    name: 'REACH Treatment',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Regional Center',
+    address: '910 South St., Greenfield, OH 45123',
+    phone: '877-997-3224',
+    hours: 'Mon-Fri 8:00am - 5:00pm',
+    description: 'Addiction treatment, behavioral health counseling, and recovery support serving Highland and Ross counties.',
+    tags: ['reach', 'greenfield', 'addiction', 'counseling']
+  },
+  {
+    id: 'rec-w4c',
+    name: 'W4C Recovery / Hope House',
+    category: 'recovery',
+    categoryLabel: 'Addiction Recovery',
+    subcategory: 'Support Services',
+    address: '84 E. Mound St., Jackson, OH 45640',
+    phone: '740-577-3834',
+    hours: 'Mon-Fri 8:00am - 4:30pm',
+    description: 'Community recovery support network and housing navigation for Southern Ohio.',
+    tags: ['w4c', 'jackson', 'recovery']
+  },
+
+  // ==================== SOBER LIVING & RECOVERY RESIDENCES ====================
+  {
+    id: 'sober-registry-orh',
+    name: 'Ohio Recovery Housing (ORH) Registry & Bed Locator',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Official State Registry & Bed Locator',
+    hours: '24/7 Online Search & Verification',
+    website: 'https://find.ohiorecoveryhousing.org/search/',
+    notes: 'Official Registry: https://rhsearch.mha.ohio.gov/ | Authoritative state search for certified recovery residences',
+    description: 'The official state directory and bed search tool to verify certified, accredited alcohol- and drug-free recovery housing in Ross County and across Ohio.',
+    bulletPoints: [
+      'Search all Ohio Recovery Housing (ORH) certified Level I, II, III, and IV residences',
+      'Filter specifically by Ross County, Chillicothe (45601), gender, and MAT acceptance',
+      'View operator standards, certified bed counts, and direct contact numbers',
+      'Confirms accreditation with Ohio Department of Mental Health and Addiction Services (OhioMHAS)'
+    ],
+    tags: ['sober living', 'recovery housing', 'registry', 'locator', 'orh', 'rhsearch', 'mha', 'certified']
+  },
+  {
+    id: 'sober-another-chance-intake',
+    name: 'Another Chance Lifechangers - Recovery Housing Network (Central Intake)',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Faith-Based Certified Network (Men & Women)',
+    address: '536 Mill St., Chillicothe, OH 45601',
+    phone: '740-804-2140',
+    notes: 'Secondary Intake: (740) 573-7005 & (740) 330-4988. Placement through operator; residential street addresses not published for resident safety.',
+    hours: 'Call for Current Bed Openings & Screening',
+    description: 'Largest local recovery housing network in Ross County, operating approximately seven certified residential recovery houses for men and women.',
+    bulletPoints: [
+      'Supervised and managed recovery housing levels with live-in Resident Advisors (RAs)',
+      'Structured daily schedule, peer accountability, random drug testing, and employment expectations',
+      'Operates separate designated homes for men and women throughout Chillicothe',
+      'Verify weekly fee, MAT policy, and current waitlist when calling intake'
+    ],
+    website: 'https://www.anotherchancerecovery.org',
+    tags: ['another chance', 'sober living', 'recovery residence', 'men', 'women', 'faith-based', 'live-in ra', 'chillicothe', 'recovery housing']
+  },
+  {
+    id: 'sober-another-chance-water',
+    name: 'Another Chance: Water Men\'s Recovery House',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Men\'s Recovery Residence',
+    address: 'Chillicothe, OH (Confidential Placement)',
+    phone: '740-804-2140',
+    notes: 'Intake: (740) 804-2140 / (740) 573-7005. Placement through Another Chance operator.',
+    hours: 'Call Intake for Openings',
+    description: 'Certified men\'s recovery residence providing a structured, alcohol- and drug-free home for men rebuilding their lives in recovery.',
+    bulletPoints: [
+      'Approximately 6 certified beds for adult men',
+      'Supervised level recovery support with dedicated live-in house leadership',
+      'MAT supported on state registry listing (confirm current medication guidelines during intake)',
+      'Weekly house meetings, curfew compliance, and mandatory random drug screening'
+    ],
+    website: 'https://www.anotherchancerecovery.org',
+    tags: ['sober living', 'recovery house', 'men', 'water', 'another chance', 'mat supported']
+  },
+  {
+    id: 'sober-another-chance-walnut',
+    name: 'Another Chance: Walnut Men\'s Recovery House',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Men\'s Recovery Residence',
+    address: 'Chillicothe, OH (Confidential Placement)',
+    phone: '740-804-2140',
+    notes: 'Intake: (740) 804-2140 / (740) 573-7005. Placement through Another Chance operator.',
+    hours: 'Call Intake for Openings',
+    description: 'Certified men\'s recovery home focused on long-term sobriety maintenance, community support, and job stability.',
+    bulletPoints: [
+      'Supervised recovery living with approximately 8 beds for men',
+      'Clean, supportive, alcohol- and drug-free living environment',
+      'Requirements: active job search or employment, chore participation, and meeting attendance',
+      'Supportive mentorship and peer brotherhood'
+    ],
+    website: 'https://www.anotherchancerecovery.org',
+    tags: ['sober living', 'recovery house', 'men', 'walnut', 'another chance', '8 beds']
+  },
+  {
+    id: 'sober-another-chance-western',
+    name: 'Another Chance: Western Men\'s Recovery House',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Men\'s Recovery Residence (Managed Level)',
+    address: 'Chillicothe, OH (Confidential Placement)',
+    phone: '740-804-2140',
+    notes: 'Intake: (740) 804-2140 / (740) 573-7005. Placement through operator.',
+    hours: 'Call Intake for Openings',
+    description: 'Managed-level recovery residence in Chillicothe providing structured living for men transitioning toward independent living.',
+    bulletPoints: [
+      'Managed-level certification with approximately 6 beds for men',
+      'Focus on self-governance, personal budgeting, and sustained workforce engagement',
+      'Strict zero-tolerance drug/alcohol policy backed by regular screening'
+    ],
+    website: 'https://www.anotherchancerecovery.org',
+    tags: ['sober living', 'recovery house', 'men', 'western', 'another chance', 'managed']
+  },
+  {
+    id: 'sober-another-chance-main',
+    name: 'Another Chance: Main Men\'s Recovery House',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Men\'s Recovery Residence',
+    address: 'Chillicothe, OH (Confidential Placement)',
+    phone: '740-804-2140',
+    notes: 'Intake: (740) 804-2140 / (740) 573-7005. Placement through operator.',
+    hours: 'Call Intake for Openings',
+    description: 'Intimate, close-knit supervised men\'s recovery home offering focused peer support and daily accountability.',
+    bulletPoints: [
+      'Supervised recovery residence with approximately 4 beds for men',
+      'Close peer mentoring and family-style recovery environment',
+      'Regular attendance at local 12-step or faith-based recovery meetings'
+    ],
+    website: 'https://www.anotherchancerecovery.org',
+    tags: ['sober living', 'recovery house', 'men', 'main', 'another chance', '4 beds']
+  },
+  {
+    id: 'sober-another-chance-women',
+    name: 'Another Chance: Women\'s Recovery Residences',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Women\'s Recovery Residences',
+    address: 'Chillicothe, OH (Confidential Placement)',
+    phone: '740-804-2140',
+    notes: 'Intake: (740) 804-2140 / (740) 573-7005. Confirm current openings, fees, and waitlist.',
+    hours: 'Call Intake for Openings & Screening',
+    description: 'Dedicated, separate recovery residences for women seeking a safe, sober, and supportive environment in Chillicothe.',
+    bulletPoints: [
+      'Women-only sober living homes with live-in female Resident Advisors',
+      'Trauma-informed, compassionate peer community fostering life-skills rebuilding',
+      'Mandatory random drug screening, curfew, and vocational/employment expectations'
+    ],
+    website: 'https://www.anotherchancerecovery.org',
+    tags: ['sober living', 'women', 'recovery house', 'female', 'another chance', 'women recovery']
+  },
+  {
+    id: 'sober-rcca-women',
+    name: 'Ross County Community Action - Women\'s Recovery Housing (Hickory House Grouping)',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Certified Women\'s Recovery Housing (Level II / Managed)',
+    address: 'Application Return: 767 Western Ave., Chillicothe, OH 45601 (Main Agency: 250 N. Woodbridge Ave.)',
+    phone: '740-702-7222 ext. 135',
+    notes: 'Lisa Mitchell: Ext. 135 (lmitchell@rossccac.com) | Teresa Juenger: Ext. 102 (tjuenger@rossccac.com). Exact street address not published for resident safety.',
+    hours: 'Mon-Fri 8:00am - 4:00pm (Intake & Applications)',
+    description: 'Certified transitional recovery housing (Ohio Recovery Housing Level II / Managed) for women who have completed treatment and need supportive housing to establish independent sobriety.',
+    bulletPoints: [
+      'Ohio Recovery Housing Level II (Managed) certified women\'s recovery home (Hickory House grouping)',
+      'Direct connection with certified RCCAC Peer Recovery Supporters for individualized wrap-around care',
+      'Structured assistance transitioning into permanent independent housing, employment, and education',
+      'Clean, supportive, alcohol- and drug-free environment with clear house standards and random testing'
+    ],
+    website: 'https://www.rossccac.org',
+    email: 'lmitchell@rossccac.com',
+    tags: ['sober living', 'recovery housing', 'women', 'rcca', 'community action', 'level ii', 'managed', 'hickory house', 'ross county community action']
+  },
+  {
+    id: 'sober-reach-jefferson',
+    name: 'REACH for Tomorrow: Jefferson Men\'s Recovery House',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Certified Men\'s Recovery Residence (Managed Level)',
+    address: 'Chillicothe, OH (Confidential Placement)',
+    phone: '877-997-3224',
+    notes: 'Placement through REACH for Tomorrow operator. Street address confidential for resident safety.',
+    hours: 'Call Intake for Bed Availability',
+    description: 'Ohio Recovery Housing certified Managed-level recovery home for men operated by REACH for Tomorrow / R.E.A.C.H. Recovery Counseling.',
+    bulletPoints: [
+      'Managed-level certified recovery residence with approximately 10 beds for adult men',
+      'Part of REACH regional supportive housing network (50+ beds across southern Ohio)',
+      'Integrated clinical counseling, case management, and recovery coaching available',
+      'Structured environment emphasizing relapse prevention, community brotherhood, and workforce re-entry'
+    ],
+    website: 'https://www.reachfortomorrowohio.org',
+    tags: ['sober living', 'men', 'reach', 'reach for tomorrow', 'jefferson', '10 beds', 'managed', 'recovery house']
+  },
+  {
+    id: 'sober-recovery-council-chillicothe',
+    name: 'The Recovery Council - Chillicothe Office & Regional Recovery Housing',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Recovery Housing Operator & Regional Referral',
+    address: '38 E. Water St., Chillicothe, OH 45601',
+    phone: '740-835-8485',
+    notes: 'Secondary Phones: (740) 851-5307 / (740) 222-1950. Primary regional referral when Chillicothe beds are full.',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Chillicothe administrative and clinical recovery presence connecting Ross County residents to four certified regional recovery residences in nearby Waverly.',
+    bulletPoints: [
+      'Direct referral link to four certified recovery homes in adjacent Waverly, OH (approx. 20 min south of Chillicothe)',
+      'Outpatient SUD counseling, case management, and transportation coordination',
+      'Crucial referral lifeline when local Ross County recovery beds are at full capacity'
+    ],
+    website: 'https://www.therecoverycouncil.org',
+    tags: ['sober living', 'recovery council', 'water st', 'pike county recovery council', 'regional housing']
+  },
+  {
+    id: 'sober-rc-eds-place',
+    name: 'Ed\'s Place (The Recovery Council - Men\'s Recovery House)',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Men\'s Regional Recovery Residence',
+    address: 'Waverly, OH (Nearby Regional Placement)',
+    phone: '740-835-8537',
+    hours: 'Call Intake for Openings',
+    description: 'Certified men\'s recovery house operated by The Recovery Council in nearby Waverly, commonly serving Ross and Pike county men in recovery.',
+    bulletPoints: [
+      'Men-only alcohol- and drug-free structured living',
+      'Peer support, weekly house meetings, and random drug/alcohol screening',
+      'Commonly utilized by Ross County residents transitioning from residential treatment'
+    ],
+    website: 'https://www.therecoverycouncil.org',
+    tags: ['sober living', 'men', 'eds place', 'recovery council', 'waverly']
+  },
+  {
+    id: 'sober-rc-georgie-harris',
+    name: 'Georgie Harris House 1 & 2 (Women\'s Recovery Residences)',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Women\'s Regional Recovery Residences',
+    address: 'Waverly, OH (Nearby Regional Placement)',
+    phone: '740-835-8537',
+    hours: 'Call Intake for Openings',
+    description: 'Two certified recovery residences dedicated to women rebuilding their lives in sobriety, operated by The Recovery Council.',
+    bulletPoints: [
+      'Safe, supportive living spaces exclusively for adult women',
+      'Structured accountability, curfew, chores, and recovery meeting attendance',
+      'Assistance with employment readiness, family reunification, and relapse prevention'
+    ],
+    website: 'https://www.therecoverycouncil.org',
+    tags: ['sober living', 'women', 'georgie harris', 'recovery council', 'waverly']
+  },
+  {
+    id: 'sober-rc-kents-place',
+    name: 'Kent\'s Place (The Recovery Council - Men\'s Recovery House)',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Men\'s Regional Recovery Residence',
+    address: 'Waverly, OH (Nearby Regional Placement)',
+    phone: '740-835-8485',
+    hours: 'Call Intake for Openings',
+    description: 'Men\'s recovery residence providing clean, structured sober housing and community support for men in early to mid-stage recovery.',
+    bulletPoints: [
+      'Men-only sober living community',
+      'Zero tolerance for substance use with regular random testing',
+      'Life-skills development, job support, and mutual recovery fellowship'
+    ],
+    website: 'https://www.therecoverycouncil.org',
+    tags: ['sober living', 'men', 'kents place', 'recovery council', 'waverly']
+  },
+  {
+    id: 'sober-rc-johnsons-house',
+    name: 'Johnson\'s House (The Recovery Council - Women\'s Recovery House)',
+    category: 'sober-living',
+    categoryLabel: 'Sober Living & Recovery Housing',
+    subcategory: 'Women\'s Regional Recovery Residence',
+    address: 'Waverly, OH (Nearby Regional Placement)',
+    phone: '740-947-2364',
+    hours: 'Call Intake for Openings',
+    description: 'Structured women\'s recovery home offering a nurturing, sober environment for women committed to long-term addiction recovery.',
+    bulletPoints: [
+      'Certified recovery residence for adult women',
+      'Peer guidance, recovery planning, and accountability',
+      'Regional referral option serving Ross and southern Ohio residents'
+    ],
+    website: 'https://www.therecoverycouncil.org',
+    tags: ['sober living', 'women', 'johnsons house', 'recovery council', 'waverly']
+  },
+
+  // ==================== MENTAL HEALTH & COUNSELING ====================
+  {
+    id: 'mh-serenity-wellness',
+    name: 'Serenity Wellness LLC - Mental Health & Counseling',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Comprehensive Outpatient Counseling',
+    address: '637 Central Center, Chillicothe, Ohio 45601, United States',
+    phone: '740-771-4226',
+    notes: 'Fax: 740-931-7400 | Email: admin@ohswc.org',
+    hours: 'By Appointment (In-person & Telehealth)',
+    description: 'Trauma-informed and evidence-based mental health counseling and case management for individuals, couples, and families across all ages.',
+    bulletPoints: [
+      'Counseling and dedicated case management for adults, adolescents, teens, and children',
+      'Couples, marriage, and family therapy',
+      'Secular and faith-based options available tailored to client preference',
+      'Trauma-informed care, grief, depression, anxiety, and PTSD therapy',
+      'Accepts Ohio Medicaid, private health insurance, and affordable self-pay'
+    ],
+    website: 'https://www.ohioserenitywellness.com/',
+    email: 'admin@ohswc.org',
+    tags: ['serenity wellness', 'counseling', 'therapy', 'mental health', 'trauma', 'couples', 'marriage', 'adolescent', 'children', 'case management', 'faith-based', 'central center']
+  },
+  {
+    id: 'mh-spvmh',
+    name: 'Scioto Paint Valley Mental Health Center (Martha Cottrill Clinic)',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Community Mental Health',
+    address: '4449 State Route 159, Chillicothe, OH 45601',
+    phone: '740-775-1260',
+    hours: 'Mon-Fri 8:00am - 5:00pm (Crisis: 24/7)',
+    notes: 'Direct Clinic: 740-335-6935; 24hr Crisis Line: 740-773-4357',
+    description: 'Comprehensive public community mental health agency serving Ross County for over 50 years. Outpatient counseling, psychiatry, and crisis center.',
+    bulletPoints: [
+      'Comprehensive adult and child psychiatric evaluations and medication management',
+      'Individual, marital, and specialized group psychotherapy',
+      'Crisis stabilization unit and 24/7 mobile crisis intervention',
+      'Accepts Medicaid, Medicare, private insurance, and sliding fee scale'
+    ],
+    website: 'https://spvmhc.org',
+    tags: ['spvmh', 'mental health', 'psychiatry', 'crisis', 'counseling', 'sliding fee', 'medicaid']
+  },
+  {
+    id: 'mh-adena-counseling',
+    name: 'Adena Counseling Center (Adena Health System)',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Health System Clinic',
+    address: '455 North Shawnee Lane, Chillicothe, OH 45601',
+    phone: '740-779-4888',
+    hours: 'Mon-Fri 8:00am - 5:00pm',
+    notes: 'Inpatient Behavioral Health: 4439 SR 159 (740-779-7500)',
+    description: 'Hospital-affiliated behavioral healthcare providing outpatient therapy, psychiatric medication management, and inpatient behavioral crisis care.',
+    bulletPoints: [
+      'Licensed psychiatrists, psychiatric nurse practitioners, and therapists',
+      'Outpatient psychotherapy and medication management',
+      'Inpatient adult behavioral health unit for acute crisis stabilization',
+      'Accepts Medicare, Ohio Medicaid, and commercial health insurance'
+    ],
+    website: 'https://www.adena.org',
+    tags: ['adena', 'hospital', 'psychiatry', 'inpatient', 'therapy', 'medication']
+  },
+  {
+    id: 'mh-integrated-services',
+    name: 'Integrated Services for Behavioral Health (ISBH)',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Community Mental Health',
+    address: '531 East Main Street, Chillicothe, OH 45601',
+    phone: '740-772-6191',
+    hours: 'Mon-Fri 9:00am - 4:00pm',
+    notes: 'Housing Line: 740-270-6701',
+    description: 'CARF-accredited community mental health organization providing clinical counseling, psychiatry, youth programs, and housing support.',
+    bulletPoints: [
+      'Outpatient therapy for children, teens, and adults',
+      'Psychiatric evaluations and medication management',
+      'Community psychiatric supportive treatment (CPST) and case management',
+      'Housing crisis stabilization and supportive housing services'
+    ],
+    website: 'https://isbh.org',
+    tags: ['isbh', 'integrated services', 'counseling', 'psychiatry', 'case management', 'housing']
+  },
+  {
+    id: 'mh-nami-southern-oh',
+    name: 'NAMI Southern Ohio (National Alliance on Mental Illness)',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Support & Advocacy',
+    address: '77 E. Water St., Chillicothe, OH 45601',
+    phone: '740-851-4242',
+    hours: 'Mon-Fri Office Hours',
+    description: 'Grassroots advocacy and education organization providing free peer-led mental health support groups for families and individuals living with mental illness.',
+    bulletPoints: [
+      'Free peer-led mental health support groups for individuals and loved ones',
+      'NAMI Family-to-Family and Basics educational courses',
+      'Stigma-reduction campaigns and mental health community advocacy'
+    ],
+    website: 'https://namisouthernohio.org',
+    tags: ['nami', 'support groups', 'advocacy', 'families', 'mental illness', 'free']
+  },
+  {
+    id: 'mh-mops',
+    name: 'Mid-Ohio Psychological Services (MOPS)',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Outpatient Clinic',
+    address: '114 Renick Avenue, Chillicothe, OH 45601',
+    phone: '740-687-0042',
+    hours: 'Mon-Fri 8:30am - 5:00pm',
+    description: 'Specialized clinical outpatient psychological services delivering high-quality trauma-informed therapy, youth counseling, and forensic assessments.',
+    bulletPoints: [
+      'Child, adolescent, adult, and geriatric mental health therapy',
+      'Trauma-focused cognitive behavioral therapy (TF-CBT)',
+      'Forensic evaluations and specialized court-ordered assessments',
+      'Accepts Ohio Medicaid and private insurance plans'
+    ],
+    website: 'https://www.mopsohio.com',
+    tags: ['mops', 'psychology', 'trauma', 'evaluations', 'therapy', 'medicaid']
+  },
+  {
+    id: 'mh-dirty-south',
+    name: 'Dirty South Therapeutics, LLC',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Private Practice',
+    address: '67 E. Water Street, Suite 217, Chillicothe, OH 45601',
+    phone: '740-879-2133',
+    hours: 'By Appointment',
+    description: 'Progressive, inclusive outpatient therapy clinic offering individual, couple, and family counseling.',
+    bulletPoints: [
+      'Trauma-informed therapy, PTSD, and grief counseling',
+      'Dual-diagnosis and addiction support',
+      'Affirming LGBTQ+ counseling and advocacy',
+      'Most insurance accepted; private pay available'
+    ],
+    tags: ['dirty south', 'therapy', 'lgbtq+', 'trauma', 'counseling']
+  },
+  {
+    id: 'mh-whole-life',
+    name: 'Whole Life Counseling Services, LLC',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Private Practice',
+    address: '20 Central Center, Chillicothe, OH 45601',
+    phone: '740-771-9022',
+    hours: 'By Appointment',
+    description: 'Outpatient mental health counseling offering in-person and telehealth appointments for anxiety, depression, trauma, and eating disorders.',
+    bulletPoints: [
+      'Individual, marital, and family therapy',
+      'Specialized care for eating disorders and complex PTSD',
+      'Sliding scale fees available for qualifying clients'
+    ],
+    tags: ['whole life', 'counseling', 'eating disorders', 'ptsd', 'telehealth']
+  },
+  {
+    id: 'mh-clear-psych',
+    name: 'Clear Psychiatric Solutions (Telehealth)',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Telehealth Psychiatry',
+    phone: '740-637-7590',
+    hours: 'By Appointment',
+    description: 'Convenient telehealth psychiatric evaluations and medication management accessible to Ross County residents from home.',
+    website: 'https://www.clearpsychiatricsolutions.com',
+    tags: ['telehealth', 'psychiatry', 'medication', 'virtual']
+  },
+  {
+    id: 'mh-insight-tms',
+    name: 'Insight TMS and Mental Health Care',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Specialized Psychiatry',
+    address: '77 E. Water St., Suite 206, Chillicothe, OH 45601',
+    phone: '740-774-3440',
+    hours: 'Mon-Fri 8:30am - 5:00pm',
+    description: 'Advanced psychiatric clinic offering Transcranial Magnetic Stimulation (TMS) therapy for treatment-resistant depression, along with medication management.',
+    website: 'https://insightpsychiatry.com',
+    tags: ['tms', 'depression', 'psychiatry', 'mental health']
+  },
+  {
+    id: 'mh-anew',
+    name: 'ANEW Behavioral Health',
+    category: 'mental-health',
+    categoryLabel: 'Mental Health & Counseling',
+    subcategory: 'Outpatient Clinic',
+    address: '1252 N. Bridge St., Chillicothe, OH 45601',
+    phone: '866-534-2639',
+    hours: 'Mon-Fri 8:00am - 5:00pm',
+    description: 'Outpatient mental health counseling and behavioral healthcare services for youth and adults.',
+    tags: ['anew', 'behavioral health', 'counseling']
+  },
+
+  // ==================== FOOD PANTRIES & FOOD ASSISTANCE ====================
+  {
+    id: 'food-good-samaritan',
+    name: 'Good Samaritan Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '255 N. Woodbridge Ave., Chillicothe, OH 45601',
+    phone: '740-774-6303',
+    hours: 'Mon-Fri 9:00am - 2:30pm',
+    availability: 'Monday through Friday',
+    notes: 'Photo ID and proof of Ross County residency may be required',
+    description: 'Major community emergency food pantry providing groceries, shelf-stable goods, fresh produce, and bakery items to Ross County families in need.',
+    bulletPoints: [
+      'Emergency food boxes containing 3-5 days of nutritionally balanced meals',
+      'Assistance available once per calendar month per household',
+      'Drive-up and walk-in service available'
+    ],
+    tags: ['food pantry', 'groceries', 'emergency food', 'good samaritan', 'woodbridge']
+  },
+  {
+    id: 'food-united-way-market',
+    name: 'United Way of Ross County - Produce Markets',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Fresh Produce Distribution',
+    address: 'Chillicothe: 140 S. Paint St. | Huntington: 188 Huntsman Dr. | Bainbridge: 113 Dewey St.',
+    phone: '740-773-3280',
+    hours: '9:00am until food runs out',
+    availability: 'Chillicothe: 2nd Wed | Huntington: 3rd Sat | Bainbridge: Last Fri',
+    description: 'Free monthly fresh produce distributions in partnership with Mid-Ohio Food Collective, open to all income-eligible Ross County households.',
+    bulletPoints: [
+      'Chillicothe (140 S Paint St): 2nd Wednesday of every month at 9am',
+      'Huntington (188 Huntsman Dr): 3rd Saturday of every month at 9am',
+      'Bainbridge (113 Dewey St): Last Friday of every month at 9am',
+      'Bring your own sturdy boxes or laundry baskets; first-come, first-served'
+    ],
+    website: 'https://www.unitedwayross.org',
+    tags: ['produce', 'fresh food', 'united way', 'vegetables', 'fruit', 'free food']
+  },
+  {
+    id: 'food-carver',
+    name: 'Carver Community Center Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry & Meals',
+    address: '165 W. 4th St., Chillicothe, OH 45601',
+    phone: '740-773-4242',
+    hours: 'Pantry: Mon-Fri 9:00am-5:00pm | Hot Meals: Mon-Fri 11:30am-1:30pm',
+    description: 'Historic community center providing daily free hot lunches, an on-site emergency food pantry, and baby supplies.',
+    bulletPoints: [
+      'Free community hot lunch served Monday through Friday 11:30am - 1:30pm',
+      'Food pantry pantry hours Monday through Friday 9:00am - 5:00pm',
+      'Baby formula and infant food available as supplies permit'
+    ],
+    tags: ['carver center', 'free lunch', 'food pantry', 'baby formula', 'meals']
+  },
+  {
+    id: 'food-j216',
+    name: 'J216 Ministries Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '3920 US Route 50, Bainbridge, OH 45612',
+    phone: '740-634-0023',
+    hours: 'Tuesday 9:00am - 11:00am & Saturday 8:00am - 11:00am',
+    availability: 'Tuesdays & Saturdays',
+    description: 'Community food pantry serving western Ross County, offering groceries, perishable foods, and seasonal items.',
+    tags: ['bainbridge', 'j216', 'food pantry', 'groceries']
+  },
+  {
+    id: 'food-open-door',
+    name: 'Open Door Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '3130 S. Bridge St., Chillicothe, OH 45601',
+    phone: '740-663-5497',
+    hours: '11:00am - 1:00pm',
+    availability: '1st and 3rd Tuesday of every month',
+    description: 'Bi-weekly community food pantry providing emergency grocery assistance to local families.',
+    tags: ['open door', 'food pantry', 'bridge street', 'groceries']
+  },
+  {
+    id: 'food-quinn-chapel',
+    name: 'Quinn Chapel A.M.E. Church Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '181 W. Main St., Chillicothe, OH 45601',
+    phone: '740-775-3529',
+    hours: 'Fridays 10:00am - 12:00pm (Except 1st Friday of month)',
+    notes: 'Photo ID required',
+    description: 'Downtown Chillicothe faith-based food pantry serving residents with canned goods, dry staples, and fresh provisions.',
+    tags: ['quinn chapel', 'ame', 'food pantry', 'downtown']
+  },
+  {
+    id: 'food-zion-baptist',
+    name: 'Zion Baptist Church Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '536 Mill St., Chillicothe, OH 45601',
+    phone: '740-775-0343',
+    hours: '10:00am - 12:00pm',
+    availability: '2nd and 4th Tuesday of every month',
+    description: 'Church-run food pantry offering emergency grocery parcels for neighbors.',
+    tags: ['zion baptist', 'food pantry', 'groceries']
+  },
+  {
+    id: 'food-lighthouse-baptist',
+    name: 'Lighthouse Baptist Church Food Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '341 Clinton Rd., Chillicothe, OH 45601',
+    phone: '740-779-2550',
+    hours: 'Sunday 8:00am - 8:00pm & Wednesday 6:00pm - 8:00pm',
+    notes: 'Not required to attend a church service to receive food',
+    description: 'Food distribution welcoming all in need without attendance requirement.',
+    tags: ['lighthouse baptist', 'food pantry', 'evening hours']
+  },
+  {
+    id: 'food-bainbridge-umc',
+    name: 'Bainbridge United Methodist Church Pantry',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Food Pantry',
+    address: '201 E. 2nd St., Bainbridge, OH 45612',
+    phone: '740-634-3791',
+    hours: 'Wednesdays 10:00am - 11:30am',
+    description: 'Local food pantry serving Bainbridge and western Ross County residents.',
+    tags: ['bainbridge', 'umc', 'food pantry']
+  },
+
+  // ==================== FREE MEALS / SOUP KITCHENS ====================
+  {
+    id: 'meal-crc-rcca',
+    name: 'Community Resource Center (CRC) Evening Meal',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Daily Hot Meal',
+    address: '804 Eastern Ave., Chillicothe, OH 45601',
+    phone: '740-702-7222 ext. 148',
+    hours: '5:00pm - 7:00pm daily',
+    availability: 'Mon - Sun 7 Days a week',
+    description: 'Hot community evening dinner served every single day of the week at the Community Resource Center / Shelter.',
+    bulletPoints: [
+      'Served 365 days a year to anyone in need of a hot dinner',
+      'No income check or referral required',
+      'Doors open at 5:00pm'
+    ],
+    tags: ['hot meal', 'soup kitchen', 'daily dinner', 'eastern ave', 'crc', 'rcca']
+  },
+  {
+    id: 'meal-walnut-st-umc',
+    name: 'Walnut Street United Methodist Church Breakfast',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Free Breakfast',
+    address: '16 S. Walnut St., Chillicothe, OH 45601',
+    phone: '740-775-7222',
+    hours: 'Mon-Thurs 8:30am - 9:30am',
+    availability: 'Monday through Thursday',
+    description: 'Free hot nutritious breakfast served 4 mornings a week in downtown Chillicothe.',
+    bulletPoints: [
+      'Warm hot breakfast, coffee, and fellowship',
+      'Open to all without requirement'
+    ],
+    tags: ['breakfast', 'hot meal', 'walnut st', 'downtown']
+  },
+  {
+    id: 'meal-trinity',
+    name: 'Trinity United Methodist Church Community Meal',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Free Lunch',
+    address: '24 S. Mulberry St., Chillicothe, OH 45601',
+    phone: '740-773-6640',
+    hours: 'Mon-Thurs 9:30am - 11:30am',
+    availability: 'Monday through Thursday',
+    description: 'Free morning meal, coffee, shower access, and laundry services in downtown Chillicothe.',
+    tags: ['trinity church', 'meal', 'lunch', 'mulberry st']
+  },
+  {
+    id: 'meal-calvary-lutheran',
+    name: 'Calvary Lutheran Church Community Dinner',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Monthly Dinner',
+    address: '74 W. Main St., Chillicothe, OH 45601',
+    phone: '740-773-1044',
+    hours: 'Last Thursday of each month at 4:30pm',
+    description: 'Free sit-down community dinner on the final Thursday of every month until supplies run out.',
+    tags: ['calvary lutheran', 'free dinner', 'monthly meal']
+  },
+  {
+    id: 'meal-first-church-god',
+    name: 'First Church of God Community Meal',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Monthly Dinner',
+    address: '780 E. Water St., Chillicothe, OH 45601',
+    phone: '740-775-2212',
+    hours: 'Last Monday of each month 4:00pm - 5:30pm',
+    description: 'Free monthly evening supper served on the last Monday of the month.',
+    tags: ['first church of god', 'free dinner', 'monthly meal']
+  },
+  {
+    id: 'meal-londonderry-seniors',
+    name: 'Londonderry Senior Citizens Center Meals',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Senior Meals',
+    address: '4923 Vigo Rd., Londonderry, OH 45647',
+    phone: '740-649-4848',
+    hours: 'Tuesday & Thursday at 11:30am',
+    notes: 'Operating April through mid-December; must be 60+ years of age',
+    description: 'Congregate lunch program and social activities for seniors aged 60 and older in eastern Ross County.',
+    tags: ['seniors', 'londonderry', 'lunch', '60+']
+  },
+  {
+    id: 'food-summer-lunch-schools',
+    name: 'Free Summer Lunch Program (Chillicothe Schools & CAC)',
+    category: 'food',
+    categoryLabel: 'Food Pantries & Free Meals',
+    subcategory: 'Summer Youth Meals',
+    address: 'Chillicothe High School / Middle School Cafeteria & various CAC sites',
+    hours: 'Mon-Fri 11:00am - 12:00pm (June - July)',
+    description: 'Free daily lunch for all children under age 18 during summer break. Children must be present to receive meals.',
+    tags: ['summer lunch', 'kids', 'free lunch', 'chillicothe schools', 'youth']
+  },
+
+  // ==================== BLESSING BOXES (ALL 21 LOCATIONS) ====================
+  ...[
+    { id: 'bb-1', num: 1, loc: "2000 Western Ave. (in front of Double D's Auction House)", area: 'Chillicothe West' },
+    { id: 'bb-2', num: 2, loc: "900 Orange St. (Adena Road Church of Christ)", area: 'Chillicothe' },
+    { id: 'bb-3', num: 3, loc: "1098 Diehl St.", area: 'Chillicothe' },
+    { id: 'bb-4', num: 4, loc: "769 E. Main St.", area: 'Chillicothe East' },
+    { id: 'bb-5', num: 5, loc: "570 Parsons Ave. (at Bishop Flaget School)", area: 'Chillicothe' },
+    { id: 'bb-6', num: 6, loc: "1653 N. Bridge St. (RTO)", area: 'Chillicothe North' },
+    { id: 'bb-7', num: 7, loc: "93 E. Valley Dr. (Pleasant Valley United Methodist Church)", area: 'Pleasant Valley' },
+    { id: 'bb-8', num: 8, loc: "2862 Church St., South Salem, OH", area: 'South Salem' },
+    { id: 'bb-9', num: 9, loc: "Bourneville, OH (beside Dairy Hut on US-50)", area: 'Bourneville' },
+    { id: 'bb-10', num: 10, loc: "678 Kinnamon Ln. (New Hope Church of God)", area: 'Chillicothe' },
+    { id: 'bb-11', num: 11, loc: "35633 US Rt. 50, Londonderry, OH (in front of donut shop)", area: 'Londonderry' },
+    { id: 'bb-12', num: 12, loc: "Adena Cancer Center, Chillicothe, OH", area: 'Chillicothe' },
+    { id: 'bb-13', num: 13, loc: "Zane Trace School, Chillicothe, OH", area: 'Zane Trace' },
+    { id: 'bb-14', num: 14, loc: "6066 St. Rt. 772 (Huntington Township)", area: 'Huntington Twp' },
+    { id: 'bb-15', num: 15, loc: "20 Third St., Kingston, OH (Kingston Living Water Church)", area: 'Kingston' },
+    { id: 'bb-16', num: 16, loc: "8585 St. Rt. 180 (Community United Methodist Church)", area: 'Ross County North' },
+    { id: 'bb-17', num: 17, loc: "11879 Main St., Adelphi, OH (Adelphi United Methodist Church)", area: 'Adelphi' },
+    { id: 'bb-18', num: 18, loc: "30 Church St., Frankfort, OH (Frankfort United Methodist Church)", area: 'Frankfort' },
+    { id: 'bb-19', num: 19, loc: "52 W. Springfield St., Frankfort, OH (Presbyterian Church)", area: 'Frankfort' },
+    { id: 'bb-20', num: 20, loc: "1249 Andersonville Rd. (Andersonville United Methodist Church)", area: 'Andersonville' },
+    { id: 'bb-21', num: 21, loc: "1264 Hospital Rd. (Chillicothe Pediatrics)", area: 'Chillicothe' }
+  ].map(b => ({
+    id: b.id,
+    name: `Blessing Box #${b.num} - ${b.area}`,
+    category: 'blessing-boxes',
+    categoryLabel: 'Blessing Boxes',
+    subcategory: '24/7 Food Pantry Box',
+    address: b.loc,
+    hours: '24/7 / Always Open',
+    availability: 'Open 24 Hours / 7 Days a week',
+    description: 'Community outdoor mini-pantry offering free non-perishable food, hygiene items, and baby goods anytime. "Take what you need, leave what you can."',
+    bulletPoints: [
+      'Accessible 24/7 with zero paperwork or identification needed',
+      'Contains non-perishable canned food, pasta, hygiene essentials, and bottled water',
+      'Community members are encouraged to donate items directly to the box'
+    ],
+    tags: ['blessing box', 'food', 'free pantry', 'micro pantry', 'emergency food', b.area.toLowerCase()]
+  })),
+
+  // ==================== HOMELESS SHELTERS & ABUSE SERVICES ====================
+  {
+    id: 'shelter-crc-rcca',
+    name: 'Ross County Community Action - Community Resource Center (Men\'s Shelter & Emergency)',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Emergency Shelter',
+    address: '804 Eastern Ave., Chillicothe, OH 45601',
+    phone: '740-702-7222 ext. 148',
+    hours: '24/7',
+    availability: 'Mon-Sun 24 Hours',
+    description: 'Ross County primary emergency homeless shelter providing beds, warm meals, showers, laundry, and intensive housing case management.',
+    bulletPoints: [
+      'Emergency overnight shelter with 24/7 intake',
+      'Daily hot dinner from 5:00pm - 7:00pm open to all',
+      'Dedicated case managers assisting with Rapid Re-Housing and permanent placement'
+    ],
+    tags: ['shelter', 'homeless', 'men', 'emergency shelter', 'rcca', 'beds', 'eastern ave']
+  },
+  {
+    id: 'shelter-seeds-of-hope',
+    name: 'Seeds of Hope (Women, Children & Married Couples Shelter)',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Family Shelter',
+    address: '2170 Lunbeck Rd., Chillicothe, OH 45601',
+    phone: '740-663-7005',
+    hours: 'Intake: Mon-Sun 8:00am - 4:00pm (Facility open 24/7)',
+    notes: 'Serves women, children, and legally married couples only',
+    description: 'Emergency shelter and supportive living facility dedicated to keeping families, mothers, and single women off the streets.',
+    bulletPoints: [
+      'Private rooms and family units with nursery accommodations',
+      'Life-skills classes, budgeting courses, and employment navigation',
+      'Dedicated children play area and school transport coordination'
+    ],
+    tags: ['seeds of hope', 'women', 'children', 'family shelter', 'homeless', 'single mothers']
+  },
+  {
+    id: 'shelter-sojourners',
+    name: 'Sojourners Youth Care Network (Ages 14-24)',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Youth Shelter',
+    address: '605 W. Main St., McArthur, OH 45651',
+    phone: '740-596-1117',
+    hours: 'Mon-Sun 8:00am - 4:00pm / Emergency 24/7',
+    notes: 'Serving youth and young adults aged up to 24',
+    description: 'Specialized youth shelter, runaway crisis center, and transitional living program for youth experiencing homelessness or unsafe home environments.',
+    tags: ['youth', 'young adults', 'runaway', 'shelter', 'sojourners']
+  },
+  {
+    id: 'shelter-hope-house',
+    name: 'Hope House (Men\'s Shelter)',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Men\'s Shelter',
+    address: '2146 N. Court St., Circleville, OH 43113',
+    phone: '740-500-1305',
+    hours: '24/7',
+    notes: 'Men only',
+    description: 'Men emergency shelter offering lodging, meals, and recovery stabilization support.',
+    tags: ['men', 'circleville', 'hope house', 'shelter']
+  },
+  {
+    id: 'shelter-bridgehaven',
+    name: 'Bridgehaven Homeless Shelter',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Regional Shelter',
+    address: '109 W. 2nd St., Waverly, OH 45690',
+    phone: '740-941-4348',
+    hours: 'Mon-Sun 8:00am - 5:00pm',
+    description: 'Regional emergency shelter providing safe transitional housing in neighboring Pike County.',
+    tags: ['bridgehaven', 'waverly', 'shelter']
+  },
+  {
+    id: 'shelter-highland-co',
+    name: 'Highland County Homeless Shelter',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Regional Shelter',
+    address: '145 Homestead Ave., Hillsboro, OH 45133',
+    phone: '937-393-0634',
+    hours: 'Mon-Sun 8:00am - 4:00pm',
+    description: 'Emergency shelter providing up to 30 days of temporary shelter, food, and case management.',
+    tags: ['highland county', 'hillsboro', 'shelter']
+  },
+  {
+    id: 'shelter-franklin-co',
+    name: 'Franklin County Shelter Referral',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Regional Referral',
+    address: '335 E. Campus View Blvd, Columbus, OH',
+    phone: '614-274-7000',
+    hours: '24/7 Intake Line',
+    description: 'Central Ohio Homeless Shelter board and 24/7 coordinated entry line.',
+    tags: ['columbus', 'shelter referral']
+  },
+  {
+    id: 'shelter-heart-of-ohio',
+    name: 'Heart of Ohio Homeless Shelter',
+    category: 'shelters',
+    categoryLabel: 'Homeless Shelters & Housing Aid',
+    subcategory: 'Regional Shelter',
+    address: '326 W. Fairground St., Marion, OH',
+    phone: '740-387-4550',
+    hours: '24/7',
+    description: 'Regional emergency shelter program.',
+    tags: ['heart of ohio', 'shelter']
+  },
+
+  // ==================== DOMESTIC VIOLENCE & ABUSE SERVICES ====================
+  {
+    id: 'dv-sotf',
+    name: 'Southern Ohio Task Force on Domestic Violence (S.O.T.F)',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Domestic Violence',
+    address: 'Portsmouth, OH',
+    phone: '740-456-8217',
+    hours: '24/7',
+    description: 'Regional emergency crisis shelter and advocacy for domestic abuse victims.',
+    tags: ['domestic violence', 'sotf', 'shelter', 'portsmouth']
+  },
+  {
+    id: 'dv-peace-house',
+    name: 'Peace House Domestic Violence Shelter',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Domestic Violence',
+    address: 'Fayette County, OH',
+    phone: '740-505-0090',
+    hours: '24/7',
+    description: 'Emergency crisis safe home for domestic violence victims and children in neighboring Fayette County.',
+    tags: ['peace house', 'dv', 'shelter', 'fayette county']
+  },
+  {
+    id: 'dv-haven-house',
+    name: 'Haven House Emergency Domestic Violence Shelter',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Domestic Violence',
+    address: 'Circleville, OH',
+    phone: '740-477-9113',
+    hours: '24/7',
+    description: '24-hour crisis shelter and court advocacy for survivors of domestic violence and sexual assault in Pickaway/Ross area.',
+    tags: ['haven house', 'circleville', 'dv', 'safe shelter']
+  },
+  {
+    id: 'dv-protection-orders',
+    name: 'Ross County Victim Assistance & Protection Orders',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Legal Protection',
+    address: 'Chillicothe, OH',
+    phone: '740-702-7222 ext. 121',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Assistance filing Civil Protection Orders (CPO), stalking orders, and obtaining victim advocate support through the courts.',
+    tags: ['protection order', 'cpo', 'victim assistance', 'legal protection']
+  },
+
+  // ==================== HOUSING AGENCIES & METROPOLITAN HOUSING ====================
+  {
+    id: 'housing-cmha',
+    name: 'Chillicothe Metropolitan Housing Authority (CMHA)',
+    category: 'housing',
+    categoryLabel: 'Housing & Apartments',
+    subcategory: 'Public Housing / Section 8',
+    address: '178 W. 4th St., Chillicothe, OH 45601',
+    phone: '740-775-7881',
+    hours: 'Mon-Fri 8:30am - 4:00pm (Closed to public on Wednesdays)',
+    description: 'Administers federal Section 8 Housing Choice Vouchers, subsidized public housing communities, and rental voucher waitlists in Ross County.',
+    bulletPoints: [
+      'Section 8 Housing Choice Voucher program management',
+      'Subsidized public apartment communities across Chillicothe',
+      'Assistance with income-based rental applications'
+    ],
+    tags: ['cmha', 'section 8', 'subsidized housing', 'vouchers', 'low income']
+  },
+  {
+    id: 'housing-rcca',
+    name: 'Ross County Community Action - Housing Assistance Programs',
+    category: 'housing',
+    categoryLabel: 'Housing & Apartments',
+    subcategory: 'Housing Programs',
+    address: '250 N. Woodbridge Ave. & 603 Central Center, Chillicothe, OH 45601',
+    phone: '740-702-7222 ext. 125',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Multiple housing assistance grants: Rent/Mortgage/Deposit Relief, Home Weatherization Assistance Program (HWAP), Rapid Re-Housing, and Young Adult SOS.',
+    bulletPoints: [
+      'Emergency rent and mortgage payment assistance to prevent eviction',
+      'Free Home Weatherization: insulation, heating system tune-ups/replacements',
+      'Rapid Re-Housing program for individuals and families in shelters'
+    ],
+    tags: ['eviction prevention', 'rent help', 'weatherization', 'community action', 'rcca']
+  },
+  {
+    id: 'housing-isbh-hotline',
+    name: 'Integrated Services Housing Hotline',
+    category: 'housing',
+    categoryLabel: 'Housing & Apartments',
+    subcategory: 'Housing Hotline',
+    phone: '740-270-6701',
+    notes: 'Toll Free: 800-321-8293',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Coordinated intake and navigation hotline for individuals and families at imminent risk of homelessness in Southeast Ohio.',
+    tags: ['housing hotline', 'isbh', 'homeless prevention']
+  },
+  {
+    id: 'housing-va',
+    name: 'Chillicothe VA Medical Center - Homeless Veteran Care & HUD-VASH',
+    category: 'housing',
+    categoryLabel: 'Housing & Apartments',
+    subcategory: 'Veterans Housing',
+    address: '17273 State Route 104, Chillicothe, OH 45601',
+    phone: '740-773-1141 ext. 6477',
+    hours: 'Mon-Sun 8:00am - 6:00pm',
+    description: 'Dedicated HUD-VASH voucher program, transitional housing, and emergency healthcare for homeless and vulnerable veterans.',
+    bulletPoints: [
+      'HUD-VASH permanent supportive housing vouchers for veterans',
+      'Transitional housing and clinical stabilization on VA grounds',
+      'Veteran peer support and healthcare enrollment'
+    ],
+    tags: ['veterans', 'va', 'hud-vash', 'housing', 'military']
+  },
+  {
+    id: 'housing-planning-dept',
+    name: 'Ross County Planning Department (Home Repair & Improvement Grants)',
+    category: 'housing',
+    categoryLabel: 'Housing & Apartments',
+    subcategory: 'Home Repair Grants',
+    address: '15 N. Paint St., Chillicothe, OH 45601',
+    phone: '740-702-3008',
+    notes: 'City Addresses: 740-773-8042',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Government grant programs assisting low- and moderate-income homeowners with critical home repairs, accessibility ramps, and roof replacements.',
+    tags: ['home repair', 'grants', 'accessibility', 'planning']
+  },
+
+  // ==================== LOCAL APARTMENT COMPLEXES (P7 & P8) ====================
+  ...[
+    { id: 'apt-walnut-hills', name: 'Walnut Hills Apartments', addr: '102 Walnut Hills Dr., Chillicothe, OH', phone: '740-772-5492', hours: 'Mon-Fri 10am-6pm', notes: 'Apply in person' },
+    { id: 'apt-dogwood', name: 'Dogwood Apartments', addr: '1355 Western Ave., Chillicothe, OH', phone: '740-775-4110', hours: 'Mon-Fri 9am-5pm', notes: 'Apply in person' },
+    { id: 'apt-north-river', name: 'North River Place', addr: '767 Hopeton Rd., Chillicothe, OH', phone: '740-774-2897', hours: 'Mon-Fri 8am-5pm', notes: 'Apply online / in person' },
+    { id: 'apt-zane-square', name: 'Zane Square Apartments', addr: '1181 Whaley Pl., Chillicothe, OH', phone: '740-773-3959', hours: 'Mon-Fri 8am-3pm', notes: 'Subsidized units' },
+    { id: 'apt-overbrook', name: 'Overbrook Apartments', addr: '2179 Anderson Station Rd., Chillicothe, OH', phone: '740-773-1159', hours: 'Mon-Fri 9am-4pm', notes: 'Income-based housing' },
+    { id: 'apt-university-hilltop', name: 'University Hilltop Apartments', addr: '596 W. 5th St., Chillicothe, OH', phone: '740-486-9929', hours: 'Tue-Fri 9am-4pm', notes: 'Apply in person' },
+    { id: 'apt-professional-dr', name: 'Professional Drive Apartments', addr: '1555 Professional Dr., Chillicothe, OH', phone: '614-531-2292', hours: 'Mon-Fri 9am-4pm', notes: 'Apply in person' },
+    { id: 'apt-applegate', name: 'Applegate Apartments', addr: '1911 Western Ave., Chillicothe, OH', phone: '740-772-1166', hours: 'Office Hours', notes: 'Call only' },
+    { id: 'apt-western-view', name: 'Western View Apartments', addr: '596 W. 5th St., Chillicothe, OH', phone: '740-779-3205', hours: 'Office Hours', notes: 'Call only' },
+    { id: 'apt-woodland-heights', name: 'Woodland Heights', addr: '547 Plyleys Lane, Chillicothe, OH', phone: '740-773-9276', hours: 'Mon-Fri 9am-5pm', notes: 'Apply in person' },
+    { id: 'apt-carlisle-crest', name: 'Carlisle Crest Apartments', addr: '402 W. Main St., Chillicothe, OH', phone: '740-248-5091', hours: 'By Appointment', notes: 'By appointment only' },
+    { id: 'apt-quinn-court', name: 'Quinn Court Senior Apartments (55+)', addr: '990 Columbus St., Chillicothe, OH', phone: '740-773-3700', hours: 'Tues-Thurs 7:30am-4:30pm', notes: 'Senior Community: 55+ Only' },
+    { id: 'apt-ardmore-crossing', name: 'Ardmore Crossing (55+)', addr: '2251 Anderson Station Rd., Chillicothe, OH', phone: '740-779-1191', hours: 'Mon, Wed, Fri 9am-4pm', notes: 'Apply online; 55+ senior community' },
+    { id: 'apt-north-creek', name: 'North Creek Apartments', addr: '175 Clinton Rd., Chillicothe, OH', phone: '740-773-0084', hours: 'Mon, Wed, Fri 9am-4pm', notes: 'Call for information' },
+    { id: 'apt-cross-creek', name: 'Cross Creek Apartments', addr: '199 Frontier Dr., Chillicothe, OH', phone: '740-779-9777', hours: 'Office Hours', notes: 'Application online' },
+    { id: 'apt-bridgestreet-landing', name: 'Bridgestreet Landing', addr: '1920 N. Bridge St., Chillicothe, OH', phone: '740-224-0006', hours: 'Mon-Fri 9am-5pm', notes: 'Call for information' },
+    { id: 'apt-freedom-path', name: 'Freedom\'s Path at Chillicothe (Veterans)', addr: '461 Hines Blvd., Chillicothe, OH 45601', phone: '855-531-4786', hours: 'Mon-Fri 8:30am-5:00pm', notes: 'VA & Military Veterans Only; on VA campus' },
+    { id: 'apt-tangle-wood', name: 'Tangle Wood Senior Apartments (62+)', addr: '440 N. Main St., Frankfort, OH 45628', phone: '740-998-2268', hours: 'Mon, Wed, Fri 9am-4pm', notes: 'Senior Community: 62+ Only' },
+    { id: 'apt-frankfort-place', name: 'Frankfort Place Senior Apartments (55+)', addr: '243 Maple Dr., Frankfort, OH 45628', phone: '740-998-2746', hours: 'Mon, Wed, Fri 9am-4pm', notes: 'Senior Community: 55+ Only' },
+    { id: 'apt-paint-creek-station', name: 'Paint Creek Station', addr: '101 W. Trotter Dr., Chillicothe, OH', phone: '740-918-3035', hours: 'Office Hours', notes: 'Call for information' },
+    { id: 'apt-hopeton-village', name: 'Hopeton Village (Elderly or Disabled)', addr: '153 University Dr., Chillicothe, OH', phone: '740-773-5220', hours: 'Office Hours', notes: 'Elderly or Disabled Only; call for info' },
+    { id: 'apt-saltcreek', name: 'Saltcreek Apartments', addr: '16242 Pike St., Laurelville, OH', phone: '740-332-6770', hours: 'Office Hours', notes: 'Call for information' },
+    { id: 'apt-bainbridge-manor', name: 'Bainbridge Manor', addr: '200 Shawnee Dr., Bainbridge, OH', phone: '740-634-2742', hours: 'Office Hours', notes: 'Call for information' },
+    { id: 'apt-hokoleqa', name: 'Hokoleqa Apartments', addr: '3658 County Rd. 550, Frankfort, OH', phone: '740-998-4050', hours: 'Office Hours', notes: 'Call for information' }
+  ].map(a => ({
+    id: a.id,
+    name: a.name,
+    category: 'housing',
+    categoryLabel: 'Housing & Apartments',
+    subcategory: 'Apartment Complex',
+    address: a.addr,
+    phone: a.phone,
+    hours: a.hours,
+    notes: a.notes,
+    description: `Subsidized, income-based, or accessible rental apartment community in Ross County. ${a.notes}`,
+    tags: ['apartment', 'housing', 'rent', 'subsidized', 'affordable housing', 'landlord']
+  })),
+
+  // ==================== PRIVATE LANDLORDS REGISTRY (P9) ====================
+  ...[
+    { id: 'landlord-1', name: 'Bill Graves (Private Landlord)', phone: '614-489-9819' },
+    { id: 'landlord-2', name: 'Dave Miller (Private Landlord)', phone: '740-703-4842' },
+    { id: 'landlord-3', name: 'Chillicothe Investors Network', phone: 'Via Facebook', notes: 'Search Facebook Groups: "Chillicothe Investors"' },
+    { id: 'landlord-4', name: 'Mainstay Living', phone: '740-703-1691' },
+    { id: 'landlord-5', name: 'Meyer Apartments / Hans Fischer', phone: '740-775-9950' },
+    { id: 'landlord-6', name: 'Ken Shleton (Private Landlord)', phone: '740-649-1942' },
+    { id: 'landlord-7', name: 'Tony Slutz (Private Landlord)', phone: '740-703-4759' },
+    { id: 'landlord-8', name: 'Dwell Real Estate & Rentals', phone: '740-851-6332' },
+    { id: 'landlord-9', name: 'Ross County Rentals', phone: '740-206-7224' },
+    { id: 'landlord-10', name: 'JS Oak with ERA Martin & Associates', phone: '937-573-7647' },
+    { id: 'landlord-11', name: 'Mid Ohio Rentals', phone: '740-571-1606' },
+    { id: 'landlord-12', name: 'Mountain Top Management', phone: '740-237-7123' },
+    { id: 'landlord-13', name: 'Arch Elm Apartments', phone: '740-773-2125' },
+    { id: 'landlord-14', name: 'Mike McCoy (Private Landlord)', phone: '740-703-9257' },
+    { id: 'landlord-15', name: 'First Group Realty', phone: '740-775-0000' },
+    { id: 'landlord-16', name: 'John Kellough (Private Landlord)', phone: '740-649-9536' },
+    { id: 'landlord-17', name: 'Carvel Simmons (Private Landlord)', phone: '740-998-2218' },
+    { id: 'landlord-18', name: 'Everett Sams (Private Landlord)', phone: '740-703-7637' },
+    { id: 'landlord-19', name: 'Half Bros Property Management', phone: '614-972-9517' },
+    { id: 'landlord-20', name: 'Butt Realty & Property Management', phone: '740-775-0311' }
+  ].map(l => ({
+    id: l.id,
+    name: l.name,
+    category: 'landlords',
+    categoryLabel: 'Private Landlords Registry',
+    subcategory: 'Private Landlord / Property Mgr',
+    address: 'Chillicothe / Ross County, OH',
+    phone: l.phone,
+    hours: 'Business / Inquiries Call Hours',
+    notes: l.notes || 'Local landlord/property manager with rental properties in Chillicothe / Ross County',
+    description: `Local Ross County landlord or rental management contact for prospective tenants looking for private apartments, houses, or units to rent. ${l.notes || ''}`,
+    tags: ['landlord', 'rental', 'housing', 'private landlord', 'apartments for rent']
+  })),
+
+  // ==================== CLOTHING, LAUNDRY & SHOWERS ====================
+  {
+    id: 'clean-bright-n-clean',
+    name: 'Bright N Clean Free Community Laundry',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Laundry Service',
+    address: '49 Douglas Ave., Chillicothe, OH 45601',
+    phone: '740-775-7760',
+    hours: '6:00pm - 7:00pm',
+    availability: '3rd Thursday of each month',
+    notes: 'Pre-registration / sign-up is required on the 1st of each month',
+    description: 'Free monthly laundry service providing washing machines, detergent, and dryer cycles to help families maintain fresh, clean clothing and bedding.',
+    bulletPoints: [
+      'Free detergent, fabric softener, and washing/drying machine tokens provided',
+      'Sign-up opens on the 1st of every month (call to reserve slot)',
+      'Held the 3rd Thursday of every month from 6pm to 7pm'
+    ],
+    tags: ['laundry', 'free laundry', 'washing', 'clean clothes', 'hygiene']
+  },
+  {
+    id: 'clean-salvation-army-laundry',
+    name: 'Salvation Army - Laundry & Showers',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Showers & Laundry',
+    address: '171 E. 4th St., Chillicothe, OH 45601',
+    phone: '740-774-2760',
+    hours: 'Mon, Tue, Thurs, Fri 8:00am - 1:00pm',
+    notes: 'Hours subject to change based on volunteer staffing',
+    description: 'Walk-in personal hygiene facility offering free hot showers, fresh towels, soap/shampoo, and on-site laundry machines.',
+    bulletPoints: [
+      'Clean, private hot shower facilities with toiletries provided',
+      'Free clothes washing and drying',
+      'Open 4 mornings a week (Monday, Tuesday, Thursday, Friday)'
+    ],
+    tags: ['showers', 'laundry', 'salvation army', 'hygiene', 'hot shower']
+  },
+  {
+    id: 'clean-trinity-laundry',
+    name: 'Trinity United Methodist Church - Showers & Laundry',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Showers & Laundry',
+    address: '24 S. Mulberry St., Chillicothe, OH 45601',
+    phone: '740-773-6640',
+    hours: 'Mon-Thurs 9:00am - 12:00pm',
+    notes: 'Hours subject to change; call ahead if traveling from distance',
+    description: 'Downtown walk-in center providing hot showers, free laundry facilities, morning coffee, and clothing assistance.',
+    tags: ['showers', 'laundry', 'trinity church', 'hygiene']
+  },
+  {
+    id: 'cloth-zion-baptist',
+    name: 'Zion Baptist Clothing Pantry',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Clothing Bank',
+    address: '322 Church St., Chillicothe, OH 45601',
+    phone: '740-775-0343',
+    hours: 'Tue-Fri 10:00am - 4:00pm',
+    description: 'Free community clothing closet providing gently used clothing, coats, shoes, and workwear for men, women, and children.',
+    tags: ['clothing', 'clothes pantry', 'coats', 'shoes', 'free clothes']
+  },
+  {
+    id: 'cloth-salvation-army-store',
+    name: 'Salvation Army Clothing Voucher Assistance',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Clothing Vouchers',
+    address: '171 E. 4th St., Chillicothe, OH 45601',
+    phone: '740-774-2760',
+    hours: 'Mon, Tue, Thurs, Fri 8:00am - 1:00pm',
+    notes: 'Provides clothing vouchers for the Salvation Army Family Store once per year per individual',
+    description: 'Emergency clothing voucher program redeemable at the Salvation Army thrift store for coats, school outfits, and work clothes.',
+    tags: ['clothing vouchers', 'salvation army', 'thrift store', 'coats']
+  },
+  {
+    id: 'cloth-trinity-closet',
+    name: 'Trinity Church Clothing Closet',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Clothing Bank',
+    address: '24 S. Mulberry St., Chillicothe, OH 45601',
+    phone: '740-773-6640',
+    hours: 'Mon-Thurs 9:00am - 12:00pm',
+    description: 'Free clothing pantry open Monday through Thursday morning in downtown Chillicothe.',
+    tags: ['clothing', 'trinity church', 'free clothes']
+  },
+  {
+    id: 'cloth-path',
+    name: 'PATH Community Clothing Resource',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Clothing Bank',
+    address: '111 W. Water St., Chillicothe, OH 45601',
+    phone: '740-851-6493',
+    hours: 'Mon-Fri 9:00am - 5:00pm',
+    description: 'Emergency clothing, winter essentials, and hygiene packets for clients and community members.',
+    tags: ['path', 'clothing', 'water street']
+  },
+  {
+    id: 'cloth-first-presbyterian',
+    name: 'Hopewell Children\'s Clothing Bank (First Presbyterian Church)',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Children\'s Clothing',
+    address: '140 S. Paint St. (Main Library Annex, Meeting Room B), Chillicothe, OH 45601',
+    phone: '740-774-4440',
+    hours: 'Tuesdays & Wednesdays 10:00am - 12:00pm',
+    notes: 'Operates August through May. Can use once every 6-12 weeks. Requires agency referral (Ross Co JFS, Assistance House, Salvation Army, etc.)',
+    description: 'Specialized children clothing bank offering quality seasonal clothing, shoes, winter coats, and school outfits for infants through teens.',
+    tags: ['children clothing', 'kids', 'coats', 'shoes', 'school clothes', 'presbyterian']
+  },
+  {
+    id: 'cloth-goodwill-voucher',
+    name: 'Goodwill - Ross County Clothing Voucher Center',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Thrift Store / Vouchers',
+    address: '1080 N. Bridge St., Chillicothe, OH 45601',
+    phone: '740-702-4000',
+    hours: 'Mon-Sat 9:00am - 9:00pm, Sun 10:00am - 6:00pm',
+    notes: 'To redeem free vouchers, must have authorized clothing voucher from True Vine - St. Paul Church (740-772-2061)',
+    description: 'Large retail thrift store accepting community vouchers for clothing and footwear.',
+    tags: ['goodwill', 'clothing voucher', 'bridge st']
+  },
+  {
+    id: 'cloth-solace-restore',
+    name: 'Black and Blue Re-Store / SOLACE of Ross County',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Free Store',
+    address: '203 West Water Street, Chillicothe, OH 45601',
+    phone: '740-851-5347',
+    email: 'solaceross@yahoo.com',
+    hours: 'Tue, Wed, Thurs 9:00am - 12:00pm & by appointment',
+    notes: 'Agency referral verifying need is requested. All donated items are free.',
+    description: 'All items are 100% donated and free. Provides clothing, household essentials, and recovery support supplies.',
+    tags: ['solace', 'restore', 'free store', 'clothing', 'household']
+  },
+  {
+    id: 'cloth-assistance-house',
+    name: 'The Assistance House Clothing & Essentials',
+    category: 'clothing-laundry',
+    categoryLabel: 'Clothing, Laundry & Showers',
+    subcategory: 'Emergency Assistance',
+    address: '147 N. Bridge St. (Rear), Chillicothe, OH 45601',
+    phone: '740-774-3560',
+    hours: 'Mon & Thurs 9:00am - 1:00pm',
+    notes: 'Call and leave a message stating specific family needs',
+    description: 'Community emergency assistance charity providing clothing, household goods, hygiene items, and utility support.',
+    tags: ['assistance house', 'clothing', 'emergency aid']
+  },
+
+  // ==================== UTILITY & FINANCIAL ASSISTANCE ====================
+  {
+    id: 'util-community-action',
+    name: 'Ross County Community Action - HEAP & Utility Assistance',
+    category: 'utilities',
+    categoryLabel: 'Utility & Emergency Aid',
+    subcategory: 'HEAP & Energy Assistance',
+    address: '250 N. Woodbridge Ave. & 603 Central Center, Chillicothe, OH 45601',
+    phone: '740-702-7222',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Home Energy Assistance Program (HEAP), Winter Crisis Program, Summer Crisis Program, and PIPP Plus payment plan enrollment.',
+    bulletPoints: [
+      'Winter Crisis Program (Emergency HEAP) to prevent heat disconnection or restore service',
+      'Percentage of Income Payment Plan (PIPP Plus) enrollment for electric and natural gas',
+      'Summer Crisis Program for electric bill assistance and free air conditioners for seniors/medical need'
+    ],
+    tags: ['heap', 'electric', 'gas', 'water', 'utility assistance', 'winter crisis', 'pipp']
+  },
+  {
+    id: 'util-salvation-army',
+    name: 'Salvation Army Utility Relief',
+    category: 'utilities',
+    categoryLabel: 'Utility & Emergency Aid',
+    subcategory: 'Utility Grants',
+    address: '171 E. 4th St., Chillicothe, OH 45601',
+    phone: '740-774-2760',
+    hours: 'Mon, Tue, Thurs, Fri 8:00am - 1:00pm',
+    notes: 'Columbia Gas and electric assistance available only when discretionary grant funds are active; disconnect notice usually required',
+    description: 'Emergency funds helping low-income households with disconnect notices keep heating and electricity on.',
+    tags: ['salvation army', 'utility help', 'gas bill', 'electric bill']
+  },
+  {
+    id: 'util-st-marys',
+    name: 'St. Mary\'s Catholic Church Emergency Utility Aid',
+    category: 'utilities',
+    categoryLabel: 'Utility & Emergency Aid',
+    subcategory: 'Parish Financial Aid',
+    address: '61 S. Paint St., Chillicothe, OH 45601',
+    phone: '740-772-2061',
+    hours: 'Thursdays Only 9:00am - 11:30am',
+    notes: 'Thursdays only. Direct intake in-person or call 740-772-2073',
+    description: 'St. Mary\'s St. Vincent de Paul ministry offering compassionate emergency utility, prescription, and emergency financial assistance.',
+    tags: ['st marys', 'st vincent de paul', 'utility help', 'financial aid']
+  },
+  {
+    id: 'util-st-vincent',
+    name: 'St. Vincent de Paul Society of Chillicothe',
+    category: 'utilities',
+    categoryLabel: 'Utility & Emergency Aid',
+    subcategory: 'Emergency Relief',
+    address: '126 Church St. & 61 S. Paint St., Chillicothe, OH 45601',
+    phone: '740-772-2812',
+    notes: 'Secondary: 740-772-2073. Leave a voicemail stating your specific need and contact number',
+    hours: 'Voicemail checked daily',
+    description: 'Emergency financial assistance for rent, utilities, life-saving prescriptions, and crisis needs.',
+    tags: ['st vincent de paul', 'emergency money', 'rent assistance', 'utilities']
+  },
+  {
+    id: 'util-veterans-commission',
+    name: 'Ross County Veterans Service Commission',
+    category: 'utilities',
+    categoryLabel: 'Utility & Emergency Aid',
+    subcategory: 'Veterans Aid',
+    address: '475 Western Ave., Suite C, Chillicothe, OH 45601',
+    phone: '740-772-1600',
+    hours: 'Mon-Fri 8:00am - 4:30pm',
+    notes: 'Must be an honorably discharged Ross County veteran or dependent spouse/child',
+    description: 'Direct financial assistance for eligible veterans facing emergency financial emergencies with rent, mortgage, food, medical, and utility payments.',
+    tags: ['veterans', 'military', 'financial assistance', 'utility aid']
+  },
+
+  // ==================== MEDICAL & DENTAL CLINICS ====================
+  {
+    id: 'med-hope-clinic',
+    name: 'Hope Clinic of Ross County (Free Medical Clinic & Pharmacy)',
+    category: 'medical',
+    categoryLabel: 'Medical & Dental Clinics',
+    subcategory: 'Free Medical Clinic',
+    address: '610 Central Center, Chillicothe, OH 45601',
+    phone: '740-774-4606',
+    hours: 'Monday evenings 5:00pm - 7:00pm',
+    availability: 'Monday Evenings (Sign-in starts at 5:00pm)',
+    notes: 'For adults without health insurance. Not available to those currently on Medicaid or Medicare.',
+    description: 'Volunteer-driven free medical clinic and charitable pharmacy providing routine primary healthcare, evaluations, blood pressure/diabetes management, and free medications.',
+    bulletPoints: [
+      'Free consultations with volunteer medical doctors and nurse practitioners',
+      'Charitable on-site pharmacy dispensing essential maintenance medications at zero cost',
+      'Chronic disease stabilization and health monitoring'
+    ],
+    website: 'https://www.hopeclinicfree.org',
+    tags: ['hope clinic', 'free clinic', 'uninsured', 'charitable pharmacy', 'free medicine', 'doctors']
+  },
+  {
+    id: 'med-hope-dental',
+    name: 'Hope Clinic Free Dental Clinic',
+    category: 'medical',
+    categoryLabel: 'Medical & Dental Clinics',
+    subcategory: 'Free Dental Clinic',
+    address: '612 Central Center, Chillicothe, OH 45601',
+    phone: '740-774-4606',
+    hours: 'By Appointment / Clinic Evenings',
+    notes: 'Free dental extractions and emergency dental care for uninsured Ross County residents',
+    description: 'Providing relief from dental pain, emergency extractions, and oral evaluations for residents without dental coverage.',
+    website: 'https://www.hopeclinicfree.org',
+    tags: ['dental', 'free dental', 'teeth', 'extractions', 'dentist']
+  },
+  {
+    id: 'med-breast-cancer-fund',
+    name: 'Breast Cancer Fund of Ohio / RCCA',
+    category: 'medical',
+    categoryLabel: 'Medical & Dental Clinics',
+    subcategory: 'Specialized Aid',
+    address: '603 Central Center, Chillicothe, OH 45601',
+    phone: '740-702-7222',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Financial assistance grants helping cancer patients undergoing active breast cancer treatment with transportation, fuel, and vital living expenses.',
+    tags: ['breast cancer', 'cancer support', 'financial assistance']
+  },
+  {
+    id: 'med-american-cancer-society',
+    name: 'American Cancer Society - Community Resource Navigator',
+    category: 'medical',
+    categoryLabel: 'Medical & Dental Clinics',
+    subcategory: 'Cancer Navigation',
+    phone: '888-227-6446 ext. 8057',
+    email: 'jennifer.knotts@cancer.org',
+    hours: 'Mon-Fri Office Hours',
+    description: 'Dedicated patient navigation for cancer diagnosis: free lodging at Hope Lodge, Road to Recovery rides, and financial resources.',
+    website: 'https://www.cancer.org',
+    tags: ['cancer', 'navigator', 'chemo rides', 'patient support']
+  },
+  {
+    id: 'med-ross-health-dept',
+    name: 'Ross County Health District',
+    category: 'medical',
+    categoryLabel: 'Medical & Dental Clinics',
+    subcategory: 'Public Health',
+    address: '150 E. 2nd St., Chillicothe, OH 45601',
+    phone: '740-779-9652',
+    hours: 'Mon-Fri 8:00am - 4:30pm',
+    description: 'Public health department providing vaccinations/immunizations, Project DAWN free Narcan distribution, birth/death certificates, and maternal-infant health programs.',
+    bulletPoints: [
+      'Project DAWN: Free Naloxone (Narcan) kits and overdose response training',
+      'Childhood and adult immunizations (Medicaid / sliding scale)',
+      'WIC (Women, Infants, and Children) nutritional food assistance'
+    ],
+    website: 'https://rosscountyhealth.org',
+    tags: ['health department', 'public health', 'narcan', 'project dawn', 'vaccines', 'wic']
+  },
+
+  // ==================== TRANSPORTATION SERVICES (P1) ====================
+  {
+    id: 'trans-chillicothe-transit',
+    name: 'Chillicothe Transit System (CTS)',
+    category: 'transportation',
+    categoryLabel: 'Transportation',
+    subcategory: 'Public Bus System',
+    address: '575 E. 7th St., Chillicothe, OH 45601',
+    phone: '740-773-1569',
+    hours: 'M-F 6:00am - 9:00pm, Sat 10:00am - 6:00pm',
+    availability: 'Monday through Saturday',
+    description: 'City public bus system operating scheduled fixed routes throughout Chillicothe, connecting neighborhoods with grocery stores, shopping centers, and medical hubs.',
+    bulletPoints: [
+      'Fixed-route public bus service across City of Chillicothe',
+      'Affordable fares with discounts for seniors, students, and disabled passengers',
+      'Buses equipped with bike racks and ADA wheelchair accessibility'
+    ],
+    website: 'https://chillicotheoh.gov/transit',
+    tags: ['bus', 'transit', 'chillicothe transit', 'transportation', 'public transit']
+  },
+  {
+    id: 'trans-ride-pingo',
+    name: 'On Demand Ride Pingo App (Chillicothe Transit)',
+    category: 'transportation',
+    categoryLabel: 'Transportation',
+    subcategory: 'On-Demand Transit',
+    address: '575 E. 7th St., Chillicothe, OH 45601',
+    phone: '740-773-1569',
+    hours: 'M-F 6:00am - 9:00pm, Sat 10:00am - 6:00pm',
+    availability: 'Monday through Saturday',
+    description: 'Curb-to-curb on-demand transit service booked via smartphone or phone call, serving anywhere within city limits, Adena Health System, and Chillicothe VA.',
+    bulletPoints: [
+      'Book rides on-demand using the free "Ride Pingo" smartphone app or call CTS dispatch',
+      'Service area includes all Chillicothe city limits, Adena Regional Medical Center, and VA grounds',
+      'Affordable point-to-point microtransit'
+    ],
+    tags: ['pingo', 'on-demand transit', 'ride pingo', 'ride share', 'transit']
+  },
+  {
+    id: 'trans-green-cab',
+    name: 'Green Cab Company (Non-Emergency Medical Transportation)',
+    category: 'transportation',
+    categoryLabel: 'Transportation',
+    subcategory: 'Medical Transport',
+    phone: '740-200-3500',
+    hours: 'By Appointment Only',
+    availability: 'Appointment Only',
+    notes: 'For Medicaid recipients; non-emergency medical transportation (NEMT)',
+    description: 'Non-emergency medical transit taking Medicaid recipients to and from doctor appointments, dialysis, dental visits, and therapy.',
+    tags: ['green cab', 'taxi', 'medicaid transport', 'nemt', 'doctor ride']
+  },
+  {
+    id: 'trans-ross-go',
+    name: 'RossGo Medical Transportation',
+    category: 'transportation',
+    categoryLabel: 'Transportation',
+    subcategory: 'Medicaid Transportation',
+    address: '575 E. 7th St., Chillicothe, OH 45601',
+    phone: '740-773-1569 ext. 106',
+    hours: 'By Appointment Only',
+    availability: 'Appointment Only',
+    notes: 'For Medicaid recipients; covers non-emergency medical trips',
+    description: 'Transportation program coordinating rides for Medicaid patients attending scheduled medical and therapeutic healthcare appointments.',
+    tags: ['rossgo', 'medical transport', 'transit', 'medicaid']
+  },
+  {
+    id: 'trans-mobility-manager',
+    name: 'Ross County Mobility Manager',
+    category: 'transportation',
+    categoryLabel: 'Transportation',
+    subcategory: 'Transit Coordination',
+    address: '150 E. 2nd St., Chillicothe, OH 45601',
+    phone: '740-779-9652 ext. 2250',
+    hours: 'Mon-Fri By Appointment',
+    availability: 'Appointment Only',
+    description: 'Ross County transportation coordinator helping residents, seniors, and disabled citizens navigate transportation options and schedule rides.',
+    bulletPoints: [
+      'Personalized route planning and travel training',
+      'Assistance finding affordable transport for work, education, and health',
+      'Bridging gaps in rural Ross County mobility'
+    ],
+    tags: ['mobility manager', 'transportation coordinator', 'rides']
+  },
+
+  // ==================== EMPLOYMENT & LEGAL ASSISTANCE ====================
+  {
+    id: 'emp-ohio-means-jobs',
+    name: 'OhioMeansJobs - Ross County',
+    category: 'employment-legal',
+    categoryLabel: 'Employment & Legal',
+    subcategory: 'Workforce Development',
+    address: '475 Western Ave., Suite B, Chillicothe, OH 45601',
+    phone: '740-772-7532',
+    hours: 'Mon-Fri 8:00am - 4:30pm',
+    notes: 'Toll-Free: 855-726-5237',
+    description: 'State comprehensive workforce center providing free public computers, resume building, job search matching, on-the-job training grants, and career coaching.',
+    bulletPoints: [
+      'Access thousands of local and statewide job postings',
+      'Free computer lab, high-speed internet, printers, and fax machines for job seekers',
+      'WIOA funded training grants for CDL, nursing, welding, and high-demand trades',
+      'Veterans priority of service and specialized youth career development'
+    ],
+    website: 'https://ohiomeansjobs.ohio.gov',
+    tags: ['jobs', 'careers', 'resume', 'training', 'employment', 'cdl', 'ohiomeansjobs']
+  },
+  {
+    id: 'emp-seols',
+    name: 'Southeastern Ohio Legal Services (SEOLS)',
+    category: 'employment-legal',
+    categoryLabel: 'Employment & Legal',
+    subcategory: 'Legal Aid',
+    address: '11 East 2nd Street, Chillicothe, OH 45601',
+    phone: '740-773-0012',
+    notes: 'Regional Intake: 614-824-2503 or 800-589-5881',
+    hours: 'Mon-Fri 8:30am - 5:00pm',
+    description: 'Free civil legal assistance for low-income residents and seniors facing eviction, domestic abuse, loss of public benefits, and consumer issues.',
+    bulletPoints: [
+      'Free civil legal representation for qualifying low-income households',
+      'Defense against wrongful eviction and housing discrimination',
+      'Assistance with domestic violence protective orders and custody safety',
+      'Help restoring suspended driver licenses and record expungement'
+    ],
+    website: 'https://www.seols.org',
+    tags: ['legal aid', 'lawyer', 'free attorney', 'eviction defense', 'seols', 'legal services']
+  },
+  {
+    id: 'emp-ross-jfs',
+    name: 'Ross County Job & Family Services (JFS)',
+    category: 'employment-legal',
+    categoryLabel: 'Employment & Legal',
+    subcategory: 'Public Assistance',
+    address: '475 Western Ave., Chillicothe, OH 45601',
+    phone: '866-386-3071',
+    hours: 'Mon-Fri 8:00am - 4:30pm',
+    description: 'Ross County official agency administering SNAP (food stamps), Ohio Medicaid healthcare enrollment, cash assistance (OWF), and subsidized child care.',
+    bulletPoints: [
+      'SNAP (Supplemental Nutrition Assistance Program / Food Stamps) applications',
+      'Ohio Medicaid healthcare eligibility and renewal processing',
+      'Publicly Funded Child Care (PFCC) subsidies for working parents'
+    ],
+    website: 'https://jfs.ohio.gov',
+    tags: ['jfs', 'food stamps', 'snap', 'medicaid', 'childcare', 'public assistance']
+  },
+
+  // ==================== NONPROFITS & CIVIC ORGANIZATIONS ====================
+  {
+    id: 'np-united-way',
+    name: 'United Way of Ross County',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Philanthropy & Human Services',
+    address: '140 S. Paint St., Chillicothe, OH 45601',
+    phone: '740-773-3280',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Leading community champion improving lives in Ross County by mobilizing resources to expand health, education, and financial stability.',
+    bulletPoints: [
+      'Coordinates monthly mobile fresh produce markets across Ross County',
+      'Funds and supports over 20 critical community safety-net programs',
+      'Powers the local 2-1-1 community health and human services directory'
+    ],
+    website: 'https://www.unitedwayross.org',
+    tags: ['united way', 'nonprofit', 'fundraising', 'produce market', 'human services']
+  },
+  {
+    id: 'np-pioneer-center',
+    name: 'Ross County Board of DD (Pioneer Center)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Developmental Disabilities',
+    address: '167 W. Main St., Chillicothe, OH 45601',
+    phone: '740-773-2165',
+    hours: 'Mon-Fri 8:00am - 4:00pm (Emergency 24hr: 740-775-7044)',
+    description: 'Empowers children and adults with developmental disabilities to live fulfilling, self-directed lives with specialized therapy, education, and employment support.',
+    bulletPoints: [
+      'Early Intervention therapy for infants and toddlers',
+      'Pioneer School educational programs and transition services for youth',
+      'Adult community integration, supported employment, and residential waivers'
+    ],
+    website: 'https://rossdd.org',
+    tags: ['pioneer center', 'developmental disabilities', 'autism', 'down syndrome', 'special needs']
+  },
+  {
+    id: 'np-bbbs',
+    name: 'Big Brothers Big Sisters of South Central Ohio',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth Mentoring',
+    address: '173 W. 5th St., Chillicothe, OH 45601',
+    phone: '740-773-2447',
+    hours: 'Mon-Fri 9:00am - 5:00pm',
+    description: 'Creates and supports one-to-one mentoring relationships that ignite the power and promise of youth in Ross, Pickaway, Pike, and Fayette counties.',
+    bulletPoints: [
+      'Community-based and school-based youth mentoring pairs',
+      'Free youth enrichment activities and educational workshops',
+      'Proven track record of improving school success and self-esteem'
+    ],
+    website: 'https://www.bbbssco.org',
+    tags: ['mentoring', 'youth', 'kids', 'big brothers', 'big sisters', 'nonprofit']
+  },
+  {
+    id: 'np-humane-society',
+    name: 'Ross County Humane Society',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Animal Welfare',
+    address: '2308 A Lick Run Rd., Chillicothe, OH 45601',
+    phone: '740-775-6808',
+    hours: 'Tue-Sat 12:00pm - 4:00pm',
+    description: 'Nonprofit animal shelter caring for lost, abandoned, and surrendered pets; providing affordable adoptions, spay/neuter outreach, and pet food pantry.',
+    bulletPoints: [
+      'Compassionate animal sheltering and dog/cat adoptions',
+      'Emergency pet food assistance for pet owners in financial distress',
+      'Community low-cost rabies and vaccine clinics'
+    ],
+    website: 'https://rosscountyhumanesociety.org',
+    tags: ['animals', 'dogs', 'cats', 'pets', 'adoption', 'humane society', 'pet food']
+  },
+  {
+    id: 'np-habitat',
+    name: 'Habitat for Humanity - Tri-County Area & ReStore',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Affordable Housing & Thrift',
+    phone: '740-779-9734',
+    hours: 'Store & Office Hours',
+    description: 'Builds decent, affordable homes in partnership with families in need of safe shelter, alongside the Habitat ReStore which sells donated home building materials.',
+    bulletPoints: [
+      'Affordable homeownership programs with zero-interest sweat-equity mortgages',
+      'Critical home repair programs for elderly and disabled homeowners',
+      'ReStore retail outlet offering discounted furniture, appliances, and building supplies'
+    ],
+    tags: ['habitat for humanity', 'restore', 'home building', 'furniture', 'thrift']
+  },
+  {
+    id: 'np-senior-center',
+    name: 'Ross County Senior Citizens Center',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Senior Services',
+    address: '1824 Western Ave., Chillicothe, OH 45601',
+    phone: '740-772-2273',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Dedicated active senior center providing congregate dining, social recreation, wellness clinics, trips, and Meals on Wheels for homebound seniors.',
+    bulletPoints: [
+      'Hot congregate lunches served daily Monday through Friday',
+      'Meals on Wheels delivery coordination for homebound elderly',
+      'Health screenings, blood pressure checks, and social fitness classes'
+    ],
+    tags: ['seniors', 'elderly', 'senior center', 'meals on wheels', 'activities']
+  },
+  {
+    id: 'np-community-foundation',
+    name: 'Ross County Community Foundation',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Endowment & Philanthropy',
+    phone: '740-703-7800',
+    hours: 'Mon-Fri Office Hours',
+    description: 'Administers charitable endowment funds and community grant programs that invest directly in local grassroots non-profit initiatives across Ross County.',
+    website: 'https://www.rossccf.org',
+    tags: ['foundation', 'grants', 'endowment', 'philanthropy', 'nonprofit']
+  },
+  {
+    id: 'np-civic-theatre',
+    name: 'Chillicothe Civic Theatre',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Arts & Culture',
+    address: 'Chillicothe, OH',
+    phone: '740-772-4040',
+    description: 'Long-standing community volunteer theatre organization bringing performing arts, youth acting workshops, and musical stage productions to Chillicothe.',
+    website: 'https://cctchillicothe.com',
+    tags: ['theatre', 'arts', 'culture', 'performing arts']
+  },
+
+  // ==================== ADDITIONAL ROSS COUNTY NONPROFITS & COOPERATIVES ====================
+  {
+    id: 'np-red-cross',
+    name: 'American Red Cross - South Central Ohio',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Disaster Relief & Blood Services',
+    address: '181 N. Bridge Street, Chillicothe, OH 45601',
+    phone: '740-772-2014',
+    notes: '24/7 Disaster Dispatch: 1-800-RED-CROSS (1-800-733-2767)',
+    hours: 'Office: Mon-Fri 8:30am - 4:30pm (Emergency Disaster Response 24/7)',
+    description: 'Humanitarian emergency response organization providing disaster relief, life-saving volunteer blood drives, and military family emergency communications.',
+    bulletPoints: [
+      'Immediate emergency food, clothing, and shelter assistance following house fires and local disasters',
+      'Coordinates community blood drives and regional blood donation appointments',
+      'Hero Care Network: Emergency communication and support for active-duty military and veterans',
+      'Community CPR, AED, First Aid, and water safety training certifications'
+    ],
+    website: 'https://www.redcross.org',
+    tags: ['red cross', 'disaster relief', 'blood drive', 'fire response', 'cpr', 'emergency']
+  },
+  {
+    id: 'np-socs-sar',
+    name: 'Southern Ohio Canine Search and Rescue (SOCS)',
+    category: 'crisis',
+    categoryLabel: 'Crisis & Emergency',
+    subcategory: 'Canine Search & Rescue',
+    address: 'Chillicothe, OH 45601',
+    phone: 'Via Ross County Sheriff Dispatch (740-773-1185)',
+    hours: '24/7 On-Call Emergency Response',
+    description: 'Dedicated 501(c)(3) volunteer canine search and rescue team assisting law enforcement in locating lost persons, missing youth, and Alzheimer\'s walkaways.',
+    bulletPoints: [
+      'Trained handler and K9 teams specialized in wilderness air-scent, trailing, and article searches',
+      'Assists law enforcement agencies and emergency services across Southern Ohio at zero charge',
+      'Community public safety outreach, lost-proofing education, and annual Dog Jog charity events'
+    ],
+    website: 'https://www.facebook.com/SouthernOhioCanineSearchandRescue/',
+    tags: ['search and rescue', 'k9', 'dogs', 'missing persons', 'sar', 'volunteers']
+  },
+  {
+    id: 'np-versiti-blood',
+    name: 'Versiti Blood Center of Ohio',
+    category: 'medical',
+    categoryLabel: 'Medical & Dental Clinics',
+    subcategory: 'Blood Donation Services',
+    phone: '800-485-6594',
+    email: 'donate.oh@versiti.org',
+    hours: 'Call for Local Blood Drive Schedule',
+    description: 'Nonprofit community blood center collecting, processing, and supplying vital blood products and cellular therapies to hospitals and trauma centers.',
+    bulletPoints: [
+      'Schedules and coordinates community mobile blood drives across Ross County and Southern Ohio',
+      'Supplies red blood cells, platelets, and plasma to regional hospital emergency departments',
+      'Provides opportunities for community groups, employers, and churches to sponsor life-saving blood drives'
+    ],
+    website: 'https://versiti.org',
+    tags: ['blood drive', 'blood donation', 'platelets', 'plasma', 'medical', 'versiti']
+  },
+  {
+    id: 'np-ross-water-co',
+    name: 'Ross County Water Company, Inc.',
+    category: 'utilities',
+    categoryLabel: 'Utility & Emergency Aid',
+    subcategory: 'Rural Water Cooperative',
+    address: '663 Fairgrounds Rd., Chillicothe, OH 45601',
+    phone: '740-774-4117',
+    notes: 'Toll-Free: 1-800-837-7525 | Fax: 740-772-6867',
+    hours: 'Office: Mon-Fri 8:00am - 4:30pm (Emergency line 24/7)',
+    description: 'Member-owned cooperative public water utility delivering clean, safe potable drinking water to rural Ross County townships and communities.',
+    bulletPoints: [
+      'Nonprofit utility cooperative supplying reliable treated drinking water across rural Ross County',
+      '24/7 emergency water main maintenance, leak response, and repair services',
+      'Customer support for water connections, meter services, and usage inquiries'
+    ],
+    website: 'https://myruralwater.com',
+    tags: ['water', 'utility', 'cooperative', 'rural water', 'drinking water']
+  },
+  {
+    id: 'np-usw-731',
+    name: 'United Steelworkers Local 731 (USW)',
+    category: 'employment-legal',
+    categoryLabel: 'Employment & Legal',
+    subcategory: 'Labor Union & Worker Advocacy',
+    address: '555 W. 4th St., Chillicothe, OH 45601',
+    phone: '740-773-2611',
+    hours: 'Union Hall Hours / Meeting Days',
+    description: 'Historic local labor union representing industrial, papermaking, and manufacturing workers in Chillicothe and Ross County.',
+    bulletPoints: [
+      'Collective bargaining, fair wage enforcement, and workplace safety representation',
+      'Worker grievance advocacy, pension administration, and healthcare benefit protections',
+      'Active community civic engagement, charitable fundraising, and holiday family food drives'
+    ],
+    website: 'https://usw.org',
+    tags: ['union', 'labor', 'steelworkers', 'paper mill', 'workers rights', 'usw']
+  },
+  {
+    id: 'np-toastmasters',
+    name: 'First Capital Toastmasters Club',
+    category: 'employment-legal',
+    categoryLabel: 'Employment & Legal',
+    subcategory: 'Leadership & Public Speaking',
+    address: 'Chillicothe, OH (Hybrid Meetings)',
+    hours: 'Bi-weekly Meetings',
+    description: 'Educational nonprofit club empowering members to hone public speaking, communication, debate, and executive leadership skills in a supportive setting.',
+    bulletPoints: [
+      'Constructive practice in prepared speaking, persuasive presentations, and impromptu speaking',
+      'Leadership training roles that develop meeting management and organizational leadership',
+      'Open to community members, job-seekers, professionals, students, and aspiring leaders'
+    ],
+    website: 'https://www.toastmasters.org',
+    tags: ['toastmasters', 'public speaking', 'leadership', 'career development', 'communication']
+  },
+  {
+    id: 'np-homeland-cu',
+    name: 'Homeland Credit Union (Community Impact & Foundation)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Mutual Financial Cooperative',
+    address: '310 Caldwell St., Chillicothe, OH 45601',
+    phone: '740-775-3331',
+    notes: 'Toll-Free: 1-800-752-5366 | Multiple Ross County branches',
+    hours: 'Mon-Thurs 8:30am - 5:00pm, Fri 8:30am - 6:00pm, Sat 8:30am - 12:00pm',
+    description: 'Member-owned not-for-profit financial cooperative founded in Chillicothe, returning earnings to members and investing heavily in local community causes.',
+    bulletPoints: [
+      'Homeland Community Foundation providing educational grants and charity sponsorships',
+      'Annual high school college scholarships for graduating Ross County seniors',
+      'Free financial literacy workshops, youth savings programs, and community food drive partnerships'
+    ],
+    website: 'https://www.homelandcu.com',
+    tags: ['credit union', 'homeland', 'financial literacy', 'scholarships', 'community foundation']
+  },
+  {
+    id: 'np-eaa-1625',
+    name: 'EAA Chapter 1625 (First Capital Aviators)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Aviation Education & STEM',
+    address: 'Ross County Airport (KRZT), 1296 Stone Rd., Chillicothe, OH 45601',
+    hours: '2nd Saturday of each month at 9:00am',
+    description: 'Local chapter of the Experimental Aircraft Association promoting grassroots aviation, aerospace education, and pilot community fellowship.',
+    bulletPoints: [
+      'EAA Young Eagles: Free introductory airplane flights for youth ages 8 to 17',
+      'Ray Aviation Scholarship funding full flight training for aspiring local youth pilots',
+      'Monthly educational presentations on flight safety, aircraft construction, and aerospace STEM'
+    ],
+    website: 'https://chapters.eaa.org/eaa1625',
+    tags: ['aviation', 'airplanes', 'eaa', 'young eagles', 'stem', 'airport', 'flying']
+  },
+  {
+    id: 'np-svarc-radio',
+    name: 'Scioto Valley Amateur Radio Club (SVARC - W8BAP)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Emergency Communications',
+    address: 'P.O. Box 874, Chillicothe, OH 45601',
+    hours: 'Meetings 3rd Thursday of each month at 7:00pm',
+    description: 'Volunteer amateur (ham) radio organization founded in 1959 providing auxiliary communications during severe weather and public emergencies.',
+    bulletPoints: [
+      'Backup auxiliary communications for Ross County EMA and local public safety during infrastructure outages',
+      'Operates regional Skywarn severe weather spotting nets on repeater 146.850 MHz',
+      'Radio communications support for community parades, distance races, and festivals; amateur radio license exams'
+    ],
+    website: 'https://w8bap.com',
+    tags: ['ham radio', 'amateur radio', 'emergency communications', 'skywarn', 'weather', 'w8bap']
+  },
+  {
+    id: 'np-dar-nathaniel-massie',
+    name: 'Daughters of the American Revolution (Nathaniel Massie Chapter)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Historic Preservation & Patriotism',
+    address: 'Chillicothe, OH 45601',
+    hours: 'Monthly Chapter Meetings',
+    description: 'Women service organization dedicated to historical preservation, youth education, and patriotism, named after Chillicothe founder Nathaniel Massie.',
+    bulletPoints: [
+      'Preservation of early Ohio pioneer archives, historic cemeteries, and local landmarks',
+      'Annual American History essay contests and DAR Good Citizens youth scholarships',
+      'Active support for hospitalized veterans at the Chillicothe VA Medical Center'
+    ],
+    website: 'https://ohiodar.org',
+    tags: ['dar', 'history', 'preservation', 'patriotism', 'veterans', 'scholarships']
+  },
+  {
+    id: 'np-eastern-star',
+    name: 'Order of the Eastern Star (Chillicothe Chapter No. 419)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Fraternal Beneficence & Charity',
+    address: 'Eastern Star Temple, 57 E. Main St., Chillicothe, OH 45601',
+    hours: 'Regular Chapter Stated Meetings',
+    description: 'Fraternal organization rooted in fellowship, charity, and service, supporting medical philanthropies and local community betterment.',
+    bulletPoints: [
+      'Fundraising for cancer research, heart disease research, and regenerative medicine charities',
+      'Charitable scholarship awards for deserving local high school and university students',
+      'Benevolence programs and visits supporting shut-ins and elderly community members'
+    ],
+    website: 'https://ohiooes.org',
+    tags: ['eastern star', 'fraternal', 'charity', 'philanthropy', 'scholarships', 'nonprofit']
+  },
+  {
+    id: 'np-love-inc',
+    name: 'Love INC of Ross County (Love In the Name of Christ)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Church Ministry Clearinghouse & Family Aid',
+    address: '41 S. Paint St. (PO Box 1802), Chillicothe, OH 45601',
+    phone: '740-772-2038',
+    hours: 'Mon-Thurs 9:00am - 12:00pm',
+    description: 'Cooperative network of local Christian churches working together to mobilize volunteers and resources to help Ross County families in crisis.',
+    bulletPoints: [
+      'Central clearinghouse verifying needs and connecting families to church benevolence ministries',
+      'Bed and furniture ministry providing mattresses and essential home goods for families in need',
+      'Personal hygiene pantry, household cleaning supplies, and infant essentials'
+    ],
+    tags: ['love inc', 'churches', 'furniture', 'beds', 'family assistance', 'nonprofit']
+  },
+  {
+    id: 'np-reentry-coalition',
+    name: 'Ross County Reentry Coalition',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Justice-Involved Support & Reintegration',
+    address: '250 N. Woodbridge Ave., Chillicothe, OH 45601',
+    phone: '740-702-7222',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Multi-agency coalition dedicated to helping citizens returning from incarceration successfully reintegrate into Ross County society.',
+    bulletPoints: [
+      'Reentry navigation assisting with birth certificates, state IDs, driver license restoration, and housing',
+      'Job placement assistance, resume workshops, and second-chance employer connections',
+      'Peer support and referrals to substance recovery and mental health treatment'
+    ],
+    tags: ['reentry', 'justice', 'second chance', 'jobs', 'reintegration', 'nonprofit']
+  },
+  {
+    id: 'np-historical-society',
+    name: 'Ross County Historical Society & Heritage Center',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'History, Museum & Archives',
+    address: '45 W. 5th St., Chillicothe, OH 45601',
+    phone: '740-772-1936',
+    hours: 'Tue-Sat 1:00pm - 5:00pm',
+    description: 'Premier historical organization preserving and sharing Ohio\'s First Capital history, pioneer artifacts, Civil War history, and regional culture.',
+    bulletPoints: [
+      'Heritage Center Museum with exhibits on Ohio statehood, Native American earthworks, and Camp Sherman',
+      'Knoles Research Library preserving extensive historical photographs, manuscripts, and rare books',
+      'Educational field trips and community historical lectures throughout the year'
+    ],
+    website: 'https://rosscountyhistoricalsociety.org',
+    tags: ['history', 'museum', 'first capital', 'archives', 'chillicothe history', 'nonprofit']
+  },
+  {
+    id: 'np-ymca',
+    name: 'YMCA of Ross County (Chillicothe YMCA)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth Development, Health & Recreation',
+    address: '465 W. 2nd St., Chillicothe, OH 45601',
+    phone: '740-772-4363',
+    hours: 'Mon-Fri 5:30am - 9:00pm, Sat 7:00am - 5:00pm, Sun 1:00pm - 5:00pm',
+    description: 'Community health, fitness, and youth development nonprofit fostering healthy living, social responsibility, and youth empowerment.',
+    bulletPoints: [
+      'Youth sports leagues: basketball, soccer, swim team, gymnastics, and summer day camps',
+      'Licensed before- and after-school child care programs for working parents',
+      'State-of-the-art wellness center, indoor heated swimming pool, and SilverSneakers senior fitness',
+      'Income-based financial assistance scholarships available so no one is turned away'
+    ],
+    website: 'https://rosscountyymca.org',
+    tags: ['ymca', 'fitness', 'swimming', 'child care', 'summer camp', 'youth sports', 'nonprofit']
+  },
+  {
+    id: 'np-downtown-chillicothe',
+    name: 'Downtown Chillicothe (Main Street Program)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Downtown Revitalization & Small Business',
+    address: '45 E. Main St., Chillicothe, OH 45601',
+    phone: '740-702-2722',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Accredited Main Street program dedicated to the economic vitality, historic preservation, and cultural activation of downtown Chillicothe.',
+    bulletPoints: [
+      'Small business support, facade improvement grants, and historic building preservation',
+      'Hosts major downtown community events: First Thursdays, seasonal sidewalk sales, and holiday parades',
+      'Promotes downtown Chillicothe as a walkable historic destination and dining hub'
+    ],
+    website: 'https://downtownchillicothe.com',
+    tags: ['downtown', 'main street', 'historic', 'small business', 'festivals', 'nonprofit']
+  },
+  {
+    id: 'np-chamber-commerce',
+    name: 'Chillicothe Ross Chamber of Commerce',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Business & Civic Development',
+    address: '45 E. Main St., Chillicothe, OH 45601',
+    phone: '740-702-2722',
+    hours: 'Mon-Fri 8:30am - 4:30pm',
+    description: 'Civic non-profit business association supporting economic growth, workforce development, and community prosperity across Ross County.',
+    bulletPoints: [
+      'Advocates for local commerce and sustainable economic development in southern Ohio',
+      'Leadership Ross County professional training and civic leadership development program',
+      'Coordinates community ribbon cuttings, job fairs, and networking events'
+    ],
+    website: 'https://chillicotheohio.com',
+    tags: ['chamber of commerce', 'business', 'leadership ross county', 'workforce', 'nonprofit']
+  },
+  {
+    id: 'np-adena-mansion',
+    name: 'Adena Mansion & Gardens Society',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Historic Landmark & Education',
+    address: '847 Adena Rd., Chillicothe, OH 45601',
+    phone: '740-772-1500',
+    notes: 'Toll-Free: 1-800-319-7248',
+    hours: 'Seasonal Tours & Grounds Open Daily',
+    description: 'Manages the historic 2,000-acre estate of Thomas Worthington (sixth governor of Ohio), source of the iconic view depicted on the Great Seal of the State of Ohio.',
+    bulletPoints: [
+      'Guided historical tours of the restored 1807 mansion, tenant house, and formal gardens',
+      'Educational museum and visitor center detailing early Ohio frontier history and statehood',
+      'Community cultural festivals, heritage craft workshops, and public garden events'
+    ],
+    website: 'https://adenamansion.com',
+    tags: ['adena mansion', 'thomas worthington', 'great seal', 'history', 'gardens', 'nonprofit']
+  },
+  {
+    id: 'np-agricultural-society',
+    name: 'Ross County Agricultural Society (Fairgrounds)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Agricultural Education & Ross County Fair',
+    address: '344 Fairgrounds Rd., Chillicothe, OH 45601',
+    phone: '740-775-5083',
+    hours: 'Office: Mon-Fri 8:30am - 4:00pm',
+    description: 'Organizers and custodians of the historic annual Ross County Fair, one of Ohio\'s largest county fairs celebrating youth 4-H and agricultural heritage.',
+    bulletPoints: [
+      'Sponsors and hosts the 7-day Ross County Fair every August featuring livestock exhibitions and 4-H competitions',
+      'Promotes youth agricultural education, Junior Fair board, and livestock auctions',
+      'Provides year-round venue rentals for community expos, tractor pulls, auctions, and equestrian events'
+    ],
+    website: 'https://rosscountyfair.com',
+    tags: ['fair', 'ross county fair', '4-h', 'agriculture', 'fairgrounds', 'livestock', 'nonprofit']
+  },
+  {
+    id: 'np-art-league',
+    name: 'Chillicothe Art League & Pump House Center for the Arts',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Visual Arts, Gallery & Education',
+    address: '1 Enderlin Circle (Yoctangee Park), Chillicothe, OH 45601',
+    phone: '740-773-1033',
+    hours: 'Tue-Fri 11:00am - 4:00pm, Sat-Sun 1:00pm - 4:00pm',
+    description: 'Visual arts organization housed in the historic Victorian gothic Pump House in Yoctangee Park, providing free art exhibits and community workshops.',
+    bulletPoints: [
+      'Monthly gallery exhibitions showcasing regional and national fine artists, painters, and sculptors',
+      'Free admission to the gallery for the public; free youth and adult art classes',
+      'Preservation of the historic 1882 architectural landmark in Yoctangee Park'
+    ],
+    website: 'https://pumphouseartgallery.com',
+    tags: ['art', 'art league', 'pump house', 'gallery', 'yoctangee park', 'painting', 'nonprofit']
+  },
+  {
+    id: 'np-rotary',
+    name: 'Chillicothe Rotary Foundation & Clubs (Noon & First Capital)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Service Club & Community Grants',
+    address: 'P.O. Box 113, Chillicothe, OH 45601',
+    hours: 'Weekly Club Meetings',
+    description: 'Community service leaders dedicated to "Service Above Self", funding local park improvements, education scholarships, and global humanitarian projects.',
+    bulletPoints: [
+      'Funds major local community projects: Yoctangee Park handicap-accessible improvements and splash pad support',
+      'Annual academic and vocational scholarships for graduating Ross County seniors',
+      'Supports local food pantries, literacy programs, and international PolioPlus eradication'
+    ],
+    website: 'https://www.rotary.org',
+    tags: ['rotary', 'service club', 'scholarships', 'yoctangee park', 'community grants', 'nonprofit']
+  },
+  {
+    id: 'np-kiwanis',
+    name: 'Chillicothe Kiwanis Club',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth Welfare & Service Club',
+    address: 'P.O. Box 365, Chillicothe, OH 45601',
+    hours: 'Weekly Luncheon Meetings',
+    description: 'Dedicated civic service club focused on serving children and youth of Chillicothe and Ross County through hands-on community projects.',
+    bulletPoints: [
+      'Sponsors school-based Key Club youth leadership programs at local high schools',
+      'Annual community projects providing winter coats, playground equipment, and reading books to youth',
+      'Supports Camp Wyandot, children\'s hospitals, and local youth athletic leagues'
+    ],
+    tags: ['kiwanis', 'children', 'youth', 'service club', 'key club', 'nonprofit']
+  },
+  {
+    id: 'np-lions',
+    name: 'Chillicothe Lions Club',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Sight Conservation & Humanitarian Service',
+    address: 'Chillicothe, OH 45601',
+    hours: 'Monthly Club Meetings',
+    description: 'Long-standing humanitarian service club renowned for sight conservation, free vision screenings, and support for the visually impaired.',
+    bulletPoints: [
+      'Provides free prescription eyeglasses and comprehensive eye examinations for qualifying low-income children and adults',
+      'Recycles gently used eyeglasses and donates reading glasses worldwide',
+      'Funds local diabetes awareness campaigns and local community service projects'
+    ],
+    tags: ['lions club', 'eyeglasses', 'vision', 'hearing', 'sight conservation', 'nonprofit']
+  },
+  {
+    id: 'np-network-children',
+    name: 'Ross County Network for Children (Family & Children First)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Child Well-Being & Multi-Agency Coordination',
+    address: '475 Western Ave., Chillicothe, OH 45601',
+    phone: '740-772-7588',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Ross County official Family and Children First Council uniting social services, schools, and health agencies to coordinate family wrap-around care.',
+    bulletPoints: [
+      'High-fidelity Service Coordination for families with children experiencing complex behavioral and mental health challenges',
+      'Early Intervention Help Me Grow coordination for infants and toddlers with developmental delays',
+      'Multi-agency resource mobilization preventing child out-of-home foster care placement'
+    ],
+    tags: ['children', 'family and children first', 'wrap-around', 'early intervention', 'nonprofit']
+  },
+  {
+    id: 'np-genealogical-society',
+    name: 'Ross County Genealogical Society',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Genealogy & Family Ancestry Research',
+    address: '44 W. 5th St., Chillicothe, OH 45601',
+    phone: '740-773-7729',
+    hours: 'Tuesday, Thursday, Saturday 10:00am - 3:00pm',
+    description: 'Nonprofit historical library helping individuals research Ross County ancestors, pioneer settlers, and family heritage.',
+    bulletPoints: [
+      'Extensive family surname files, cemetery tombstone transcriptions, and early Ross County marriage/wills records',
+      'Volunteer genealogical researchers assisting local and out-of-state family historians',
+      'Preserves original township census documents, church registers, and historical maps'
+    ],
+    website: 'https://rcgs.org',
+    tags: ['genealogy', 'ancestry', 'family tree', 'history', 'cemetery records', 'nonprofit']
+  },
+  {
+    id: 'np-education-foundation',
+    name: 'Chillicothe Education Foundation',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Public School Academic Excellence',
+    address: '425 Yoctangee Pkwy, Chillicothe, OH 45601',
+    description: 'Philanthropic foundation dedicated to enhancing educational opportunities for students and teachers in the Chillicothe City School District.',
+    bulletPoints: [
+      'Awards innovative teacher classroom grants for STEM equipment, literacy, and robotics',
+      'Administers endowed college scholarships for graduating Chillicothe High School seniors',
+      'Funds afterschool enrichment programs and academic tutoring'
+    ],
+    tags: ['education foundation', 'schools', 'cavaliers', 'scholarships', 'teachers', 'nonprofit']
+  },
+  {
+    id: 'np-shine-on',
+    name: 'Shine On Chillicothe',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Civic Pride & Public Beautification',
+    address: 'Chillicothe, OH 45601',
+    description: 'Community volunteer non-profit dedicated to beautifying Chillicothe\'s historic spaces and illuminating civic pride.',
+    bulletPoints: [
+      'Organizes and funds the annual downtown holiday lighting displays and community Christmas trees in Yoctangee Park',
+      'Public park beautification, tree planting, and historical monument illumination projects',
+      'Promotes community volunteerism and pride across Chillicothe neighborhoods'
+    ],
+    tags: ['shine on', 'beautification', 'holiday lights', 'yoctangee park', 'civic pride', 'nonprofit']
+  },
+  {
+    id: 'np-halloween-festival',
+    name: 'Chillicothe Halloween Festival Inc.',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Community Arts & Festival Charity',
+    address: 'Yoctangee Park, Chillicothe, OH 45601',
+    hours: 'Annual Festival: Second Full Weekend of October',
+    description: 'Beloved 3-day annual autumn arts, crafts, and music festival in Yoctangee Park supporting local charities and community arts.',
+    bulletPoints: [
+      'Features 100+ craft vendors, merchandise booths, local food trucks, and live entertainment stages',
+      'Free admission community event hosting costume contests, car shows, and children games',
+      'Proceeds benefit local youth organizations and civic charities'
+    ],
+    website: 'https://chillicothehalloweenfestival.com',
+    tags: ['halloween festival', 'yoctangee park', 'festival', 'fall festival', 'vendors', 'nonprofit']
+  },
+  {
+    id: 'np-conservation-league',
+    name: 'Ross County Conservation League',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Wildlife Conservation & Outdoor Sports',
+    address: '643 Conservation Rd., Chillicothe, OH 45601',
+    phone: '740-775-7281',
+    description: 'Dedicated conservation organization promoting responsible wildlife management, hunter safety education, and youth outdoor skills.',
+    bulletPoints: [
+      'ODNR-certified hunter safety education and youth archery training programs',
+      'Wildlife habitat restoration and local watershed conservation projects',
+      'Shooting sports facilities and conservation scholarships for environmental science students'
+    ],
+    tags: ['conservation', 'wildlife', 'hunting safety', 'archery', 'outdoors', 'nonprofit']
+  },
+  {
+    id: 'np-veterans-council',
+    name: 'Ross County Veterans Council',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Veterans Advocacy & Memorial Services',
+    address: '475 Western Ave., Chillicothe, OH 45601',
+    phone: '740-772-1600',
+    description: 'Alliance of all chartered Ross County veterans organizations (VFW, American Legion, AMVETS, DAV) honoring and serving military veterans.',
+    bulletPoints: [
+      'Coordinates official Ross County Memorial Day parades, ceremonies, and Veterans Day services',
+      'Provides military honors and rifle details at funerals of deceased veterans',
+      'Maintains and preserves the Ross County Veterans Memorial monuments'
+    ],
+    tags: ['veterans', 'military', 'vfw', 'american legion', 'memorial', 'nonprofit']
+  },
+  {
+    id: 'np-salvation-army-corps',
+    name: 'The Salvation Army Chillicothe Corps Community Center',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Comprehensive Community Safety-Net',
+    address: '171 E. 4th St., Chillicothe, OH 45601',
+    phone: '740-774-2760',
+    hours: 'Mon-Fri 8:30am - 4:00pm',
+    description: 'Faith-based community center providing emergency food, utility shut-off relief, warm clothing, hygiene facilities, and seasonal assistance.',
+    bulletPoints: [
+      'Famous Red Kettle campaign and Angel Tree Christmas toy distribution for local children',
+      'Year-round emergency social services: groceries, clothing vouchers, and utility aid',
+      'Walk-in showers, laundry facilities, and disaster canteen emergency response'
+    ],
+    website: 'https://easternusa.salvationarmy.org/southwest-ohio/chillicothe/',
+    tags: ['salvation army', 'angel tree', 'red kettle', 'charity', 'poverty', 'nonprofit']
+  },
+  {
+    id: 'np-elks',
+    name: 'Chillicothe Elks Lodge #52 (B.P.O.E.)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Fraternal & Community Benevolence',
+    address: '42 W. 2nd St., Chillicothe, OH 45601',
+    phone: '740-773-2287',
+    hours: 'Lodge & Office Hours',
+    description: 'Historic fraternal charitable order in downtown Chillicothe investing in youth programs, veterans services, and drug awareness.',
+    bulletPoints: [
+      'Elks "Hoop Shoot" free-throw contest and local college scholarships for high school seniors',
+      'Active outreach and donations supporting hospitalized veterans at the Chillicothe VA',
+      'Elks National Foundation community benefit grants for local Ross County hunger relief'
+    ],
+    website: 'https://www.elks.org/lodges/home.cfm?LodgeNumber=52',
+    tags: ['elks', 'fraternal', 'hoop shoot', 'veterans', 'scholarships', 'nonprofit']
+  },
+  {
+    id: 'np-historic-chillicothe',
+    name: 'Historic Chillicothe Inc.',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Historic Preservation & Architecture',
+    address: 'Chillicothe, OH 45601',
+    description: 'Nonprofit organization promoting architectural conservation, walking tours, and preservation of Chillicothe\'s first-capital heritage.',
+    bulletPoints: [
+      'Advocates for the preservation of historic homes and commercial buildings in the historic district',
+      'Conducts architectural walking tours and publishes historical educational guides',
+      'Collaborates with state and national preservation trusts'
+    ],
+    tags: ['historic chillicothe', 'architecture', 'preservation', 'history', 'nonprofit']
+  },
+  {
+    id: 'np-cavalier-club',
+    name: 'Chillicothe Cavalier Athletic Club',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth Athletics Booster',
+    address: 'Chillicothe, OH 45601',
+    description: 'Community booster non-profit supporting student athletics, athletic facilities, and sports equipment across Chillicothe City Schools.',
+    bulletPoints: [
+      'Funds athletic equipment, uniforms, and facility upgrades for student-athletes',
+      'Administers annual college athletic and academic scholarships for graduating senior athletes',
+      'Encourages sportsmanship, community volunteerism, and youth development'
+    ],
+    tags: ['cavalier club', 'athletics', 'sports', 'boosters', 'scholarships', 'nonprofit']
+  },
+  {
+    id: 'np-youth-baseball',
+    name: 'Chillicothe Youth Baseball League',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth Sports League',
+    address: 'Chillicothe, OH 45601',
+    description: 'Volunteer-driven youth recreational baseball non-profit serving hundreds of boys and girls across Ross County each season.',
+    bulletPoints: [
+      'Organizes instructional, t-ball, minor, and major division baseball leagues',
+      'Teaches teamwork, physical fitness, sportsmanship, and foundational athletic skills',
+      'Fee assistance scholarships ensuring every child can participate regardless of income'
+    ],
+    tags: ['baseball', 'youth sports', 'recreation', 'kids', 't-ball', 'nonprofit']
+  },
+  {
+    id: 'np-youth-soccer',
+    name: 'Chillicothe Youth Soccer League Inc.',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth Sports League',
+    address: 'Chillicothe, OH 45601',
+    description: 'Community youth soccer organization providing recreational and competitive soccer leagues for youth ages 4 through 18 in Ross County.',
+    bulletPoints: [
+      'Spring and fall youth soccer leagues with volunteer certified coaches',
+      'Focus on skill development, active lifestyle, fair play, and fun',
+      'Maintains youth soccer facilities for community tournament play'
+    ],
+    tags: ['soccer', 'youth sports', 'recreation', 'kids soccer', 'fitness', 'nonprofit']
+  },
+  {
+    id: 'np-farm-bureau',
+    name: 'Ross County Farm Bureau',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Agricultural Advocacy & Rural Education',
+    address: '2460 N. Court St., Circleville / Chillicothe, OH 43113',
+    phone: '740-474-6284',
+    hours: 'Mon-Fri 8:00am - 4:00pm',
+    description: 'Grassroots agricultural non-profit working for the advancement and protection of farmers, food production, and rural Ross County communities.',
+    bulletPoints: [
+      'Advocates for local farmers, farmland preservation, and sustainable agriculture policies',
+      'Ag-in-the-Classroom educational programs teaching schoolchildren where their food comes from',
+      'Annual collegiate agricultural scholarships for local students studying farming and veterinary science'
+    ],
+    website: 'https://ofbf.org/counties/ross/',
+    tags: ['farm bureau', 'agriculture', 'farming', 'food production', 'rural', 'nonprofit']
+  },
+  {
+    id: 'np-christian-academy',
+    name: 'Ross County Christian Academy (RCCA)',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Nonprofit Christian School',
+    address: '2215 Western Ave., Chillicothe, OH 45601',
+    phone: '740-772-4532',
+    hours: 'Mon-Fri 8:00am - 3:30pm',
+    description: 'Accredited non-profit Christian academy providing preschool through 12th-grade academic education, fine arts, and community service.',
+    bulletPoints: [
+      'Comprehensive pre-K through 12th grade college-preparatory curriculum',
+      'Ohio EdChoice scholarship provider ensuring tuition accessibility for local families',
+      'Active student community service projects supporting local food pantries and seniors'
+    ],
+    website: 'https://www.myrcca.org',
+    tags: ['school', 'education', 'christian academy', 'edchoice', 'youth', 'nonprofit']
+  },
+  {
+    id: 'np-jr-fair-committee',
+    name: 'Ross County Junior Fair Sale Committee',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Youth 4-H & Livestock Auction',
+    address: '344 Fairgrounds Rd., Chillicothe, OH 45601',
+    phone: '740-775-5083',
+    description: 'Volunteer committee organizing the annual Ross County Junior Fair livestock sale supporting local 4-H and FFA youth exhibitors.',
+    bulletPoints: [
+      'Coordinates the annual youth livestock sale rewarding hard work and animal husbandry',
+      'Directly funds youth college savings, trade school funds, and future agriculture projects',
+      'Connects local business buyers with hardworking Ross County youth'
+    ],
+    tags: ['junior fair', '4-h', 'ffa', 'livestock sale', 'youth agriculture', 'nonprofit']
+  },
+  {
+    id: 'np-firefighters-foundation',
+    name: 'Chillicothe Firefighters Toy Drive & Relief Fund',
+    category: 'nonprofits',
+    categoryLabel: 'Community Nonprofits',
+    subcategory: 'Charitable Toy Drive & Relief',
+    address: '54 E. Water St., Chillicothe, OH 45601',
+    phone: '740-773-2212',
+    description: 'Charitable foundation operated by local professional firefighters providing holiday gifts for underprivileged children and emergency fire relief.',
+    bulletPoints: [
+      'Annual holiday toy drive ensuring children across Ross County receive gifts at Christmas',
+      'Immediate crisis aid providing clothing and essentials to families displaced by structure fires',
+      'Smoke detector installation and fire prevention education for low-income seniors'
+    ],
+    tags: ['firefighters', 'toy drive', 'christmas', 'children', 'relief fund', 'nonprofit']
+  }
+];
+
+// Write out JSON
+const outDir = path.join(__dirname, '..', 'src', 'data');
+if (!fs.existsSync(outDir)) {
+  fs.mkdirSync(outDir, { recursive: true });
+}
+
+fs.writeFileSync(path.join(outDir, 'resources.json'), JSON.stringify(resources, null, 2), 'utf-8');
+console.log(`Successfully compiled ${resources.length} community resources into src/data/resources.json`);

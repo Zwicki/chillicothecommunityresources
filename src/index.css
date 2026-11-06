@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;
+  }
+}
+
+@media print {
+  /* Hide all screen-only UI */
+  .no-print,
+  nav,
+  header,
+  footer,
+  aside,
+  button,
+  input,
+  .emergency-banner,
+  #modal-root {
+    display: none !important;
+  }
+
+  @page {
+    margin: 0.35in 0.4in;
+    size: letter portrait;
+  }
+  
+  body {
+    background: white !important;
+    color: #111827 !important;
+    font-size: 9.5pt;
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Reveal dedicated print layout */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Prevent card splitting across pages */
+  .print-avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .page-break {
+    page-break-after: always !important;
+    break-after: always !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+
+  img {
+    max-width: 100%;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Hidden by default on screen */
+.print-only {
+  display: none;
+}

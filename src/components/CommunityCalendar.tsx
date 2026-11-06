@@ -3,6 +3,8 @@ import {
   Calendar as CalendarIcon, 
   ChevronLeft, 
   ChevronRight, 
+  ChevronDown,
+  ChevronUp,
   PlusCircle, 
   MapPin, 
   Clock, 
@@ -33,7 +35,7 @@ interface CommunityCalendarProps {
   onEditEvent: (event: CommunityEvent) => void;
   onCopyEvent: (event: CommunityEvent) => void;
   onDeleteEvent: (id: string) => void;
-  onViewFlyer: (imageUrl: string, title: string) => void;
+  onViewFlyer: (event: CommunityEvent) => void;
   currentUser: AuthUser | null;
   onOpenLogin: () => void;
   onImportEvents?: (events: CommunityEvent[]) => void;
@@ -967,7 +969,7 @@ interface EventCardProps {
   onEdit: (event: CommunityEvent) => void;
   onCopy: (event: CommunityEvent) => void;
   onDelete: (id: string) => void;
-  onViewFlyer: (imageUrl: string, title: string) => void;
+  onViewFlyer: (event: CommunityEvent) => void;
   getCategoryBadgeClass: (category: string) => string;
   currentUser: AuthUser | null;
 }
@@ -981,6 +983,8 @@ const EventCard: React.FC<EventCardProps> = ({
   getCategoryBadgeClass,
   currentUser,
 }) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const isLongDescription = (event.description?.length || 0) > 130 || event.description?.includes('\n');
   const formattedDates = formatEventDates(event.date, event.endDate);
   const isMultiDay = Boolean(event.endDate && event.endDate !== event.date);
   const isRepeating = Boolean(event.recurrence && event.recurrence !== 'none');
@@ -1005,7 +1009,7 @@ const EventCard: React.FC<EventCardProps> = ({
       <div>
         {/* Flyer / JPG Image Preview Banner (if uploaded) */}
         {event.imageUrl && (
-          <div className="relative h-44 w-full bg-slate-900 overflow-hidden group cursor-pointer" onClick={() => onViewFlyer(event.imageUrl!, event.title)}>
+          <div className="relative h-44 w-full bg-slate-900 overflow-hidden group cursor-pointer" onClick={() => onViewFlyer(event)}>
             <img
               src={event.imageUrl}
               alt={event.title}
@@ -1014,7 +1018,7 @@ const EventCard: React.FC<EventCardProps> = ({
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-white bg-black/60 backdrop-blur-xs">
                 <Maximize2 className="w-3.5 h-3.5" />
-                <span>View Full Flyer</span>
+                <span>View Full Details &amp; Flyer</span>
               </span>
             </div>
           </div>
@@ -1089,9 +1093,33 @@ const EventCard: React.FC<EventCardProps> = ({
           </div>
 
           {/* Description Text */}
-          <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
-            {event.description}
-          </p>
+          <div className="mt-2.5">
+            <p className={`text-xs text-slate-600 leading-relaxed ${isExpanded ? 'whitespace-pre-line text-slate-800' : 'line-clamp-3'}`}>
+              {event.description}
+            </p>
+            {isLongDescription && (
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="text-xs font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <span>{isExpanded ? 'Show less' : 'Show more...'}</span>
+                  {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
+
+                <span className="text-slate-300">&bull;</span>
+
+                <button
+                  type="button"
+                  onClick={() => onViewFlyer(event)}
+                  className="text-xs font-semibold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <span>Full Details &amp; Flyer</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -222,7 +222,7 @@ export const App: React.FC = () => {
   const [isEventModalOpen, setIsEventModalOpen] = useState<boolean>(false);
   const [editingEvent, setEditingEvent] = useState<CommunityEvent | null>(null);
   const [eventModalMode, setEventModalMode] = useState<'create' | 'edit' | 'copy'>('create');
-  const [flyerModal, setFlyerModal] = useState<{ url: string; title: string } | null>(null);
+  const [selectedFlyerEvent, setSelectedFlyerEvent] = useState<CommunityEvent | null>(null);
 
   useEffect(() => {
     try {
@@ -307,8 +307,8 @@ export const App: React.FC = () => {
     setIsEventModalOpen(true);
   };
 
-  const handleViewFlyer = (url: string, title: string) => {
-    setFlyerModal({ url, title });
+  const handleViewFlyer = (event: CommunityEvent) => {
+    setSelectedFlyerEvent(event);
   };
 
   // Print Configuration State
@@ -853,12 +853,14 @@ export const App: React.FC = () => {
           editingEvent={editingEvent}
         />
 
-        {/* Click-to-Enlarge Event JPG Flyer Modal */}
+        {/* Event Flyer & Full Details Modal */}
         <EventFlyerModal
-          isOpen={flyerModal !== null}
-          onClose={() => setFlyerModal(null)}
-          imageUrl={flyerModal?.url || ''}
-          title={flyerModal?.title || ''}
+          isOpen={selectedFlyerEvent !== null}
+          onClose={() => setSelectedFlyerEvent(null)}
+          event={selectedFlyerEvent}
+          onEdit={handleOpenEditEvent}
+          onCopy={handleOpenCopyEvent}
+          currentUser={currentUser}
         />
       </div>
 

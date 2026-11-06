@@ -16,7 +16,7 @@ export interface CommunityEvent {
   endDate?: string; // YYYY-MM-DD (Optional End Date for multi-day events)
   time?: string; // e.g. "10:00 AM - 1:00 PM"
   location?: string;
-  categories: EventCategory[]; // Supports 1 or more categories
+  categories?: EventCategory[]; // Supports 1 or more categories
   category?: EventCategory; // Backward compatibility
   description: string;
   imageUrl?: string; // JPG / PNG base64 or external URL

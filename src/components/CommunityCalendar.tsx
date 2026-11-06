@@ -20,6 +20,7 @@ import {
   Filter,
   Download,
   Upload,
+  RotateCcw,
   X
 } from 'lucide-react';
 import { CommunityEvent, EventCategory, getEventCategories } from '../types/event';
@@ -36,6 +37,7 @@ interface CommunityCalendarProps {
   currentUser: AuthUser | null;
   onOpenLogin: () => void;
   onImportEvents?: (events: CommunityEvent[]) => void;
+  onResetDefaultEvents?: () => void;
 }
 
 type CalendarViewMode = 'month' | 'week' | 'day' | 'list';
@@ -66,6 +68,7 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   currentUser,
   onOpenLogin,
   onImportEvents,
+  onResetDefaultEvents,
 }) => {
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
@@ -388,6 +391,17 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
                   <Upload className="w-3.5 h-3.5 text-slate-600" />
                   <span>Import Events</span>
                 </button>
+
+                {onResetDefaultEvents && (
+                  <button
+                    onClick={onResetDefaultEvents}
+                    className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
+                    title="Restore official community calendar announcements from server seed"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-slate-600" />
+                    <span>Sync Official Events</span>
+                  </button>
+                )}
               </>
             )}
 

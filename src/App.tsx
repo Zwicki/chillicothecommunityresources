@@ -19,13 +19,13 @@ import { EventFlyerModal } from './components/EventFlyerModal';
 import { CommunityEvent } from './types/event';
 import { INITIAL_EVENTS } from './data/initialEvents';
 import { parseRouteFromPath, getPathForCategory } from './utils/categoryRoutes';
-import { AuthUser, SUPER_USER_EMAIL } from './types/auth';
+import { AuthUser, SUPER_USER_EMAIL, isSuperUserEmail } from './types/auth';
 import { LoginModal } from './components/LoginModal';
 import { ResourceModal } from './components/ResourceModal';
 import { SearchX, Shield, RefreshCw, ChevronLeft, Printer, Plus, RotateCcw, Download } from 'lucide-react';
 
 const STORAGE_KEY = 'chillicothe_community_submissions_v1';
-const EVENTS_STORAGE_KEY = 'chillicothe_community_events_v1';
+const EVENTS_STORAGE_KEY = 'chillicothe_community_events_v2';
 const AUTH_STORAGE_KEY = 'chillicothe_community_auth_user_v1';
 const RESOURCES_STORAGE_KEY = 'chillicothe_community_custom_resources_v1';
 
@@ -71,7 +71,15 @@ export const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
     try {
       const saved = localStorage.getItem(AUTH_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
+      if (saved) {
+        const parsed: AuthUser = JSON.parse(saved);
+        // Ensure that any cached session claiming superUser actually matches a recognized super user email
+        if (parsed?.isSuperUser && !isSuperUserEmail(parsed.email)) {
+          parsed.isSuperUser = false;
+        }
+        return parsed;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -178,8 +186,35 @@ export const App: React.FC = () => {
   // Community Events State & Modals
   const [events, setEvents] = useState<CommunityEvent[]>(() => {
     try {
-      const saved = localStorage.getItem(EVENTS_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+      const savedV2 = localStorage.getItem(EVENTS_STORAGE_KEY);
+      if (savedV2) {
+        const parsed: CommunityEvent[] = JSON.parse(savedV2);
+        // Ensure all 11 default announcements from INITIAL_EVENTS are guaranteed present
+        const parsedIds = new Set(parsed.map(e => e.id));
+        const missing = INITIAL_EVENTS.filter(e => !parsedIds.has(e.id));
+        if (missing.length > 0) {
+          const merged = [...parsed, ...missing];
+          localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(merged));
+          return merged;
+        }
+        return parsed;
+      }
+
+      // Check if user had older v1 saved in browser localStorage
+      const savedV1 = localStorage.getItem('chillicothe_community_events_v1');
+      if (savedV1) {
+        try {
+          const parsedV1: CommunityEvent[] = JSON.parse(savedV1);
+          const initialIds = new Set(INITIAL_EVENTS.map(e => e.id));
+          const customExtra = parsedV1.filter(e => !initialIds.has(e.id));
+          const merged = [...INITIAL_EVENTS, ...customExtra];
+          localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(merged));
+          return merged;
+        } catch {}
+      }
+
+      localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(INITIAL_EVENTS));
+      return INITIAL_EVENTS;
     } catch {
       return INITIAL_EVENTS;
     }
@@ -215,6 +250,18 @@ export const App: React.FC = () => {
       localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(importedEvents));
     } catch (e) {
       console.error('Failed to save imported events to localStorage', e);
+    }
+  };
+
+  const handleResetDefaultEvents = () => {
+    if (window.confirm('Sync Community Calendar with official announcements? This will restore all 11 default events.')) {
+      setEvents(INITIAL_EVENTS);
+      try {
+        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(INITIAL_EVENTS));
+        localStorage.removeItem('chillicothe_community_events_v1');
+      } catch (e) {
+        console.error('Failed to reset events', e);
+      }
     }
   };
 
@@ -502,6 +549,7 @@ export const App: React.FC = () => {
             currentUser={currentUser}
             onOpenLogin={() => setIsLoginModalOpen(true)}
             onImportEvents={handleImportEvents}
+            onResetDefaultEvents={handleResetDefaultEvents}
           />
         </main>
       ) : (

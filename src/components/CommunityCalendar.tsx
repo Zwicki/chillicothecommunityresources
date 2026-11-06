@@ -17,7 +17,10 @@ import {
   Columns,
   CalendarCheck,
   Check,
-  Filter
+  Filter,
+  Download,
+  Upload,
+  X
 } from 'lucide-react';
 import { CommunityEvent, EventCategory, getEventCategories } from '../types/event';
 import { getEventOccurrences, formatEventDates } from '../utils/eventOccurrences';
@@ -32,6 +35,7 @@ interface CommunityCalendarProps {
   onViewFlyer: (imageUrl: string, title: string) => void;
   currentUser: AuthUser | null;
   onOpenLogin: () => void;
+  onImportEvents?: (events: CommunityEvent[]) => void;
 }
 
 type CalendarViewMode = 'month' | 'week' | 'day' | 'list';
@@ -61,6 +65,7 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   onViewFlyer,
   currentUser,
   onOpenLogin,
+  onImportEvents,
 }) => {
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
@@ -68,6 +73,45 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   // Active date cursor
   const [currentDate, setCurrentDate] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
   const [selectedDayString, setSelectedDayString] = useState<string | null>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
+  const [importJsonText, setImportJsonText] = useState<string>('');
+  const [importError, setImportError] = useState<string | null>(null);
+
+  const handleExportEvents = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(events, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `chillicothe-community-events-${todayString}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+
+    try {
+      navigator.clipboard.writeText(JSON.stringify(events, null, 2));
+      alert('Success! Downloaded events backup JSON file and copied your events data to the clipboard. You can paste it directly to sync with GitHub!');
+    } catch {
+      alert('Success! Downloaded events backup JSON file.');
+    }
+  };
+
+  const handleProcessImport = () => {
+    setImportError(null);
+    try {
+      const parsed = JSON.parse(importJsonText.trim());
+      if (!Array.isArray(parsed)) {
+        setImportError('Invalid format: Expected a JSON array of events.');
+        return;
+      }
+      if (onImportEvents) {
+        onImportEvents(parsed);
+      }
+      setIsImportModalOpen(false);
+      setImportJsonText('');
+      alert(`Successfully imported ${parsed.length} community events!`);
+    } catch (e: any) {
+      setImportError(`Failed to parse JSON: ${e.message}`);
+    }
+  };
   
   // View mode: month | week | day | list
   const [viewMode, setViewMode] = useState<CalendarViewMode>('month');
@@ -324,7 +368,29 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
+            {currentUser && (
+              <>
+                <button
+                  onClick={handleExportEvents}
+                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
+                  title="Export events to JSON file or clipboard to sync with GitHub/production"
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Export Events ({events.length})</span>
+                </button>
+
+                <button
+                  onClick={() => setIsImportModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
+                  title="Import events from JSON"
+                >
+                  <Upload className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Import Events</span>
+                </button>
+              </>
+            )}
+
             {currentUser ? (
               <button
                 onClick={onAddEvent}
@@ -822,6 +888,62 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
         )}
 
       </div>
+
+      {/* Import Events Modal */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Upload className="w-4 h-4 text-amber-400" />
+                <h3 className="text-sm font-bold">Import Community Events JSON</h3>
+              </div>
+              <button
+                onClick={() => setIsImportModalOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Paste your exported events JSON array below to sync or restore events in this environment:
+              </p>
+
+              {importError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800">
+                  {importError}
+                </div>
+              )}
+
+              <textarea
+                value={importJsonText}
+                onChange={e => setImportJsonText(e.target.value)}
+                placeholder="Paste events JSON array here (starts with [ and ends with ])..."
+                rows={8}
+                className="w-full p-3 text-xs font-mono bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              />
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  onClick={() => setIsImportModalOpen(false)}
+                  className="px-3 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleProcessImport}
+                  disabled={!importJsonText.trim()}
+                  className="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl disabled:opacity-50 cursor-pointer shadow-sm"
+                >
+                  Import Events
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

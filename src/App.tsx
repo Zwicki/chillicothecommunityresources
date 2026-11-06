@@ -112,6 +112,15 @@ export const App: React.FC = () => {
     setEditingEvent(null);
   };
 
+  const handleImportEvents = (importedEvents: CommunityEvent[]) => {
+    setEvents(importedEvents);
+    try {
+      localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(importedEvents));
+    } catch (e) {
+      console.error('Failed to save imported events to localStorage', e);
+    }
+  };
+
   // Limited to logged-in users / super users
   const handleDeleteEvent = (id: string) => {
     if (!currentUser) {
@@ -394,6 +403,7 @@ export const App: React.FC = () => {
             onViewFlyer={handleViewFlyer}
             currentUser={currentUser}
             onOpenLogin={() => setIsLoginModalOpen(true)}
+            onImportEvents={handleImportEvents}
           />
         </main>
       ) : (

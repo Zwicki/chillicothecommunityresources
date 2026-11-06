@@ -1,25 +1,65 @@
-import React from 'react';
-import { Search, MapPin, Sparkles, Heart, Utensils, Home, Shield, PhoneCall, Printer } from 'lucide-react';
-import { ResourceCategory } from '../types/resource';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Search, MapPin, Heart, Utensils, Home, PhoneCall, Printer, X, ArrowRight, Phone } from 'lucide-react';
+import { Resource, ResourceCategory } from '../types/resource';
 
 interface LandingHeroProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  onPerformSearch: (query?: string) => void;
   onSelectCategory: (category: ResourceCategory) => void;
   totalResourcesCount: number;
   onOpenPrintModal: () => void;
+  allResources?: Resource[];
 }
 
 export const LandingHero: React.FC<LandingHeroProps> = ({
   searchQuery,
   onSearchChange,
+  onPerformSearch,
   onSelectCategory,
   totalResourcesCount,
   onOpenPrintModal,
+  allResources,
 }) => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsFocused(false);
+    onPerformSearch();
+  };
+
+  // Live preview matching for dropdown suggestions
+  const trimmedQuery = searchQuery.trim().toLowerCase();
+  const previewMatches = useMemo(() => {
+    if (!trimmedQuery || !allResources) return [];
+    return allResources.filter(res => {
+      const inName = res.name.toLowerCase().includes(trimmedQuery);
+      const inCategory = res.categoryLabel.toLowerCase().includes(trimmedQuery) || (res.subcategory && res.subcategory.toLowerCase().includes(trimmedQuery));
+      const inAddress = res.address ? res.address.toLowerCase().includes(trimmedQuery) : false;
+      const inDesc = res.description ? res.description.toLowerCase().includes(trimmedQuery) : false;
+      const inTags = res.tags ? res.tags.some(t => t.toLowerCase().includes(trimmedQuery)) : false;
+      return inName || inCategory || inAddress || inDesc || inTags;
+    });
+  }, [trimmedQuery, allResources]);
+
+  const showDropdown = isFocused && trimmedQuery.length >= 1;
+
   return (
     <section className="relative overflow-hidden bg-slate-950 text-white border-b border-slate-800 shadow-xl">
-      {/* Background Image of Historic Downtown Chillicothe - increased visibility to showcase city buildings */}
+      {/* Background Image of Historic Downtown Chillicothe - high visibility */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transform motion-safe:transition-transform duration-1000 opacity-80"
         style={{
@@ -27,14 +67,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         }}
       />
 
-      {/* Soft Vignette & Balanced Contrast Gradient (allows buildings to be clearly seen) */}
+      {/* Soft Vignette & Balanced Contrast Gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/45 to-slate-950/30" />
       <div className="absolute inset-0 bg-black/20" />
 
       {/* Content Container */}
       <div className="relative max-w-5xl mx-auto px-4 py-14 sm:py-18 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         
-        {/* Life Recovery Society Presenter Badge with Large High-Contrast Phoenix Logo */}
+        {/* Life Recovery Society Presenter Badge */}
         <div className="flex flex-col items-center mb-6">
           <a
             href="https://liferecoverysociety.org"
@@ -77,20 +117,116 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           A free, comprehensive directory connecting neighbors, families, and case workers with food pantries, addiction recovery, sober living homes, mental health counseling, emergency shelters, and essential community services.
         </p>
 
-        {/* Search Bar on Hero */}
-        <div className="mt-8 w-full max-w-2xl relative shadow-2xl">
-          <div className="relative flex items-center">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-emerald-500" />
+        {/* Interactive Search Bar on Hero */}
+        <div ref={containerRef} className="mt-8 w-full max-w-2xl relative z-30">
+          <form 
+            onSubmit={handleFormSubmit}
+            className="relative flex items-center shadow-2xl rounded-2xl bg-white text-slate-900 border-2 border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-500/30 transition-all overflow-hidden"
+          >
+            <div className="pl-4 flex items-center pointer-events-none text-emerald-600">
+              <Search className="h-5 w-5" />
             </div>
+            
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setIsFocused(false);
+              }}
               placeholder="Search services, keywords, addresses (e.g., 'sober living', 'food pantry', 'IOP', 'shelter')..."
-              className="block w-full pl-12 pr-4 py-4 text-sm sm:text-base bg-white/95 text-slate-900 rounded-2xl shadow-2xl border-2 border-emerald-500/80 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition-all font-medium placeholder:text-slate-500"
+              className="block w-full pl-3 pr-2 py-3.5 sm:py-4 text-sm sm:text-base bg-white text-slate-900 focus:outline-none font-medium placeholder:text-slate-500"
             />
-          </div>
+
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  onSearchChange('');
+                  setIsFocused(true);
+                }}
+                className="p-1.5 mr-1 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+
+            <button
+              type="submit"
+              className="mr-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 transition-all shadow-md active:scale-95 flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
+            >
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span>Search</span>
+            </button>
+          </form>
+
+          {/* Live Quick Results Dropdown */}
+          {showDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden text-left z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="px-4 py-2 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span className="font-bold text-slate-700">
+                  {previewMatches.length > 0 ? `Matching Resources (${previewMatches.length})` : 'No matching resources found'}
+                </span>
+                <span className="text-[11px] text-slate-400">Press Enter to view in directory</span>
+              </div>
+
+              {previewMatches.length > 0 ? (
+                <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
+                  {previewMatches.slice(0, 4).map((res) => (
+                    <div
+                      key={res.id}
+                      onClick={() => {
+                        setIsFocused(false);
+                        onPerformSearch(res.name);
+                      }}
+                      className="p-3 hover:bg-emerald-50/70 transition-colors cursor-pointer group flex items-start justify-between gap-3"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-emerald-700 truncate">
+                            {res.name}
+                          </h4>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                            {res.categoryLabel}
+                          </span>
+                        </div>
+                        {res.address && (
+                          <p className="text-[11px] text-slate-500 truncate mt-0.5 flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                            <span>{res.address}</span>
+                          </p>
+                        )}
+                      </div>
+
+                      {res.phone && (
+                        <div className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1 flex-shrink-0 pt-0.5">
+                          <Phone className="w-3 h-3 text-emerald-600" />
+                          <span>{res.phone}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-4 text-center text-xs text-slate-500">
+                  No directory listings match "{searchQuery}". Press Enter or click Search to explore all resources.
+                </div>
+              )}
+
+              <div
+                onClick={() => {
+                  setIsFocused(false);
+                  onPerformSearch();
+                }}
+                className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-between cursor-pointer transition-colors"
+              >
+                <span>View all matching results in Directory</span>
+                <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Quick Emergency & Common Needs Shortcut Chips */}
@@ -101,7 +237,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <button
             onClick={() => onSelectCategory('crisis')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-rose-200 border border-rose-500/70 hover:bg-rose-950 transition-colors shadow-md backdrop-blur-md font-semibold"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-rose-200 border border-rose-500/70 hover:bg-rose-950 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
           >
             <PhoneCall className="w-3.5 h-3.5 text-rose-400" />
             <span>24/7 Crisis &amp; 988</span>
@@ -109,7 +245,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <button
             onClick={() => onSelectCategory('food')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-amber-200 border border-amber-500/70 hover:bg-amber-950 transition-colors shadow-md backdrop-blur-md font-semibold"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-amber-200 border border-amber-500/70 hover:bg-amber-950 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
           >
             <Utensils className="w-3.5 h-3.5 text-amber-400" />
             <span>Free Meals &amp; Pantries</span>
@@ -117,7 +253,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <button
             onClick={() => onSelectCategory('sober-living')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-teal-200 border border-teal-500/70 hover:bg-teal-950 transition-colors shadow-md backdrop-blur-md font-semibold"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-teal-200 border border-teal-500/70 hover:bg-teal-950 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
           >
             <Home className="w-3.5 h-3.5 text-teal-400" />
             <span>Sober Living Residences</span>
@@ -125,7 +261,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <button
             onClick={() => onSelectCategory('recovery')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-emerald-200 border border-emerald-500/70 hover:bg-emerald-950 transition-colors shadow-md backdrop-blur-md font-semibold"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-emerald-200 border border-emerald-500/70 hover:bg-emerald-950 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
           >
             <Heart className="w-3.5 h-3.5 text-emerald-400" />
             <span>Addiction Recovery / MAT</span>
@@ -133,7 +269,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <button
             onClick={onOpenPrintModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 text-slate-100 border border-slate-500/80 hover:bg-slate-800 transition-colors shadow-md backdrop-blur-md font-semibold"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 text-slate-100 border border-slate-500/80 hover:bg-slate-800 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
             title="Print custom resource directory handout"
           >
             <Printer className="w-3.5 h-3.5 text-emerald-400" />

@@ -399,12 +399,17 @@ export const App: React.FC = () => {
     navigateTo('directory', category, true);
   };
 
-  // Switch to directory on search typing
+  // Handle search typing smoothly without interrupting the user
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    if (query.trim() && currentView === 'landing') {
-      navigateTo('directory', 'all', true);
+  };
+
+  // Perform search and navigate to directory (e.g. on Enter key, Search button, or suggestion click)
+  const handlePerformSearch = (query?: string) => {
+    if (query !== undefined) {
+      setSearchQuery(query);
     }
+    navigateTo('directory', 'all', true);
   };
 
   const handleGoToLanding = () => {
@@ -526,9 +531,11 @@ export const App: React.FC = () => {
           <LandingHero
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
+            onPerformSearch={handlePerformSearch}
             onSelectCategory={handleSelectCategoryFromLanding}
             totalResourcesCount={allResources.length}
             onOpenPrintModal={() => setIsPrintModalOpen(true)}
+            allResources={allResources}
           />
 
           {/* Large Interactive Buttons Grid for Categories */}

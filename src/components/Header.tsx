@@ -37,32 +37,59 @@ export const Header: React.FC<HeaderProps> = ({
           
           {/* Logo / Brand */}
           <div className="flex items-center justify-between">
-            <button 
-              onClick={onGoToLanding}
-              className="text-left flex items-center gap-3 group"
-            >
-              <img 
-                src="./images/life-recovery-society-logo.png" 
-                alt="Life Recovery Society" 
-                className="h-14 sm:h-16 w-auto object-contain drop-shadow-sm group-hover:scale-105 transition-transform flex-shrink-0"
-              />
-              <div>
+            <div className="flex items-center gap-3">
+              {/* Life Recovery Society Logo links to liferecoverysociety.org */}
+              <a 
+                href="https://liferecoverysociety.org" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="Visit Life Recovery Society (liferecoverysociety.org)"
+                className="group flex-shrink-0 cursor-pointer"
+              >
+                <img 
+                  src="./images/life-recovery-society-logo.png" 
+                  alt="Life Recovery Society" 
+                  className="h-14 sm:h-16 w-auto object-contain drop-shadow-sm group-hover:scale-105 transition-transform"
+                />
+              </a>
+
+              <div className="text-left">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight group-hover:text-emerald-700 transition-colors">
+                  <button 
+                    onClick={onGoToLanding}
+                    className="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight hover:text-emerald-700 transition-colors text-left"
+                    title="Return to Main Page"
+                  >
                     Chillicothe Community Resources
-                  </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.2 rounded-full text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
+                  </button>
+                  <a 
+                    href="https://liferecoverysociety.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2 py-0.2 rounded-full text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 transition-colors"
+                    title="Visit Life Recovery Society (liferecoverysociety.org)"
+                  >
                     Life Recovery Society
-                  </span>
+                  </a>
                   <span className="hidden lg:inline-flex items-center gap-1 px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                     Ross County, OH
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 line-clamp-1">
-                  Presented by Life Recovery Society &bull; {totalCount} Verified Community Services
+                  Presented by{' '}
+                  <a 
+                    href="https://liferecoverysociety.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-amber-800 hover:text-amber-950 font-semibold underline decoration-amber-300 underline-offset-2 transition-colors"
+                    title="Visit liferecoverysociety.org"
+                  >
+                    Life Recovery Society
+                  </a>
+                  {' '}&bull; {totalCount} Verified Community Services
                 </p>
               </div>
-            </button>
+            </div>
 
             {/* Mobile Actions */}
             <div className="flex items-center gap-1.5 md:hidden">

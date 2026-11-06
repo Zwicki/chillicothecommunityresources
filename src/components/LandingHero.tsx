@@ -36,15 +36,29 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         
         {/* Life Recovery Society Presenter Badge with Large High-Contrast Phoenix Logo */}
         <div className="flex flex-col items-center mb-6">
-          <div className="p-3 sm:p-4 rounded-3xl bg-slate-950/75 border border-amber-500/50 backdrop-blur-md shadow-2xl flex flex-col items-center group transition-all hover:border-amber-400 mb-3.5">
+          <a
+            href="https://liferecoverysociety.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit Life Recovery Society (liferecoverysociety.org)"
+            className="p-3 sm:p-4 rounded-3xl bg-slate-950/75 border border-amber-500/50 backdrop-blur-md shadow-2xl flex flex-col items-center group transition-all hover:border-amber-400 hover:shadow-amber-500/20 mb-3.5 cursor-pointer"
+          >
             <img 
               src="./images/life-recovery-society-logo.png" 
               alt="Life Recovery Society" 
               className="h-36 sm:h-48 md:h-56 w-auto object-contain drop-shadow-[0_12px_28px_rgba(0,0,0,0.95)] transform group-hover:scale-105 transition-transform duration-300"
             />
-          </div>
+          </a>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-slate-950/90 text-amber-300 border border-amber-500/60 shadow-xl backdrop-blur-md drop-shadow-md">
-            <span>Life Recovery Society</span>
+            <a 
+              href="https://liferecoverysociety.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:underline hover:text-amber-200 transition-colors cursor-pointer"
+              title="Visit Life Recovery Society website"
+            >
+              Life Recovery Society
+            </a>
             <span className="text-slate-400">&bull;</span>
             <span className="text-emerald-300 flex items-center gap-1 font-semibold">
               <MapPin className="w-3.5 h-3.5 text-emerald-400 inline" />

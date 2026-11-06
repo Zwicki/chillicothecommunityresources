@@ -134,23 +134,29 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           </div>
 
           {/* Life Recovery Society Brand Header */}
-          <div className="px-4 py-3 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700/60 flex items-center gap-3">
-            <div className="p-1 bg-slate-950/80 rounded-xl border border-amber-500/30 flex-shrink-0">
+          <a
+            href="https://liferecoverysociety.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit Life Recovery Society (liferecoverysociety.org)"
+            className="px-4 py-3 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700/60 flex items-center gap-3 hover:from-slate-850 hover:to-slate-750 transition-colors group cursor-pointer"
+          >
+            <div className="p-1 bg-slate-950/80 rounded-xl border border-amber-500/30 flex-shrink-0 group-hover:border-amber-400 transition-colors">
               <img 
                 src="./images/life-recovery-society-logo.png" 
                 alt="Life Recovery Society" 
-                className="h-14 w-auto object-contain drop-shadow"
+                className="h-14 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform"
               />
             </div>
             <div className="min-w-0">
-              <span className="text-xs font-bold text-amber-300 leading-tight block">
+              <span className="text-xs font-bold text-amber-300 group-hover:text-amber-200 leading-tight block">
                 Life Recovery Society
               </span>
               <span className="text-[11px] text-slate-300 block">
-                Ross County Directory
+                liferecoverysociety.org &nearr;
               </span>
             </div>
-          </div>
+          </a>
 
           {/* Category List Header */}
           <div className="px-5 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">

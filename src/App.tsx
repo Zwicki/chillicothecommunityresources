@@ -18,6 +18,7 @@ import { EventModal } from './components/EventModal';
 import { EventFlyerModal } from './components/EventFlyerModal';
 import { CommunityEvent } from './types/event';
 import { INITIAL_EVENTS } from './data/initialEvents';
+import { parseRouteFromPath, getPathForCategory } from './utils/categoryRoutes';
 import { SearchX, Shield, RefreshCw, ChevronLeft, Printer } from 'lucide-react';
 
 const STORAGE_KEY = 'chillicothe_community_submissions_v1';
@@ -30,10 +31,13 @@ export const App: React.FC = () => {
     []
   );
 
+  // Initial Route parsed from browser URL (e.g., /foodbanks, /recovery, or /)
+  const initialRoute = useMemo(() => parseRouteFromPath(window.location.pathname), []);
+
   // Navigation View State
-  const [currentView, setCurrentView] = useState<'landing' | 'directory'>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'directory'>(initialRoute.view);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeCategory, setActiveCategory] = useState<ResourceCategory | 'all'>('all');
+  const [activeCategory, setActiveCategory] = useState<ResourceCategory | 'all'>(initialRoute.category);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
   
   // Modals & Drawers
@@ -138,31 +142,65 @@ export const App: React.FC = () => {
     setSubmissions(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Switch to directory with chosen category
-  const handleSelectCategoryFromLanding = (category: ResourceCategory) => {
+  // Central Navigation & URL Synchronization
+  const navigateTo = (view: 'landing' | 'directory', category: ResourceCategory | 'all' = 'all', push: boolean = true) => {
+    setCurrentView(view);
     setActiveCategory(category);
-    setCurrentView('directory');
+    const targetPath = getPathForCategory(category, view);
+    if (push && window.location.pathname !== targetPath) {
+      window.history.pushState({ view, category }, '', targetPath);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Sync state with browser Back and Forward navigation buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = parseRouteFromPath(window.location.pathname);
+      setCurrentView(route.view);
+      setActiveCategory(route.category);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Update document title dynamically based on active category
+  useEffect(() => {
+    if (currentView === 'landing') {
+      document.title = 'Chillicothe Community Resources | Ross County, Ohio';
+    } else {
+      const activeMeta = CATEGORIES.find(c => c.id === activeCategory);
+      const titleLabel = activeMeta ? activeMeta.label : 'Directory';
+      document.title = `${titleLabel} | Chillicothe Community Resources`;
+    }
+  }, [currentView, activeCategory]);
+
+  // Switch to directory with chosen category (e.g. from landing grid or quick chips)
+  const handleSelectCategoryFromLanding = (category: ResourceCategory) => {
+    navigateTo('directory', category, true);
+  };
+
+  // Switch category inside directory view (e.g. from sidebar)
+  const handleSelectCategoryInDirectory = (category: ResourceCategory | 'all') => {
+    navigateTo('directory', category, true);
   };
 
   // Switch to directory on search typing
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     if (query.trim() && currentView === 'landing') {
-      setCurrentView('directory');
+      navigateTo('directory', 'all', true);
     }
   };
 
   const handleGoToLanding = () => {
-    setCurrentView('landing');
     setSearchQuery('');
-    setActiveCategory('all');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('landing', 'all', true);
   };
 
   const handleGoToDirectory = () => {
-    setCurrentView('directory');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('directory', 'all', true);
   };
 
   // Handle printing a single category from the directory view
@@ -300,7 +338,7 @@ export const App: React.FC = () => {
           {/* Left Persistent Category Sidebar */}
           <SidebarNav
             activeCategory={activeCategory}
-            onSelectCategory={setActiveCategory}
+            onSelectCategory={handleSelectCategoryInDirectory}
             onBackToHome={handleGoToLanding}
             categoryCounts={categoryCounts}
             onOpenSuggestModal={() => setIsSuggestModalOpen(true)}
@@ -353,8 +391,8 @@ export const App: React.FC = () => {
                 {(activeCategory !== 'all' || searchQuery) && (
                   <button
                     onClick={() => {
-                      setActiveCategory('all');
                       setSearchQuery('');
+                      navigateTo('directory', 'all', true);
                     }}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl border border-emerald-200 transition-colors cursor-pointer"
                   >
@@ -388,7 +426,7 @@ export const App: React.FC = () => {
                   <button
                     onClick={() => {
                       setSearchQuery('');
-                      setActiveCategory('all');
+                      navigateTo('directory', 'all', true);
                     }}
                     className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                   >
@@ -411,16 +449,31 @@ export const App: React.FC = () => {
       <footer className="bg-white border-t border-slate-200 py-8 px-4 sm:px-6 lg:px-8 mt-12 no-print">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-3">
-            <div className="p-1.5 bg-slate-900 rounded-xl flex-shrink-0 border border-slate-700/60">
+            <a 
+              href="https://liferecoverysociety.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              title="Visit Life Recovery Society (liferecoverysociety.org)"
+              className="p-1.5 bg-slate-900 rounded-xl flex-shrink-0 border border-slate-700/60 hover:border-amber-400 transition-colors group cursor-pointer"
+            >
               <img 
                 src="./images/life-recovery-society-logo.png" 
                 alt="Life Recovery Society" 
-                className="h-12 sm:h-14 w-auto object-contain flex-shrink-0"
+                className="h-12 sm:h-14 w-auto object-contain flex-shrink-0 group-hover:scale-105 transition-transform"
               />
-            </div>
+            </a>
             <div>
               <span className="font-extrabold text-slate-800 text-xs block">
-                Chillicothe Community Resources &bull; Presented by Life Recovery Society
+                Chillicothe Community Resources &bull; Presented by{' '}
+                <a 
+                  href="https://liferecoverysociety.org" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-amber-800 hover:text-amber-950 font-bold underline decoration-amber-300 underline-offset-2 transition-colors"
+                  title="Visit liferecoverysociety.org"
+                >
+                  Life Recovery Society
+                </a>
               </span>
               <span className="text-[11px] text-slate-500 block">
                 Free public directory serving Chillicothe &amp; Ross County, Ohio

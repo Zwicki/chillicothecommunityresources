@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { CommunityEvent, EventCategory, getEventCategories } from '../types/event';
 import { getEventOccurrences, formatEventDates } from '../utils/eventOccurrences';
+import { AuthUser } from '../types/auth';
 
 interface CommunityCalendarProps {
   events: CommunityEvent[];
@@ -29,6 +30,8 @@ interface CommunityCalendarProps {
   onCopyEvent: (event: CommunityEvent) => void;
   onDeleteEvent: (id: string) => void;
   onViewFlyer: (imageUrl: string, title: string) => void;
+  currentUser: AuthUser | null;
+  onOpenLogin: () => void;
 }
 
 type CalendarViewMode = 'month' | 'week' | 'day' | 'list';
@@ -56,6 +59,8 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   onCopyEvent,
   onDeleteEvent,
   onViewFlyer,
+  currentUser,
+  onOpenLogin,
 }) => {
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
@@ -320,13 +325,24 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 flex-wrap">
-            <button
-              onClick={onAddEvent}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-md active:scale-95 cursor-pointer"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>+ Post Community Event</span>
-            </button>
+            {currentUser ? (
+              <button
+                onClick={onAddEvent}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>+ Post Community Event</span>
+              </button>
+            ) : (
+              <button
+                onClick={onOpenLogin}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
+                title="Sign in with Google to post an event"
+              >
+                <PlusCircle className="w-4 h-4 text-emerald-600" />
+                <span>Sign In to Post Event</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -607,6 +623,7 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
                         onDelete={onDeleteEvent}
                         onViewFlyer={onViewFlyer}
                         getCategoryBadgeClass={getCategoryBadgeClass}
+                        currentUser={currentUser}
                       />
                     ))}
                   </div>
@@ -740,6 +757,7 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
                     onDelete={onDeleteEvent}
                     onViewFlyer={onViewFlyer}
                     getCategoryBadgeClass={getCategoryBadgeClass}
+                    currentUser={currentUser}
                   />
                 ))}
               </div>
@@ -751,11 +769,11 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
                   There are no community events matching your category filter on this date.
                 </p>
                 <button
-                  onClick={onAddEvent}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700"
+                  onClick={currentUser ? onAddEvent : onOpenLogin}
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 cursor-pointer"
                 >
                   <PlusCircle className="w-4 h-4" />
-                  <span>Post Event for this Date</span>
+                  <span>{currentUser ? 'Post Event for this Date' : 'Sign In to Post Event'}</span>
                 </button>
               </div>
             )}
@@ -775,6 +793,7 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
                   onDelete={onDeleteEvent}
                   onViewFlyer={onViewFlyer}
                   getCategoryBadgeClass={getCategoryBadgeClass}
+                  currentUser={currentUser}
                 />
               ))
             ) : (
@@ -814,6 +833,7 @@ interface EventCardProps {
   onDelete: (id: string) => void;
   onViewFlyer: (imageUrl: string, title: string) => void;
   getCategoryBadgeClass: (category: string) => string;
+  currentUser: AuthUser | null;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -823,6 +843,7 @@ const EventCard: React.FC<EventCardProps> = ({
   onDelete,
   onViewFlyer,
   getCategoryBadgeClass,
+  currentUser,
 }) => {
   const formattedDates = formatEventDates(event.date, event.endDate);
   const isMultiDay = Boolean(event.endDate && event.endDate !== event.date);
@@ -955,39 +976,41 @@ const EventCard: React.FC<EventCardProps> = ({
           <span className="text-[11px] text-slate-400 italic">Community Announcement</span>
         )}
 
-        {/* Administrator Actions */}
-        <div className="flex items-center gap-1">
-          {/* Copy Button */}
-          <button
-            onClick={() => onCopy(event)}
-            className="p-1.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
-            title="Copy / Duplicate this announcement"
-          >
-            <Copy className="w-3.5 h-3.5" />
-          </button>
+        {/* Administrator Actions - Strictly limited to logged in users */}
+        {currentUser && (
+          <div className="flex items-center gap-1">
+            {/* Copy Button */}
+            <button
+              onClick={() => onCopy(event)}
+              className="p-1.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+              title="Copy / Duplicate this announcement"
+            >
+              <Copy className="w-3.5 h-3.5" />
+            </button>
 
-          {/* Edit Button */}
-          <button
-            onClick={() => onEdit(event)}
-            className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-200 rounded-lg transition-colors"
-            title="Edit Announcement"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-          </button>
+            {/* Edit Button */}
+            <button
+              onClick={() => onEdit(event)}
+              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
+              title="Edit Announcement"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+            </button>
 
-          {/* Delete Button */}
-          <button
-            onClick={() => {
-              if (window.confirm(`Are you sure you want to delete "${event.title}"?`)) {
-                onDelete(event.id);
-              }
-            }}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-            title="Delete Announcement"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
+            {/* Delete Button */}
+            <button
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to delete "${event.title}"?`)) {
+                  onDelete(event.id);
+                }
+              }}
+              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+              title="Delete Announcement"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

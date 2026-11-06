@@ -1,6 +1,7 @@
 import React from 'react';
-import { X, Download, Trash2, CheckCircle2, Inbox, AlertCircle, PlusCircle } from 'lucide-react';
+import { X, Download, Trash2, CheckCircle2, Inbox, AlertCircle, PlusCircle, ShieldCheck } from 'lucide-react';
 import { UserFeedback } from '../types/resource';
+import { AuthUser } from '../types/auth';
 
 interface SubmissionsDrawerProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface SubmissionsDrawerProps {
   submissions: UserFeedback[];
   onClearSubmissions: () => void;
   onDeleteSubmission: (index: number) => void;
+  currentUser: AuthUser | null;
 }
 
 export const SubmissionsDrawer: React.FC<SubmissionsDrawerProps> = ({
@@ -16,6 +18,7 @@ export const SubmissionsDrawer: React.FC<SubmissionsDrawerProps> = ({
   submissions,
   onClearSubmissions,
   onDeleteSubmission,
+  currentUser,
 }) => {
   if (!isOpen) return null;
 
@@ -92,14 +95,16 @@ export const SubmissionsDrawer: React.FC<SubmissionsDrawerProps> = ({
             <span>Export to CSV / Excel</span>
           </button>
 
-          <button
-            onClick={onClearSubmissions}
-            disabled={submissions.length === 0}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 rounded-lg disabled:opacity-50 transition-colors"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Clear All</span>
-          </button>
+          {currentUser?.isSuperUser && (
+            <button
+              onClick={onClearSubmissions}
+              disabled={submissions.length === 0}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 rounded-lg disabled:opacity-50 transition-colors cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Clear All</span>
+            </button>
+          )}
         </div>
 
         {/* Submissions List */}
@@ -141,13 +146,15 @@ export const SubmissionsDrawer: React.FC<SubmissionsDrawerProps> = ({
                     <span className="text-[10px] text-slate-400">
                       {new Date(sub.submittedAt).toLocaleDateString()}
                     </span>
-                    <button
-                      onClick={() => onDeleteSubmission(idx)}
-                      className="text-slate-300 hover:text-rose-600 p-1 rounded transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {currentUser && (
+                      <button
+                        onClick={() => onDeleteSubmission(idx)}
+                        className="text-slate-300 hover:text-rose-600 p-1 rounded transition-colors cursor-pointer"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
 

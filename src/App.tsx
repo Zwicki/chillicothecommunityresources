@@ -19,10 +19,13 @@ import { EventFlyerModal } from './components/EventFlyerModal';
 import { CommunityEvent } from './types/event';
 import { INITIAL_EVENTS } from './data/initialEvents';
 import { parseRouteFromPath, getPathForCategory } from './utils/categoryRoutes';
+import { AuthUser, SUPER_USER_EMAIL } from './types/auth';
+import { LoginModal } from './components/LoginModal';
 import { SearchX, Shield, RefreshCw, ChevronLeft, Printer } from 'lucide-react';
 
 const STORAGE_KEY = 'chillicothe_community_submissions_v1';
 const EVENTS_STORAGE_KEY = 'chillicothe_community_events_v1';
+const AUTH_STORAGE_KEY = 'chillicothe_community_auth_user_v1';
 
 export const App: React.FC = () => {
   const allResources: Resource[] = resourcesDataRaw as Resource[];
@@ -40,6 +43,35 @@ export const App: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<ResourceCategory | 'all'>(initialRoute.category);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
   
+  // Authentication State (Non-required public access, persistent session)
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
+    try {
+      const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+
+  const handleLoginSuccess = (user: AuthUser) => {
+    setCurrentUser(user);
+    try {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+    } catch (e) {
+      console.error('Failed to save user session', e);
+    }
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (e) {
+      console.error('Failed to remove user session', e);
+    }
+  };
+
   // Modals & Drawers
   const [reportingResource, setReportingResource] = useState<Resource | null>(null);
   const [isSuggestModalOpen, setIsSuggestModalOpen] = useState<boolean>(false);
@@ -80,23 +112,43 @@ export const App: React.FC = () => {
     setEditingEvent(null);
   };
 
+  // Limited to logged-in users / super users
   const handleDeleteEvent = (id: string) => {
+    if (!currentUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setEvents(prev => prev.filter(e => e.id !== id));
   };
 
+  // Limited to logged-in users
   const handleOpenAddEvent = () => {
+    if (!currentUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setEditingEvent(null);
     setEventModalMode('create');
     setIsEventModalOpen(true);
   };
 
+  // Limited to logged-in users
   const handleOpenEditEvent = (event: CommunityEvent) => {
+    if (!currentUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setEditingEvent(event);
     setEventModalMode('edit');
     setIsEventModalOpen(true);
   };
 
+  // Limited to logged-in users
   const handleOpenCopyEvent = (event: CommunityEvent) => {
+    if (!currentUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setEditingEvent(event);
     setEventModalMode('copy');
     setIsEventModalOpen(true);
@@ -133,12 +185,20 @@ export const App: React.FC = () => {
   };
 
   const handleClearSubmissions = () => {
+    if (!currentUser?.isSuperUser) {
+      alert(`Only the designated super user (${SUPER_USER_EMAIL}) can clear all submissions.`);
+      return;
+    }
     if (window.confirm('Are you sure you want to clear all recorded submissions?')) {
       setSubmissions([]);
     }
   };
 
   const handleDeleteSubmission = (index: number) => {
+    if (!currentUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setSubmissions(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -300,6 +360,9 @@ export const App: React.FC = () => {
         onOpenAddEvent={handleOpenAddEvent}
         onOpenSubmissions={() => setIsSubmissionsOpen(true)}
         submissionsCount={submissions.length}
+        currentUser={currentUser}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onLogout={handleLogout}
       />
 
       {/* VIEW 1: MAIN LANDING PAGE */}
@@ -329,6 +392,8 @@ export const App: React.FC = () => {
             onCopyEvent={handleOpenCopyEvent}
             onDeleteEvent={handleDeleteEvent}
             onViewFlyer={handleViewFlyer}
+            currentUser={currentUser}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
           />
         </main>
       ) : (
@@ -532,6 +597,7 @@ export const App: React.FC = () => {
         submissions={submissions}
         onClearSubmissions={handleClearSubmissions}
         onDeleteSubmission={handleDeleteSubmission}
+        currentUser={currentUser}
       />
 
         {/* Print Selection Modal (Custom Handout Builder) */}
@@ -540,6 +606,13 @@ export const App: React.FC = () => {
           onClose={() => setIsPrintModalOpen(false)}
           categoryCounts={categoryCounts}
           onConfirmPrint={handleConfirmPrintCustom}
+        />
+
+        {/* Optional Google Login Modal (Non-required authentication) */}
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
         />
 
         {/* Administrator Community Event / Announcement Modal */}

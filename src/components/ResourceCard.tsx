@@ -10,18 +10,26 @@ import {
   ExternalLink, 
   Edit3,
   Calendar,
-  CheckCircle2
+  CheckCircle2,
+  Trash2,
+  ShieldCheck
 } from 'lucide-react';
 import { Resource } from '../types/resource';
 
 interface ResourceCardProps {
   resource: Resource;
   onReportInaccuracy: (resource: Resource) => void;
+  isSuperUser?: boolean;
+  onEditResource?: (resource: Resource) => void;
+  onDeleteResource?: (resourceId: string) => void;
 }
 
 export const ResourceCard: React.FC<ResourceCardProps> = ({
   resource,
   onReportInaccuracy,
+  isSuperUser,
+  onEditResource,
+  onDeleteResource,
 }) => {
   // Format clean phone for tel link
   const cleanPhone = resource.phone ? resource.phone.replace(/[^0-9+]/g, '') : '';
@@ -49,12 +57,42 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             )}
           </div>
 
-          {resource.isEmergency && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
-              <AlertTriangle className="w-3 h-3 text-rose-600" />
-              24/7 Crisis
-            </span>
-          )}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {resource.isEmergency && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
+                <AlertTriangle className="w-3 h-3 text-rose-600" />
+                24/7 Crisis
+              </span>
+            )}
+
+            {isSuperUser && (
+              <div className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 rounded-lg p-0.5 shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => onEditResource && onEditResource(resource)}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold text-amber-900 hover:bg-amber-100 rounded transition-colors cursor-pointer"
+                  title="Super User: Edit this listing"
+                >
+                  <Edit3 className="w-3 h-3 text-amber-700" />
+                  <span>Edit</span>
+                </button>
+                <span className="text-amber-300">|</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm(`Are you sure you want to permanently delete "${resource.name}" from the directory?`)) {
+                      onDeleteResource && onDeleteResource(resource.id);
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold text-rose-700 hover:bg-rose-100 rounded transition-colors cursor-pointer"
+                  title="Super User: Delete this listing"
+                >
+                  <Trash2 className="w-3 h-3 text-rose-600" />
+                  <span>Delete</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Agency / Service Name */}
@@ -185,7 +223,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         {cleanPhone.length >= 3 ? (
           <a
             href={`tel:${cleanPhone}`}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-sm active:scale-95 flex-1 text-center"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors shadow-sm active:scale-95 flex-1 text-center cursor-pointer"
           >
             <Phone className="w-3 h-3" />
             <span>Call Now</span>
@@ -194,14 +232,27 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           <span className="text-[11px] text-slate-400 italic">Direct contact listed above</span>
         )}
 
-        <button
-          onClick={() => onReportInaccuracy(resource)}
-          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors border border-transparent hover:border-slate-200"
-          title="Report outdated hours, phone number, or wrong details"
-        >
-          <Edit3 className="w-3 h-3 text-slate-400" />
-          <span>Report Error</span>
-        </button>
+        <div className="flex items-center gap-1.5">
+          {isSuperUser && (
+            <button
+              onClick={() => onEditResource && onEditResource(resource)}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-lg transition-colors cursor-pointer"
+              title="Super User: Edit this listing"
+            >
+              <Edit3 className="w-3 h-3 text-amber-700" />
+              <span>Edit</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => onReportInaccuracy(resource)}
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors border border-transparent hover:border-slate-200 cursor-pointer"
+            title="Report outdated hours, phone number, or wrong details"
+          >
+            <Edit3 className="w-3 h-3 text-slate-400" />
+            <span>Report Error</span>
+          </button>
+        </div>
       </div>
     </div>
   );

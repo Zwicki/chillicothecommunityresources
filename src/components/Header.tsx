@@ -13,6 +13,7 @@ interface HeaderProps {
   onOpenSuggestModal: () => void;
   onOpenPrintModal: () => void;
   onOpenAddEvent?: () => void;
+  onOpenAddResource?: () => void;
   onOpenSubmissions: () => void;
   submissionsCount: number;
   currentUser: AuthUser | null;
@@ -31,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSuggestModal,
   onOpenPrintModal,
   onOpenAddEvent,
+  onOpenAddResource,
   onOpenSubmissions,
   submissionsCount,
   currentUser,
@@ -207,7 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
               currentUser ? (
                 <button
                   onClick={onOpenAddEvent}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl transition-all shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl transition-all shadow-xs cursor-pointer"
                   title="Post upcoming community event or announcement"
                 >
                   <Calendar className="w-3.5 h-3.5 text-emerald-600" />
@@ -216,13 +218,25 @@ export const Header: React.FC<HeaderProps> = ({
               ) : (
                 <button
                   onClick={onOpenLogin}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all shadow-xs cursor-pointer"
                   title="Sign in with Google to post an event"
                 >
                   <Calendar className="w-3.5 h-3.5 text-slate-400" />
                   <span>+ Add Event</span>
                 </button>
               )
+            )}
+
+            {/* Super User + Add Resource Button */}
+            {currentUser?.isSuperUser && onOpenAddResource && (
+              <button
+                onClick={onOpenAddResource}
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-amber-950 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-xl transition-all shadow-xs cursor-pointer"
+                title="Super User: Add a new verified community resource to the directory"
+              >
+                <PlusCircle className="w-3.5 h-3.5 text-amber-800" />
+                <span>+ Add Resource</span>
+              </button>
             )}
 
             <button

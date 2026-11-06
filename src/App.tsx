@@ -21,14 +21,38 @@ import { INITIAL_EVENTS } from './data/initialEvents';
 import { parseRouteFromPath, getPathForCategory } from './utils/categoryRoutes';
 import { AuthUser, SUPER_USER_EMAIL } from './types/auth';
 import { LoginModal } from './components/LoginModal';
-import { SearchX, Shield, RefreshCw, ChevronLeft, Printer } from 'lucide-react';
+import { ResourceModal } from './components/ResourceModal';
+import { SearchX, Shield, RefreshCw, ChevronLeft, Printer, Plus, RotateCcw, Download } from 'lucide-react';
 
 const STORAGE_KEY = 'chillicothe_community_submissions_v1';
 const EVENTS_STORAGE_KEY = 'chillicothe_community_events_v1';
 const AUTH_STORAGE_KEY = 'chillicothe_community_auth_user_v1';
+const RESOURCES_STORAGE_KEY = 'chillicothe_community_custom_resources_v1';
 
 export const App: React.FC = () => {
-  const allResources: Resource[] = resourcesDataRaw as Resource[];
+  // Dynamic Resources State (persisted for super user additions/edits/deletions)
+  const [resources, setResources] = useState<Resource[]>(() => {
+    try {
+      const saved = localStorage.getItem(RESOURCES_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error('Failed to load custom resources from localStorage', e);
+    }
+    return resourcesDataRaw as Resource[];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(RESOURCES_STORAGE_KEY, JSON.stringify(resources));
+    } catch (e) {
+      console.error('Failed to save resources to localStorage', e);
+    }
+  }, [resources]);
+
+  const allResources: Resource[] = resources;
   const allCategoryIds = useMemo(
     () => CATEGORIES.filter(c => c.id !== 'all').map(c => c.id as ResourceCategory),
     []
@@ -77,6 +101,79 @@ export const App: React.FC = () => {
   const [isSuggestModalOpen, setIsSuggestModalOpen] = useState<boolean>(false);
   const [isSubmissionsOpen, setIsSubmissionsOpen] = useState<boolean>(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState<boolean>(false);
+
+  // Super User Community Resources Management State & Handlers
+  const [isResourceModalOpen, setIsResourceModalOpen] = useState<boolean>(false);
+  const [editingResource, setEditingResource] = useState<Resource | null>(null);
+  const [resourceModalMode, setResourceModalMode] = useState<'create' | 'edit'>('create');
+
+  const handleOpenAddResource = () => {
+    if (!currentUser?.isSuperUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setEditingResource(null);
+    setResourceModalMode('create');
+    setIsResourceModalOpen(true);
+  };
+
+  const handleOpenEditResource = (resource: Resource) => {
+    if (!currentUser?.isSuperUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setEditingResource(resource);
+    setResourceModalMode('edit');
+    setIsResourceModalOpen(true);
+  };
+
+  const handleSaveResource = (savedResource: Resource) => {
+    setResources(prev => {
+      const exists = prev.some(r => r.id === savedResource.id);
+      if (exists) {
+        return prev.map(r => (r.id === savedResource.id ? savedResource : r));
+      } else {
+        return [savedResource, ...prev];
+      }
+    });
+    setEditingResource(null);
+  };
+
+  const handleDeleteResource = (resourceId: string) => {
+    if (!currentUser?.isSuperUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setResources(prev => prev.filter(r => r.id !== resourceId));
+  };
+
+  const handleExportResourcesJson = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(resources, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `chillicothe-resources-${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+
+    try {
+      navigator.clipboard.writeText(JSON.stringify(resources, null, 2));
+      alert(`Exported all ${resources.length} community resources! JSON file downloaded and copied to clipboard.`);
+    } catch {
+      alert(`Exported all ${resources.length} community resources! JSON file downloaded.`);
+    }
+  };
+
+  const handleResetResourcesDefault = () => {
+    if (!currentUser?.isSuperUser) return;
+    if (window.confirm('Are you sure you want to restore the original 228 default resources? Any custom edits or added resources will be reset.')) {
+      setResources(resourcesDataRaw as Resource[]);
+      try {
+        localStorage.removeItem(RESOURCES_STORAGE_KEY);
+      } catch {}
+      alert('Successfully restored original default directory resources.');
+    }
+  };
 
   // Community Events State & Modals
   const [events, setEvents] = useState<CommunityEvent[]>(() => {
@@ -367,6 +464,7 @@ export const App: React.FC = () => {
         onOpenSuggestModal={() => setIsSuggestModalOpen(true)}
         onOpenPrintModal={() => setIsPrintModalOpen(true)}
         onOpenAddEvent={handleOpenAddEvent}
+        onOpenAddResource={handleOpenAddResource}
         onOpenSubmissions={() => setIsSubmissionsOpen(true)}
         submissionsCount={submissions.length}
         currentUser={currentUser}
@@ -478,6 +576,53 @@ export const App: React.FC = () => {
               </div>
             </div>
 
+            {/* Super User Resource Management Toolbar */}
+            {currentUser?.isSuperUser && (
+              <div className="mb-4 p-3.5 bg-gradient-to-r from-amber-500/10 via-amber-50 to-amber-100/50 border-2 border-amber-400/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-amber-400 text-slate-950 rounded-xl font-bold shadow-xs">
+                    <Shield className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-black uppercase tracking-wider text-amber-950 block">
+                      Super User Resource Administration
+                    </span>
+                    <span className="text-[11px] text-slate-600 block">
+                      You can add new services, edit any listing, or delete outdated resources.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={handleOpenAddResource}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>+ Add New Resource</span>
+                  </button>
+
+                  <button
+                    onClick={handleExportResourcesJson}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl transition-all shadow-xs cursor-pointer"
+                    title="Export all resources to JSON to backup or sync with GitHub"
+                  >
+                    <Download className="w-3.5 h-3.5 text-slate-600" />
+                    <span>Export Resources</span>
+                  </button>
+
+                  <button
+                    onClick={handleResetResourcesDefault}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-xl transition-all cursor-pointer"
+                    title="Restore original 228 default resources"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Reset Defaults</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Resources Cards Grid */}
             {filteredResources.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -486,6 +631,9 @@ export const App: React.FC = () => {
                     key={resource.id}
                     resource={resource}
                     onReportInaccuracy={setReportingResource}
+                    isSuperUser={currentUser?.isSuperUser}
+                    onEditResource={handleOpenEditResource}
+                    onDeleteResource={handleDeleteResource}
                   />
                 ))}
               </div>
@@ -623,6 +771,19 @@ export const App: React.FC = () => {
           isOpen={isLoginModalOpen}
           onClose={() => setIsLoginModalOpen(false)}
           onLoginSuccess={handleLoginSuccess}
+        />
+
+        {/* Super User Add / Edit Resource Modal */}
+        <ResourceModal
+          isOpen={isResourceModalOpen}
+          mode={resourceModalMode}
+          editingResource={editingResource}
+          defaultCategory={activeCategory}
+          onClose={() => {
+            setIsResourceModalOpen(false);
+            setEditingResource(null);
+          }}
+          onSave={handleSaveResource}
         />
 
         {/* Administrator Community Event / Announcement Modal */}

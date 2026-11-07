@@ -245,23 +245,15 @@ export const App: React.FC = () => {
   };
 
   const handleImportEvents = (importedEvents: CommunityEvent[]) => {
+    if (!currentUser?.isSuperUser) {
+      alert('Only the Super User administrator (rfannin25@gmail.com) can import events.');
+      return;
+    }
     setEvents(importedEvents);
     try {
       localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(importedEvents));
     } catch (e) {
       console.error('Failed to save imported events to localStorage', e);
-    }
-  };
-
-  const handleResetDefaultEvents = () => {
-    if (window.confirm('Sync Community Calendar with official announcements? This will restore all 11 default events.')) {
-      setEvents(INITIAL_EVENTS);
-      try {
-        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(INITIAL_EVENTS));
-        localStorage.removeItem('chillicothe_community_events_v1');
-      } catch (e) {
-        console.error('Failed to reset events', e);
-      }
     }
   };
 
@@ -556,7 +548,6 @@ export const App: React.FC = () => {
             currentUser={currentUser}
             onOpenLogin={() => setIsLoginModalOpen(true)}
             onImportEvents={handleImportEvents}
-            onResetDefaultEvents={handleResetDefaultEvents}
           />
         </main>
       ) : (

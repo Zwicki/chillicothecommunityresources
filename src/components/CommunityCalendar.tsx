@@ -22,7 +22,6 @@ import {
   Filter,
   Download,
   Upload,
-  RotateCcw,
   X
 } from 'lucide-react';
 import { CommunityEvent, EventCategory, getEventCategories } from '../types/event';
@@ -39,7 +38,6 @@ interface CommunityCalendarProps {
   currentUser: AuthUser | null;
   onOpenLogin: () => void;
   onImportEvents?: (events: CommunityEvent[]) => void;
-  onResetDefaultEvents?: () => void;
 }
 
 type CalendarViewMode = 'month' | 'week' | 'day' | 'list';
@@ -70,7 +68,6 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   currentUser,
   onOpenLogin,
   onImportEvents,
-  onResetDefaultEvents,
 }) => {
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
@@ -83,6 +80,10 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   const [importError, setImportError] = useState<string | null>(null);
 
   const handleExportEvents = () => {
+    if (!currentUser?.isSuperUser) {
+      alert('Exporting community events is restricted to Super User administrator account (rfannin25@gmail.com).');
+      return;
+    }
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(events, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
@@ -100,6 +101,10 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
   };
 
   const handleProcessImport = () => {
+    if (!currentUser?.isSuperUser) {
+      setImportError('Importing community events is restricted to Super User administrator account (rfannin25@gmail.com).');
+      return;
+    }
     setImportError(null);
     try {
       const parsed = JSON.parse(importJsonText.trim());
@@ -374,36 +379,25 @@ export const CommunityCalendar: React.FC<CommunityCalendarProps> = ({
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            {currentUser && (
+            {currentUser?.isSuperUser && (
               <>
                 <button
                   onClick={handleExportEvents}
-                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
-                  title="Export events to JSON file or clipboard to sync with GitHub/production"
+                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 transition-all shadow-xs cursor-pointer"
+                  title="Export events to JSON file or clipboard to sync with GitHub/production (Super User Only)"
                 >
-                  <Download className="w-3.5 h-3.5 text-slate-600" />
+                  <Download className="w-3.5 h-3.5 text-amber-700" />
                   <span>Export Events ({events.length})</span>
                 </button>
 
                 <button
                   onClick={() => setIsImportModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
-                  title="Import events from JSON"
+                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 transition-all shadow-xs cursor-pointer"
+                  title="Import events from JSON (Super User Only)"
                 >
-                  <Upload className="w-3.5 h-3.5 text-slate-600" />
+                  <Upload className="w-3.5 h-3.5 text-amber-700" />
                   <span>Import Events</span>
                 </button>
-
-                {onResetDefaultEvents && (
-                  <button
-                    onClick={onResetDefaultEvents}
-                    className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition-all shadow-xs cursor-pointer"
-                    title="Restore official community calendar announcements from server seed"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5 text-slate-600" />
-                    <span>Sync Official Events</span>
-                  </button>
-                )}
               </>
             )}
 

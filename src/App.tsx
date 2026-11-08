@@ -23,26 +23,33 @@ import { AuthUser, SUPER_USER_EMAIL, isSuperUserEmail } from './types/auth';
 import { LoginModal } from './components/LoginModal';
 import { ResourceModal } from './components/ResourceModal';
 import { SupportMeetingsView } from './components/SupportMeetingsView';
+import { EMBEDDED_RECOVERY_MEETINGS } from './data/embeddedMeetingsSeed';
 import { SearchX, Shield, RefreshCw, ChevronLeft, Printer, Plus, RotateCcw, Download } from 'lucide-react';
 
 const STORAGE_KEY = 'chillicothe_community_submissions_v1';
 const EVENTS_STORAGE_KEY = 'chillicothe_community_events_v2';
 const AUTH_STORAGE_KEY = 'chillicothe_community_auth_user_v1';
-const RESOURCES_STORAGE_KEY = 'chillicothe_community_custom_resources_v1';
+const RESOURCES_STORAGE_KEY = 'chillicothe_community_custom_resources_v2';
 
 export const App: React.FC = () => {
   // Dynamic Resources State (persisted for super user additions/edits/deletions)
   const [resources, setResources] = useState<Resource[]>(() => {
+    const defaultResources = resourcesDataRaw as Resource[];
     try {
-      const saved = localStorage.getItem(RESOURCES_STORAGE_KEY);
+      const saved = localStorage.getItem(RESOURCES_STORAGE_KEY) || localStorage.getItem('chillicothe_community_custom_resources_v1');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const existingIds = new Set(parsed.map((r: Resource) => r.id));
+          // Seamlessly merge in any new default resources (like the 40 newly added Ross County churches)
+          const missingDefaults = defaultResources.filter(r => !existingIds.has(r.id));
+          return [...parsed, ...missingDefaults];
+        }
       }
     } catch (e) {
       console.error('Failed to load custom resources from localStorage', e);
     }
-    return resourcesDataRaw as Resource[];
+    return defaultResources;
   });
 
   useEffect(() => {
@@ -175,12 +182,13 @@ export const App: React.FC = () => {
 
   const handleResetResourcesDefault = () => {
     if (!currentUser?.isSuperUser) return;
-    if (window.confirm('Are you sure you want to restore the original 228 default resources? Any custom edits or added resources will be reset.')) {
+    if (window.confirm(`Are you sure you want to restore the original ${resourcesDataRaw.length} default resources? Any custom edits or added resources will be reset.`)) {
       setResources(resourcesDataRaw as Resource[]);
       try {
         localStorage.removeItem(RESOURCES_STORAGE_KEY);
+        localStorage.removeItem('chillicothe_community_custom_resources_v1');
       } catch {}
-      alert('Successfully restored original default directory resources.');
+      alert(`Successfully restored original default directory resources (${resourcesDataRaw.length} listings).`);
     }
   };
 
@@ -452,6 +460,10 @@ export const App: React.FC = () => {
         counts[res.category]++;
       }
     });
+
+    // Support meetings count from recovery meetings directory
+    counts['support-meetings'] = EMBEDDED_RECOVERY_MEETINGS.length;
+
     return counts;
   }, [allResources]);
 
@@ -664,7 +676,7 @@ export const App: React.FC = () => {
                   <button
                     onClick={handleResetResourcesDefault}
                     className="inline-flex items-center gap-1.5 px-2.5 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-xl transition-all cursor-pointer"
-                    title="Restore original 228 default resources"
+                    title={`Restore original ${resourcesDataRaw.length} default resources`}
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Reset Defaults</span>

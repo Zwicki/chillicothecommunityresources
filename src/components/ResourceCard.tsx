@@ -12,7 +12,9 @@ import {
   Calendar,
   CheckCircle2,
   Trash2,
-  ShieldCheck
+  ShieldCheck,
+  Church,
+  User
 } from 'lucide-react';
 import { Resource } from '../types/resource';
 
@@ -157,6 +159,43 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               ) : (
                 <span className="font-semibold text-slate-800">{resource.phone}</span>
               )}
+            </div>
+          )}
+
+          {/* Pastor / Minister (for churches) */}
+          {resource.pastorName && (
+            <div className="flex items-center gap-2">
+              <User className="w-3.5 h-3.5 text-amber-700 flex-shrink-0" />
+              <span className="text-slate-800">
+                <strong className="text-slate-600 font-medium">Pastor / Leadership: </strong>
+                {resource.pastorName}
+              </span>
+            </div>
+          )}
+
+          {/* Denomination (for churches) */}
+          {resource.denomination && (
+            <div className="flex items-center gap-2">
+              <Church className="w-3.5 h-3.5 text-amber-700 flex-shrink-0" />
+              <span className="text-slate-800">
+                <strong className="text-slate-600 font-medium">Denomination: </strong>
+                {resource.denomination}
+              </span>
+            </div>
+          )}
+
+          {/* Service Times (for churches) */}
+          {resource.serviceTimes && (
+            <div className="flex items-start gap-2">
+              <Clock className="w-3.5 h-3.5 text-amber-700 mt-0.5 flex-shrink-0" />
+              <div>
+                <span className="font-semibold text-slate-800 mr-1.5">
+                  Worship / Service Times:
+                </span>
+                <span className="text-slate-700">
+                  {resource.serviceTimes}
+                </span>
+              </div>
             </div>
           )}
 

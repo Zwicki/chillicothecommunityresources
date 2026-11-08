@@ -14,6 +14,8 @@ import {
   Bus, 
   Briefcase, 
   Users,
+  Compass,
+  Church,
   ArrowRight,
   Sparkles,
   Printer
@@ -42,6 +44,8 @@ const getCategoryIcon = (iconName: string, className: string = 'w-6 h-6') => {
     case 'Stethoscope': return <Stethoscope className={className} />;
     case 'Bus': return <Bus className={className} />;
     case 'Briefcase': return <Briefcase className={className} />;
+    case 'Compass': return <Compass className={className} />;
+    case 'Church': return <Church className={className} />;
     case 'Users':
     default:
       return <Users className={className} />;
@@ -154,6 +158,20 @@ const CATEGORY_STYLES: Record<string, { bg: string; border: string; iconBg: stri
     hoverBorder: 'hover:border-lime-400 hover:shadow-lime-100',
     iconBg: 'bg-emerald-700 text-white',
     text: 'text-emerald-950'
+  },
+  'support-meetings': {
+    bg: 'bg-indigo-50/60',
+    border: 'border-indigo-200',
+    hoverBorder: 'hover:border-indigo-400 hover:shadow-indigo-100',
+    iconBg: 'bg-indigo-600 text-white',
+    text: 'text-indigo-950'
+  },
+  'churches': {
+    bg: 'bg-amber-50/60',
+    border: 'border-amber-200',
+    hoverBorder: 'hover:border-amber-400 hover:shadow-amber-100',
+    iconBg: 'bg-amber-700 text-white',
+    text: 'text-amber-950'
   }
 };
 

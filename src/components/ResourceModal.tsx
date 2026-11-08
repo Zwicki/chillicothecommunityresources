@@ -31,6 +31,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
   const [availability, setAvailability] = useState<string>('');
   const [website, setWebsite] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [pastorName, setPastorName] = useState<string>('');
+  const [denomination, setDenomination] = useState<string>('');
+  const [serviceTimes, setServiceTimes] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [bulletPointsText, setBulletPointsText] = useState<string>('');
   const [tagsText, setTagsText] = useState<string>('');
@@ -51,6 +54,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
       setAvailability(editingResource.availability || '');
       setWebsite(editingResource.website || '');
       setEmail(editingResource.email || '');
+      setPastorName(editingResource.pastorName || '');
+      setDenomination(editingResource.denomination || '');
+      setServiceTimes(editingResource.serviceTimes || '');
       setDescription(editingResource.description || '');
       setBulletPointsText((editingResource.bulletPoints || []).join('\n'));
       setTagsText((editingResource.tags || []).join(', '));
@@ -70,6 +76,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
       setAvailability('');
       setWebsite('');
       setEmail('');
+      setPastorName('');
+      setDenomination('');
+      setServiceTimes('');
       setDescription('');
       setBulletPointsText('');
       setTagsText('');
@@ -127,6 +136,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
       bulletPoints: bulletPoints.length > 0 ? bulletPoints : undefined,
       website: website.trim() || undefined,
       email: email.trim() || undefined,
+      pastorName: pastorName.trim() || undefined,
+      denomination: denomination.trim() || undefined,
+      serviceTimes: serviceTimes.trim() || undefined,
       isEmergency,
       tags
     };
@@ -320,6 +332,55 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
               />
             </div>
           </div>
+
+          {/* Church & Faith Community Specific Fields */}
+          {(category === 'churches' || pastorName || denomination || serviceTimes) && (
+            <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-200/80 space-y-3">
+              <div className="text-[11px] font-bold text-amber-900 uppercase tracking-wide">
+                Church & Faith Details
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                    Senior Pastor / Minister
+                  </label>
+                  <input
+                    type="text"
+                    value={pastorName}
+                    onChange={e => setPastorName(e.target.value)}
+                    placeholder="e.g. Pastor John Doe"
+                    className="w-full px-3 py-2 text-xs bg-white border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                    Denomination / Affiliation
+                  </label>
+                  <input
+                    type="text"
+                    value={denomination}
+                    onChange={e => setDenomination(e.target.value)}
+                    placeholder="e.g. United Methodist, Baptist, Non-Denominational"
+                    className="w-full px-3 py-2 text-xs bg-white border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-medium"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Worship & Service Times
+                </label>
+                <input
+                  type="text"
+                  value={serviceTimes}
+                  onChange={e => setServiceTimes(e.target.value)}
+                  placeholder="e.g. Sunday: 10:00 AM Worship | Wednesday: 7:00 PM"
+                  className="w-full px-3 py-2 text-xs bg-white border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-medium"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Detailed Description */}
           <div>

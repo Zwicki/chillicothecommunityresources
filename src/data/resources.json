@@ -4977,5 +4977,1184 @@
       "relief fund",
       "nonprofit"
     ]
+  },
+  {
+    "id": "church-brookside",
+    "name": "Brookside Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Non-Denominational Christian",
+    "address": "2215 W 4th St, Chillicothe, OH 45601",
+    "phone": "740-775-8025",
+    "email": "info@brooksidechurch.info",
+    "website": "https://brooksidechurch.info",
+    "pastorName": "Jack Norman (Senior Pastor)",
+    "denomination": "Non-Denominational / Evangelical",
+    "serviceTimes": "Sunday: 9:00 AM & 10:45 AM | Thursday CR: 6:30 PM",
+    "hours": "Sunday Worship + Office Mon-Thu 9am-4pm",
+    "description": "A vibrant, Christ-centered community offering weekly worship services, extensive youth and family ministries, food outreaches, and Celebrate Recovery on Thursday evenings.",
+    "bulletPoints": [
+      "Sunday Worship at 9:00 AM and 10:45 AM",
+      "Celebrate Recovery every Thursday (dinner 5:30 PM, worship 6:30 PM)",
+      "Dynamic children, student ministries, and family care groups",
+      "Active community outreach, food distributions, and crisis support"
+    ],
+    "tags": [
+      "church",
+      "worship",
+      "celebrate recovery",
+      "non-denominational",
+      "youth ministry",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-open-door",
+    "name": "Open Door Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Non-Denominational Christian",
+    "address": "75 N Paint St, Chillicothe, OH 45601",
+    "phone": "740-774-6736",
+    "email": "office@opendoorfamily.org",
+    "website": "https://opendoorfamily.org",
+    "pastorName": "Mark Clendaniel (Lead Pastor)",
+    "denomination": "Non-Denominational",
+    "serviceTimes": "Sunday: 10:00 AM | Monday CR: 6:00 PM",
+    "hours": "Sunday: 10:00 AM | Monday CR: 6:00 PM",
+    "description": "A downtown Chillicothe church passionate about loving God, loving people, and serving the community. Home to Celebrate Recovery on Monday evenings.",
+    "bulletPoints": [
+      "Sunday morning worship service at 10:00 AM",
+      "Monday Celebrate Recovery (dinner at 5:15 PM, meeting at 6:00 PM)",
+      "Downtown community outreach, meal blessings, and prayer team",
+      "Small groups, youth group, and family fellowship"
+    ],
+    "tags": [
+      "church",
+      "downtown",
+      "open door",
+      "celebrate recovery",
+      "worship",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-st-mary-catholic",
+    "name": "St. Mary Catholic Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Catholic Church",
+    "address": "61 S Paint St, Chillicothe, OH 45601",
+    "phone": "740-772-2061",
+    "email": "secretary@stmarychillicothe.com",
+    "website": "https://stmarychillicothe.com",
+    "pastorName": "Father Christopher Tuttle",
+    "denomination": "Roman Catholic (Diocese of Columbus)",
+    "serviceTimes": "Saturday Vigil: 5:00 PM | Sunday: 8:30 AM & 10:30 AM",
+    "hours": "Daily Mass Mon-Fri | Weekend Masses",
+    "description": "Historic downtown Catholic parish founded in 1837, offering daily and weekend Mass, confession, religious education, St. Vincent de Paul charity outreach, and community fellowship.",
+    "bulletPoints": [
+      "Weekend Masses: Saturday 5:00 PM, Sunday 8:30 AM & 10:30 AM",
+      "St. Vincent de Paul Society emergency assistance and pantry support",
+      "Bishop Flaget Catholic School affiliation (PreK - 8th grade)",
+      "Confession, Eucharistic Adoration, and active prayer ministries"
+    ],
+    "tags": [
+      "church",
+      "catholic",
+      "mass",
+      "st mary",
+      "st vincent de paul",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-st-peter-catholic",
+    "name": "St. Peter Catholic Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Catholic Church",
+    "address": "285 W Water St, Chillicothe, OH 45601",
+    "phone": "740-774-1407",
+    "email": "office@stpeterchillicothe.com",
+    "website": "https://stpeterchillicothe.com",
+    "pastorName": "Father Jacob Hahn",
+    "denomination": "Roman Catholic (Diocese of Columbus)",
+    "serviceTimes": "Saturday Vigil: 5:00 PM | Sunday: 8:00 AM & 11:30 AM",
+    "hours": "Parish Office Mon-Fri 9:00 AM - 4:00 PM",
+    "description": "Historic Ross County Catholic parish dedicated to reverent liturgy, Catholic tradition, robust charitable works, and support for the needy.",
+    "bulletPoints": [
+      "Weekend Masses: Saturday 5:00 PM, Sunday 8:00 AM & 11:30 AM",
+      "St. Vincent de Paul Society outreach helping with food, rent, and utilities",
+      "Eucharistic Adoration chapel and traditional devotions",
+      "Bishop Flaget Catholic School partner"
+    ],
+    "tags": [
+      "church",
+      "catholic",
+      "mass",
+      "st peter",
+      "confession",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-first-presbyterian",
+    "name": "First Presbyterian Church of Chillicothe",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Presbyterian (PCUSA)",
+    "address": "13 S Paint St, Chillicothe, OH 45601",
+    "phone": "740-774-4440",
+    "email": "office@firstpreshillicothe.org",
+    "website": "https://firstpreshillicothe.org",
+    "pastorName": "Rev. Jason Link",
+    "denomination": "Presbyterian Church (USA)",
+    "serviceTimes": "Sunday: 10:15 AM (Worship) & 9:00 AM (Sunday School)",
+    "hours": "Office: Mon-Thu 9:00 AM - 1:00 PM",
+    "description": "Historic downtown congregation dating to 1797 with deeply committed ministries in social justice, community food distribution, downtown feeding programs, and music arts.",
+    "bulletPoints": [
+      "Sunday Worship at 10:15 AM with chancel choir and historic pipe organ",
+      "Hosts Community Food Outreaches and 12-Step Recovery groups",
+      "Stephen Ministry compassionate care for grieving and struggling individuals",
+      "Rich history as Ohio's first Presbyterian church in the Northwest Territory"
+    ],
+    "tags": [
+      "church",
+      "presbyterian",
+      "downtown",
+      "food pantry",
+      "music",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-chillicothe-baptist",
+    "name": "Chillicothe Baptist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Baptist Church",
+    "address": "1400 Fairgrounds Rd, Chillicothe, OH 45601",
+    "phone": "740-773-1544",
+    "email": "office@chillicothebaptist.org",
+    "website": "https://chillicothebaptist.org",
+    "pastorName": "Pastor John Otto",
+    "denomination": "Southern Baptist / Conservative Baptist",
+    "serviceTimes": "Sunday: 9:00 AM & 10:30 AM | Wednesday: 6:30 PM",
+    "hours": "Sunday Services + Wednesday Midweek",
+    "description": "A biblically faithful, welcoming church emphasizing verse-by-verse scripture teaching, missions, youth and children's ministries, and local community outreach.",
+    "bulletPoints": [
+      "Sunday Morning Worship: 9:00 AM (Classic) & 10:30 AM (Contemporary)",
+      "Wednesday evening Bible study, AWANA kids club, and student ministry",
+      "Active local missions and community compassionate aid",
+      "Full nursery and Sunday school classes for all ages"
+    ],
+    "tags": [
+      "church",
+      "baptist",
+      "awana",
+      "missions",
+      "youth ministry",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-walnut-st-umc",
+    "name": "Walnut Street United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "16 S Walnut St, Chillicothe, OH 45601",
+    "phone": "740-774-2117",
+    "email": "office@walnutstreetumc.com",
+    "website": "https://walnutstreetumc.com",
+    "pastorName": "Rev. Therese Lehman",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 9:30 AM (Modern) & 11:00 AM (Traditional)",
+    "hours": "Office: Mon-Fri 8:30 AM - 4:00 PM",
+    "description": "Downtown community church offering open hearts, open minds, and open doors with strong missions, community meals, daycare, and local recovery support.",
+    "bulletPoints": [
+      "Two Sunday worship services: 9:30 AM Modern & 11:00 AM Traditional",
+      "Hosts weekly community food distributions and free lunch outreaches",
+      "Loving Hands Daycare and preschool facility",
+      "Meeting host for local AA, Al-Anon, and community service groups"
+    ],
+    "tags": [
+      "church",
+      "methodist",
+      "daycare",
+      "food outreach",
+      "downtown",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-trinity-umc",
+    "name": "Trinity United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "24 S Mulberry St, Chillicothe, OH 45601",
+    "phone": "740-773-2415",
+    "email": "trinityumc@horizonview.net",
+    "website": "https://trinitychillicothe.com",
+    "pastorName": "Pastor Mark Gray",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 10:00 AM Worship",
+    "hours": "Office: Mon-Thu 9:00 AM - 1:00 PM",
+    "description": "Welcoming downtown fellowship committed to Christ-like love, mission work, neighborhood feeding programs, and children's education.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:00 AM",
+      "Regular neighborhood community dinners and blessing box support",
+      "Active women's and men's fellowship circles",
+      "Warm, inclusive family atmosphere"
+    ],
+    "tags": [
+      "church",
+      "methodist",
+      "downtown",
+      "community meals",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-first-wesleyan",
+    "name": "First Wesleyan Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Wesleyan Church",
+    "address": "89 S Mulberry St, Chillicothe, OH 45601",
+    "phone": "740-774-1224",
+    "email": "office@chillicothefirstwesleyan.org",
+    "website": "https://chillicothefirstwesleyan.org",
+    "pastorName": "Pastor Jon Welch",
+    "denomination": "The Wesleyan Church",
+    "serviceTimes": "Sunday: 10:30 AM Worship | Wednesday: 6:30 PM",
+    "hours": "Sunday Worship + Wednesday Night Prayer",
+    "description": "A Christ-honoring holiness fellowship sharing hope, holiness, and healing in downtown Chillicothe through dynamic preaching and loving community.",
+    "bulletPoints": [
+      "Sunday Worship Service at 10:30 AM",
+      "Wednesday night prayer gathering and adult Bible study at 6:30 PM",
+      "Children's church and youth group programs",
+      "Downtown compassion ministry and food pantry partnerships"
+    ],
+    "tags": [
+      "church",
+      "wesleyan",
+      "holiness",
+      "prayer",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-calvary-lutheran",
+    "name": "Calvary Lutheran Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Lutheran Church (ELCA)",
+    "address": "74 W Main St, Chillicothe, OH 45601",
+    "phone": "740-773-1950",
+    "email": "calvarylutheran74@gmail.com",
+    "website": "https://calvarychillicothe.org",
+    "pastorName": "Pastor Janet Hatch",
+    "denomination": "Evangelical Lutheran Church in America (ELCA)",
+    "serviceTimes": "Sunday: 9:30 AM Worship & Communion",
+    "hours": "Sunday: 9:30 AM Worship",
+    "description": "Historic Lutheran congregation in downtown Chillicothe emphasizing grace alone, faith alone, scripture alone, and compassionate service to neighbors in need.",
+    "bulletPoints": [
+      "Sunday Worship and Holy Communion at 9:30 AM",
+      "Active community food pantry and blessing box support",
+      "Reconciling in Christ partner extending warm hospitality to all",
+      "Ecumenical collaboration with Ross County faith coalitions"
+    ],
+    "tags": [
+      "church",
+      "lutheran",
+      "communion",
+      "elca",
+      "food pantry",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-st-pauls-episcopal",
+    "name": "St. Paul's Episcopal Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Episcopal Church",
+    "address": "33 E Main St, Chillicothe, OH 45601",
+    "phone": "740-772-1326",
+    "email": "stpaulschillicothe@gmail.com",
+    "website": "https://stpaulschillicothe.org",
+    "pastorName": "Rev. David Browne",
+    "denomination": "Episcopal (Diocese of Southern Ohio)",
+    "serviceTimes": "Sunday: 8:00 AM (Spoken Rite I) & 10:30 AM (Choral Rite II)",
+    "hours": "Office: Tue-Fri 9:00 AM - 1:00 PM",
+    "description": "Chillicothe's historic Gothic Episcopal church (dating to 1817) offering contemplative liturgical worship, choral music, and deep community outreach programs.",
+    "bulletPoints": [
+      "Sunday Holy Eucharist at 8:00 AM & 10:30 AM",
+      "Home to the Loaves & Fishes monthly community lunch program",
+      "Hosts community AA and recovery support groups",
+      "Beautiful historic sanctuary with stained glass and pipe organ"
+    ],
+    "tags": [
+      "church",
+      "episcopal",
+      "eucharist",
+      "liturgy",
+      "loaves and fishes",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-tabernacle-baptist",
+    "name": "Tabernacle Baptist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Baptist Church (ABC-USA)",
+    "address": "221 E Main St, Chillicothe, OH 45601",
+    "phone": "740-774-2224",
+    "email": "office@tabernaclebaptist.org",
+    "website": "https://tabernaclebaptist.org",
+    "pastorName": "Pastor Chris Brown",
+    "denomination": "American Baptist Churches USA",
+    "serviceTimes": "Sunday: 9:00 AM (Traditional) & 10:30 AM (Contemporary)",
+    "hours": "Office: Mon-Fri 8:30 AM - 4:30 PM",
+    "description": "Centrally located Baptist congregation with over 130 years of gospel preaching, disaster relief participation, family care, and youth sports/Christian education.",
+    "bulletPoints": [
+      "Sunday Services: 9:00 AM Traditional & 10:30 AM Contemporary",
+      "Children's ministries, preschool, and Awana clubs",
+      "Mission trips, local Ross County benevolent fund assistance",
+      "Active senior adult ministries and weekly Bible studies"
+    ],
+    "tags": [
+      "church",
+      "baptist",
+      "preschool",
+      "bible study",
+      "missions",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-chillicothe-first-church-god",
+    "name": "First Church of God",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Church of God (Anderson)",
+    "address": "780 Western Ave, Chillicothe, OH 45601",
+    "phone": "740-773-4244",
+    "email": "office@fcogchillicothe.com",
+    "website": "https://fcogchillicothe.com",
+    "pastorName": "Pastor Matthew Roe",
+    "denomination": "Church of God (Anderson, IN)",
+    "serviceTimes": "Sunday: 10:00 AM Worship | Wednesday: 6:30 PM",
+    "hours": "Sunday Worship + Midweek Programs",
+    "description": "A loving, multi-generational family church focused on discipleship, vibrant praise, and practical community outreach on Western Avenue.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:00 AM",
+      "Wednesday night classes for kids, teens, and adults at 6:30 PM",
+      "Community food box outreach and benevolence help",
+      "Upward sports programs and Christian family events"
+    ],
+    "tags": [
+      "church",
+      "church of god",
+      "western ave",
+      "discipleship",
+      "upward",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-first-christian",
+    "name": "First Christian Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Christian Church (Disciples of Christ)",
+    "address": "268 W Water St, Chillicothe, OH 45601",
+    "phone": "740-772-2432",
+    "email": "fccchillicothe@gmail.com",
+    "website": "https://fccchillicothe.org",
+    "pastorName": "Pastor Alan Newbanks",
+    "denomination": "Christian Church (Disciples of Christ)",
+    "serviceTimes": "Sunday: 10:30 AM Worship",
+    "hours": "Sunday: 10:30 AM Worship & Fellowship",
+    "description": "A movement for wholeness in a fragmented world, welcoming everyone to the Lord's Table each Sunday with strong commitments to local recovery support and hunger relief.",
+    "bulletPoints": [
+      "Weekly Sunday Worship with Holy Communion for all at 10:30 AM",
+      "Long-time meeting home for Chillicothe AA and NA recovery groups",
+      "Active support for Ross County community food pantries",
+      "Warm, inclusive, open communion tradition"
+    ],
+    "tags": [
+      "church",
+      "christian church",
+      "disciples of christ",
+      "recovery meetings",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-centerpoint",
+    "name": "Centerpoint Church - Chillicothe Campus",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Non-Denominational Christian",
+    "address": "180 Enterprise Dr, Chillicothe, OH 45601",
+    "phone": "740-773-0303",
+    "email": "chillicothe@centerpointchurch.com",
+    "website": "https://centerpointchurch.com/chillicothe",
+    "pastorName": "Campus Pastor Scott Bihl",
+    "denomination": "Non-Denominational",
+    "serviceTimes": "Sunday: 9:30 AM & 11:15 AM",
+    "hours": "Sunday Services: 9:30 AM & 11:15 AM",
+    "description": "Modern, engaging church experience featuring uplifting contemporary worship, practical gospel teaching, thriving kids environments (CP Kids), and life groups.",
+    "bulletPoints": [
+      "Energetic Sunday experiences at 9:30 AM & 11:15 AM",
+      "Secure, fun children's programs (nursery through 5th grade)",
+      "Weekly small groups meeting across Ross County",
+      "Active volunteer teams serving homeless, students, and families"
+    ],
+    "tags": [
+      "church",
+      "contemporary",
+      "centerpoint",
+      "youth",
+      "modern",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-quinn-chapel-ame",
+    "name": "Quinn Chapel A.M.E. Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "African Methodist Episcopal",
+    "address": "181 W 4th St, Chillicothe, OH 45601",
+    "phone": "740-774-4537",
+    "email": "quinnchapelamechillicothe@gmail.com",
+    "website": "https://quinnchapelchillicothe.com",
+    "pastorName": "Rev. Victor Davis",
+    "denomination": "African Methodist Episcopal (AME)",
+    "serviceTimes": "Sunday: 11:00 AM Worship | Sunday School: 9:30 AM",
+    "hours": "Sunday Worship: 11:00 AM",
+    "description": "One of Chillicothe's most historically significant congregations, founded in 1821 with vital ties to the Underground Railroad, civil rights, and passionate community service.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 11:00 AM with soulful gospel praise",
+      "Historic Ross County Underground Railroad station site",
+      "Community food and holiday outreach baskets",
+      "Youth mentorship, academic tutoring, and heritage celebrations"
+    ],
+    "tags": [
+      "church",
+      "ame",
+      "african methodist",
+      "underground railroad",
+      "historic",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-zion-baptist",
+    "name": "Zion Baptist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Baptist Church",
+    "address": "84 S Clinton Rd, Chillicothe, OH 45601",
+    "phone": "740-774-2975",
+    "email": "zionbaptistchillicothe@gmail.com",
+    "website": "https://zionbaptistchillicothe.org",
+    "pastorName": "Dr. J. Troy Gray (Senior Pastor)",
+    "denomination": "National Baptist / Missionary Baptist",
+    "serviceTimes": "Sunday: 10:45 AM Worship | Sunday School: 9:30 AM",
+    "hours": "Sunday Worship: 10:45 AM",
+    "description": "A beacon of faith and hope in Ross County offering dynamic gospel preaching, vibrant music ministry, youth programs, and benevolent care for local families.",
+    "bulletPoints": [
+      "Sunday Worship Celebration at 10:45 AM",
+      "Food assistance, coat drives, and back-to-school backpack outreaches",
+      "Wednesday night Bible study and prayer call",
+      "Senior citizen transportation and home visitation ministry"
+    ],
+    "tags": [
+      "church",
+      "baptist",
+      "gospel",
+      "missionary baptist",
+      "outreach",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-bridge-st-church-christ",
+    "name": "Bridge Street Church of Christ",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Churches of Christ",
+    "address": "147 N Bridge St, Chillicothe, OH 45601",
+    "phone": "740-773-4552",
+    "email": "bridgestreetchurch@gmail.com",
+    "website": "https://bridgestreetchurch.com",
+    "pastorName": "Minister Rick Lanning",
+    "denomination": "Churches of Christ (Non-Instrumental)",
+    "serviceTimes": "Sunday: 10:00 AM Worship | Bible Class: 9:00 AM",
+    "hours": "Sunday Services + Wednesday 7:00 PM",
+    "description": "New Testament Christian congregation adhering to Bible-only authority, a cappella singing, weekly communion, and warm Christian fellowship.",
+    "bulletPoints": [
+      "Sunday Worship with heartfelt a cappella praise at 10:00 AM",
+      "Weekly observance of the Lord's Supper each Sunday morning",
+      "Midweek Bible study on Wednesday at 7:00 PM",
+      "Disaster relief support and Ross County family aid"
+    ],
+    "tags": [
+      "church",
+      "church of christ",
+      "a cappella",
+      "communion",
+      "bible",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-high-st-church-christ",
+    "name": "High Street Church of Christ",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Churches of Christ",
+    "address": "244 N High St, Chillicothe, OH 45601",
+    "phone": "740-773-1490",
+    "email": "highstreetcoc@yahoo.com",
+    "website": "https://highstreetcoc.org",
+    "pastorName": "Minister Brad Seevers",
+    "denomination": "Churches of Christ",
+    "serviceTimes": "Sunday: 10:00 AM Worship | Bible Study: 9:00 AM",
+    "hours": "Sunday Services + Wednesday 7:00 PM",
+    "description": "A friendly, Bible-grounded congregation seeking to follow the pattern of the first-century church in love, truth, and community service.",
+    "bulletPoints": [
+      "Sunday Worship at 10:00 AM with weekly Lord's Supper",
+      "Free Bible correspondence courses and personal Bible studies",
+      "Active teen youth group and family retreats",
+      "Local benevolence fund assisting neighbors with emergency needs"
+    ],
+    "tags": [
+      "church",
+      "church of christ",
+      "high st",
+      "bible study",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-crossway-community",
+    "name": "Crossway Community Center & Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Community Church & Ministry Center",
+    "address": "940 Jefferson Ave, Chillicothe, OH 45601",
+    "phone": "740-774-6000",
+    "email": "crosswaychillicothe@gmail.com",
+    "website": "https://crosswaychillicothe.com",
+    "pastorName": "Pastor John Hocker",
+    "denomination": "Non-Denominational / Community Outreach",
+    "serviceTimes": "Sunday: 11:00 AM | Tuesday Live Free Recovery: 6:00 PM",
+    "hours": "Community Center open throughout the week",
+    "description": "East End ministry hub combining Sunday worship, youth sports, community clothing/food distributions, and the weekly Live Free faith-based recovery group.",
+    "bulletPoints": [
+      "Sunday Worship and Family Fellowship at 11:00 AM",
+      "Tuesday Live Free Faith-Based Recovery Support Group at 6:00 PM",
+      "Community gymnasium hosting youth activities and neighborhood meals",
+      "Direct partnership with Serenity Wellness and local recovery networks"
+    ],
+    "tags": [
+      "church",
+      "community center",
+      "east end",
+      "live free",
+      "recovery",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-kingston-umc",
+    "name": "Kingston United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "27 E Main St, Kingston, OH 45644",
+    "phone": "740-642-2615",
+    "email": "kingstonumc@horizonview.net",
+    "website": "https://kingstonumcoh.com",
+    "pastorName": "Pastor Jenefer Snyder",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 10:30 AM Worship | Sunday School: 9:15 AM",
+    "hours": "Sunday Services: 10:30 AM",
+    "description": "Historic village church in northern Ross County serving Kingston and Green Township with faithful worship, food pantry distribution, and recovery meetings.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM",
+      "Kingston Community Food Pantry operating monthly",
+      "Hosts Friday night Kingston Hope & Serenity AA group at 7:30 PM",
+      "Active summer Bible school and community festival participation"
+    ],
+    "tags": [
+      "church",
+      "kingston",
+      "ross county",
+      "methodist",
+      "food pantry",
+      "recovery meetings"
+    ]
+  },
+  {
+    "id": "church-bainbridge-umc",
+    "name": "Bainbridge United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "201 E Main St, Bainbridge, OH 45612",
+    "phone": "740-634-3151",
+    "email": "bainbridgeumc@horizonview.net",
+    "website": "https://bainbridgeumcoh.org",
+    "pastorName": "Pastor Matt Brookes",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 10:30 AM Worship",
+    "hours": "Sunday: 10:30 AM Worship",
+    "description": "Western Ross County church in historic Bainbridge offering warm community worship, weekly AA meetings, and emergency food and utility assistance for valley families.",
+    "bulletPoints": [
+      "Sunday Morning Worship Service at 10:30 AM",
+      "Hosts Wednesday night Bainbridge AA 12-Step group at 7:00 PM",
+      "Valley community food distribution and emergency assistance fund",
+      "Friendly small-town family atmosphere"
+    ],
+    "tags": [
+      "church",
+      "bainbridge",
+      "ross county",
+      "methodist",
+      "aa meetings",
+      "food pantry"
+    ]
+  },
+  {
+    "id": "church-frankfort-presbyterian",
+    "name": "Frankfort Presbyterian Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Presbyterian Church",
+    "address": "47 W Springfield St, Frankfort, OH 45628",
+    "phone": "740-998-4441",
+    "email": "frankfortpresbyterian@gmail.com",
+    "website": "https://frankfortpresbyterian.com",
+    "pastorName": "Pastor Todd Thomas",
+    "denomination": "Presbyterian (EPC / Evangelical)",
+    "serviceTimes": "Sunday: 10:30 AM Worship",
+    "hours": "Sunday: 10:30 AM Worship",
+    "description": "Long-standing congregation in northwestern Ross County committed to Christ's teachings, community fellowship, local clothing drives, and youth activities.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM",
+      "Community clothing closet and local emergency support",
+      "Support for Adena Local Schools families and students",
+      "Warm, intergenerational fellowship"
+    ],
+    "tags": [
+      "church",
+      "frankfort",
+      "ross county",
+      "presbyterian",
+      "clothing closet"
+    ]
+  },
+  {
+    "id": "church-frankfort-umc",
+    "name": "Frankfort United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "24 S Main St, Frankfort, OH 45628",
+    "phone": "740-998-5081",
+    "email": "frankfortumc@gmail.com",
+    "website": "https://frankfortumcoh.org",
+    "pastorName": "Pastor Neil Foster",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 9:30 AM Worship",
+    "hours": "Sunday: 9:30 AM Worship",
+    "description": "Village fellowship actively serving Frankfort, Concord Township, and western Ross County through worship, food drives, and family programs.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 9:30 AM",
+      "Monthly community food pantry and blessing box stewardship",
+      "Youth mission trips and community service initiatives",
+      "Active women's and men's service groups"
+    ],
+    "tags": [
+      "church",
+      "frankfort",
+      "ross county",
+      "methodist",
+      "food pantry"
+    ]
+  },
+  {
+    "id": "church-richmond-dale-cog",
+    "name": "Richmond Dale Church of God",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Church of God",
+    "address": "319 Market St, Richmond Dale, OH 45673",
+    "phone": "740-887-2512",
+    "email": "richmonddalecog@gmail.com",
+    "website": "https://richmonddalecog.com",
+    "pastorName": "Pastor John Evans",
+    "denomination": "Church of God (Cleveland, TN)",
+    "serviceTimes": "Sunday: 10:30 AM & 6:00 PM | Wednesday: 7:00 PM",
+    "hours": "Sunday Worship + Wednesday Bible Study",
+    "description": "Southeastern Ross County church in Richmond Dale offering spirit-filled worship, Bible preaching, children's ministries, and food outreach for local families.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM & Evening Service at 6:00 PM",
+      "Wednesday night Bible study and prayer meeting at 7:00 PM",
+      "Richmond Dale community food box ministry",
+      "Youth rallies, vacation Bible school, and gospel singings"
+    ],
+    "tags": [
+      "church",
+      "richmond dale",
+      "ross county",
+      "church of god",
+      "pentecostal"
+    ]
+  },
+  {
+    "id": "church-clarksburg-umc",
+    "name": "Clarksburg United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "10323 Main St, Clarksburg, OH 43115",
+    "phone": "740-993-2195",
+    "email": "clarksburgumc@gmail.com",
+    "website": "https://clarksburgumcoh.org",
+    "pastorName": "Pastor Dan Bennett",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 10:00 AM Worship",
+    "hours": "Sunday: 10:00 AM Worship",
+    "description": "Serving the rural community of Clarksburg and northern Ross County with Christ-centered worship, local food assistance, and community fellowship events.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:00 AM",
+      "Local community food pantry support and benevolence help",
+      "Holiday food baskets for local families in need",
+      "Close community ties with rural farm families and neighbors"
+    ],
+    "tags": [
+      "church",
+      "clarksburg",
+      "ross county",
+      "methodist",
+      "rural"
+    ]
+  },
+  {
+    "id": "church-bourneville-christian",
+    "name": "Bourneville Christian Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Christian Church",
+    "address": "9976 US Route 50, Bourneville, OH 45617",
+    "phone": "740-626-2581",
+    "email": "bournevillechristian@gmail.com",
+    "website": "https://bournevillechristian.org",
+    "pastorName": "Pastor Rick Phillips",
+    "denomination": "Independent Christian Church",
+    "serviceTimes": "Sunday: 10:30 AM Worship | Sunday School: 9:30 AM",
+    "hours": "Sunday: 10:30 AM Worship",
+    "description": "Bible-believing country church in Paint Township providing worship, youth ministry, and compassionate care along the US-50 corridor in Ross County.",
+    "bulletPoints": [
+      "Sunday Worship Service at 10:30 AM",
+      "Weekly communion celebrated with all believers",
+      "Paint Valley school district community assistance and coat drives",
+      "Friendly, welcoming country congregation"
+    ],
+    "tags": [
+      "church",
+      "bourneville",
+      "paint valley",
+      "ross county",
+      "christian church"
+    ]
+  },
+  {
+    "id": "church-beulah-chapel",
+    "name": "Beulah Chapel Christian Union Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Christian Union",
+    "address": "585 Beulah Park, Chillicothe, OH 45601",
+    "phone": "740-775-6804",
+    "email": "beulahchapelcu@gmail.com",
+    "website": "https://beulahchapel.org",
+    "pastorName": "Pastor Bruce Viar",
+    "denomination": "Christian Union",
+    "serviceTimes": "Sunday: 10:30 AM & 6:00 PM | Wednesday: 7:00 PM",
+    "hours": "Sunday Worship + Midweek Service",
+    "description": "A loving Christian Union congregation in eastern Ross County offering biblical preaching, joyful music, active youth groups, and benevolent ministries.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM & Evening at 6:00 PM",
+      "Wednesday evening prayer and youth programs at 7:00 PM",
+      "Annual Christian Union camp meeting and community dinners",
+      "Active prayer chain and emergency benevolence support"
+    ],
+    "tags": [
+      "church",
+      "christian union",
+      "chillicothe",
+      "beulah chapel",
+      "worship"
+    ]
+  },
+  {
+    "id": "church-lighthouse-baptist",
+    "name": "Lighthouse Baptist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Baptist Church",
+    "address": "341 Clinton Rd, Chillicothe, OH 45601",
+    "phone": "740-775-8889",
+    "email": "lighthousebaptistchillicothe@gmail.com",
+    "website": "https://lighthousebaptistchillicothe.com",
+    "pastorName": "Pastor Ryan Bevan",
+    "denomination": "Independent Fundamental Baptist (KJV)",
+    "serviceTimes": "Sunday: 10:30 AM & 6:00 PM | Wednesday: 7:00 PM",
+    "hours": "Sunday Services + Wednesday Evening",
+    "description": "Traditional Baptist church emphasizing King James Bible preaching, old-fashioned hymns, bus ministry, and door-to-door community outreach in Chillicothe.",
+    "bulletPoints": [
+      "Sunday Services at 10:30 AM & 6:00 PM",
+      "Bus ministry providing free transportation to church for children",
+      "Traditional choir and congregational hymn singing",
+      "Weekly door-to-door visitation and tracts outreach"
+    ],
+    "tags": [
+      "church",
+      "baptist",
+      "traditional",
+      "bus ministry",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-pleasant-valley-cog",
+    "name": "Pleasant Valley Church of God",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Church of God",
+    "address": "688 Pleasant Valley Rd, Chillicothe, OH 45601",
+    "phone": "740-773-8722",
+    "email": "pvcog@horizonview.net",
+    "website": "https://pleasantvalleychurchofgod.org",
+    "pastorName": "Pastor Harry DeMint",
+    "denomination": "Church of God (Cleveland, TN)",
+    "serviceTimes": "Sunday: 10:30 AM & 6:00 PM | Wednesday: 7:00 PM",
+    "hours": "Sunday Worship + Midweek",
+    "description": "A community church in Pleasant Valley offering vibrant worship, Spirit-led preaching, youth ministries, and caring pastoral counsel.",
+    "bulletPoints": [
+      "Sunday Worship at 10:30 AM and 6:00 PM",
+      "Wednesday night Bible study and prayer at 7:00 PM",
+      "Community food box outreach and senior support",
+      "Warm family atmosphere and children's church"
+    ],
+    "tags": [
+      "church",
+      "church of god",
+      "pleasant valley",
+      "ross county",
+      "worship"
+    ]
+  },
+  {
+    "id": "church-south-salem-presbyterian",
+    "name": "South Salem Presbyterian Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Presbyterian Church",
+    "address": "298 Church St, South Salem, OH 45681",
+    "phone": "740-981-2290",
+    "email": "southsalempresbyterian@gmail.com",
+    "website": "https://southsalempresbyterian.org",
+    "pastorName": "Pastor Kevin Kelly",
+    "denomination": "Presbyterian Church (USA)",
+    "serviceTimes": "Sunday: 10:00 AM Worship",
+    "hours": "Sunday: 10:00 AM Worship",
+    "description": "Historic rural Ross County church dating back to 1802, home to the historic Salem Academy grounds and a close-knit community of faithful neighbors.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:00 AM",
+      "Historic Salem Academy preservation and community museum",
+      "Local community fellowship suppers and food bank support",
+      "Serving Buckskin Township and surrounding valley families"
+    ],
+    "tags": [
+      "church",
+      "south salem",
+      "ross county",
+      "presbyterian",
+      "historic"
+    ]
+  },
+  {
+    "id": "church-yellowbud-cog",
+    "name": "Yellowbud Church of God",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Church of God",
+    "address": "12318 State Route 104, Yellowbud, OH 43113",
+    "phone": "740-993-4112",
+    "email": "yellowbudcog@gmail.com",
+    "website": "https://yellowbudcog.com",
+    "pastorName": "Pastor Gary Thompson",
+    "denomination": "Church of God (Cleveland, TN)",
+    "serviceTimes": "Sunday: 10:30 AM & 6:00 PM | Wednesday: 7:00 PM",
+    "hours": "Sunday Services + Wednesday Midweek",
+    "description": "Located along State Route 104 in northern Ross County, serving the rural farming community with vibrant worship, prayer, and family ministries.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM",
+      "Wednesday evening prayer and youth Bible study",
+      "Community blessing box and emergency food aid",
+      "Faithful community ministry along the Scioto river valley"
+    ],
+    "tags": [
+      "church",
+      "yellowbud",
+      "ross county",
+      "church of god",
+      "rural"
+    ]
+  },
+  {
+    "id": "church-londonderry-umc",
+    "name": "Londonderry United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "38927 US-50, Londonderry, OH 45647",
+    "phone": "740-887-3211",
+    "email": "londonderryumc@gmail.com",
+    "website": "https://londonderryumcoh.org",
+    "pastorName": "Pastor Cheryl Morrison",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 10:30 AM Worship",
+    "hours": "Sunday: 10:30 AM Worship",
+    "description": "Eastern Ross County village church providing compassionate pastoral care, Sunday worship, and community assistance along the US-50 corridor.",
+    "bulletPoints": [
+      "Sunday Worship Service at 10:30 AM",
+      "Londonderry community food distribution",
+      "Southeastern local school district assistance programs",
+      "Welcoming small-town congregation"
+    ],
+    "tags": [
+      "church",
+      "londonderry",
+      "ross county",
+      "methodist",
+      "food assistance"
+    ]
+  },
+  {
+    "id": "church-hallsville-umc",
+    "name": "Hallsville United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "8585 State Route 180, Hallsville, OH 45633",
+    "phone": "740-655-2244",
+    "email": "hallsvilleumc@gmail.com",
+    "website": "https://hallsvilleumcoh.org",
+    "pastorName": "Pastor David Cox",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 9:30 AM Worship",
+    "hours": "Sunday: 9:30 AM Worship",
+    "description": "Colerain Township congregation serving northeastern Ross County with community worship, youth programs, and agricultural community support.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 9:30 AM",
+      "Support for Zane Trace Local School students and families",
+      "Community food box and emergency fuel fund",
+      "Warm rural Christian hospitality"
+    ],
+    "tags": [
+      "church",
+      "hallsville",
+      "ross county",
+      "methodist",
+      "zane trace"
+    ]
+  },
+  {
+    "id": "church-tyler-memorial-umc",
+    "name": "Tyler Memorial United Methodist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Methodist Church",
+    "address": "260 Mill St, Chillicothe, OH 45601",
+    "phone": "740-773-1383",
+    "email": "tylerumcchillicothe@gmail.com",
+    "website": "https://tylermemorialumc.com",
+    "pastorName": "Pastor Sam Mincey",
+    "denomination": "United Methodist (UMC)",
+    "serviceTimes": "Sunday: 10:30 AM Worship",
+    "hours": "Sunday: 10:30 AM Worship",
+    "description": "East End Chillicothe neighborhood church dedicated to community care, children's outreach, and weekly worship.",
+    "bulletPoints": [
+      "Sunday Worship at 10:30 AM",
+      "East End neighborhood food pantry and meal outreach",
+      "Vacation Bible school and community family days",
+      "Warm and caring congregation"
+    ],
+    "tags": [
+      "church",
+      "methodist",
+      "east end",
+      "food pantry",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-mount-logan-baptist",
+    "name": "Mount Logan Baptist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Baptist Church",
+    "address": "420 E 2nd St, Chillicothe, OH 45601",
+    "phone": "740-775-4340",
+    "email": "mountloganbaptist@gmail.com",
+    "website": "https://mountloganbaptist.org",
+    "pastorName": "Pastor Ronald Jenkins",
+    "denomination": "Baptist",
+    "serviceTimes": "Sunday: 11:00 AM Worship | Sunday School: 9:45 AM",
+    "hours": "Sunday Worship: 11:00 AM",
+    "description": "East End congregation providing spiritual encouragement, biblical teaching, community meals, and assistance to local families.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 11:00 AM",
+      "Community food box ministry and holiday gift outreaches",
+      "Wednesday evening Bible study at 6:30 PM",
+      "Close community connection with the Alano Club and neighborhood recovery"
+    ],
+    "tags": [
+      "church",
+      "baptist",
+      "east end",
+      "chillicothe",
+      "mount logan"
+    ]
+  },
+  {
+    "id": "church-liberty-baptist",
+    "name": "Liberty Baptist Church",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Baptist Church",
+    "address": "28260 US-23, Chillicothe, OH 45601",
+    "phone": "740-773-1081",
+    "email": "libertybaptistchillicothe@gmail.com",
+    "website": "https://libertybaptistchillicothe.com",
+    "pastorName": "Pastor Douglas Campbell",
+    "denomination": "Independent Baptist",
+    "serviceTimes": "Sunday: 10:30 AM & 6:00 PM | Wednesday: 7:00 PM",
+    "hours": "Sunday Services + Wednesday Evening",
+    "description": "Gospel-centered Baptist congregation on North US-23 offering verse-by-verse preaching, missionary support, and family discipleship.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM & Evening at 6:00 PM",
+      "Worldwide missions support and local evangelism",
+      "King's Kids youth program and Sunday School",
+      "Friendly and loving atmosphere"
+    ],
+    "tags": [
+      "church",
+      "baptist",
+      "independent baptist",
+      "us-23",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-sunrush-church-christ",
+    "name": "Sunrush Church of Christ",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Churches of Christ",
+    "address": "84 Sunrush Blvd, Chillicothe, OH 45601",
+    "phone": "740-775-6540",
+    "email": "sunrushchurch@gmail.com",
+    "website": "https://sunrushchurch.com",
+    "pastorName": "Evangelist Ron Thomas",
+    "denomination": "Churches of Christ",
+    "serviceTimes": "Sunday: 10:00 AM Worship | Sunday School: 9:00 AM",
+    "hours": "Sunday Services + Wednesday 7:00 PM",
+    "description": "Non-denominational congregation of Christians following the Bible as their only guide, worshiping in spirit and truth with weekly communion.",
+    "bulletPoints": [
+      "Sunday Worship with a cappella singing at 10:00 AM",
+      "Observance of the Lord's Supper each Sunday",
+      "Midweek Bible study for all ages on Wednesday at 7:00 PM",
+      "Active benevolence for Ross County residents"
+    ],
+    "tags": [
+      "church",
+      "church of christ",
+      "sunrush",
+      "communion",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-jefferson-ave-church-christ",
+    "name": "Jefferson Avenue Church of Christ",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Churches of Christ",
+    "address": "930 Jefferson Ave, Chillicothe, OH 45601",
+    "phone": "740-775-2311",
+    "email": "jeffersonavechurch@gmail.com",
+    "website": "https://jeffersonavecoc.org",
+    "pastorName": "Minister Mark Phillips",
+    "denomination": "Churches of Christ",
+    "serviceTimes": "Sunday: 10:30 AM Worship | Sunday School: 9:30 AM",
+    "hours": "Sunday Services + Wednesday 7:00 PM",
+    "description": "East End congregation dedicated to simple New Testament Christianity, community compassion, and scriptural truth.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM",
+      "East End neighborhood outreach and meal assistance",
+      "Bible studies, teen youth group, and home visitation",
+      "Weekly communion celebrated each Sunday"
+    ],
+    "tags": [
+      "church",
+      "church of christ",
+      "jefferson ave",
+      "east end",
+      "chillicothe"
+    ]
+  },
+  {
+    "id": "church-first-church-nazarene",
+    "name": "First Church of the Nazarene",
+    "category": "churches",
+    "categoryLabel": "Churches & Faith Communities",
+    "subcategory": "Church of the Nazarene",
+    "address": "374 S Paint St, Chillicothe, OH 45601",
+    "phone": "740-774-3200",
+    "email": "chillicothenaz@gmail.com",
+    "website": "https://chillicothenaz.org",
+    "pastorName": "Pastor Jeremy Schinkle",
+    "denomination": "Church of the Nazarene",
+    "serviceTimes": "Sunday: 10:30 AM Worship | Sunday School: 9:30 AM",
+    "hours": "Sunday Services + Wednesday 6:30 PM",
+    "description": "A holiness church on South Paint Street passionate about making Christ-like disciples, providing compassionate community ministries, and family care.",
+    "bulletPoints": [
+      "Sunday Morning Worship at 10:30 AM",
+      "Wednesday night caravan kids club and youth group",
+      "Downtown compassion ministry and blessing box",
+      "Warm, supportive church family"
+    ],
+    "tags": [
+      "church",
+      "nazarene",
+      "south paint",
+      "holiness",
+      "discipleship",
+      "chillicothe"
+    ]
   }
 ]

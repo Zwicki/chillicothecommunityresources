@@ -14,6 +14,8 @@ import {
   Bus, 
   Briefcase, 
   Users,
+  Compass,
+  Church,
   ChevronLeft,
   Printer,
   PlusCircle,
@@ -49,6 +51,8 @@ const getCategoryIcon = (iconName: string, className: string = 'w-4 h-4') => {
     case 'Stethoscope': return <Stethoscope className={className} />;
     case 'Bus': return <Bus className={className} />;
     case 'Briefcase': return <Briefcase className={className} />;
+    case 'Compass': return <Compass className={className} />;
+    case 'Church': return <Church className={className} />;
     case 'Users':
     default:
       return <Users className={className} />;

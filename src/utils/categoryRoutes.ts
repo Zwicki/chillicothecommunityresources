@@ -17,7 +17,9 @@ export const CATEGORY_TO_SLUG: Record<ResourceCategory | 'all', string> = {
   medical: 'medical',
   transportation: 'transportation',
   'employment-legal': 'employment-legal',
-  nonprofits: 'nonprofits'
+  nonprofits: 'nonprofits',
+  'support-meetings': 'support-meetings',
+  churches: 'churches'
 };
 
 // Friendly aliases so links like /food, /foodbanks, /food-pantries, /mentalhealth all resolve seamlessly
@@ -106,7 +108,22 @@ export const SLUG_TO_CATEGORY: Record<string, ResourceCategory | 'all'> = {
   // Nonprofits
   nonprofits: 'nonprofits',
   charity: 'nonprofits',
-  community: 'nonprofits'
+  community: 'nonprofits',
+
+  // Support Meetings
+  'support-meetings': 'support-meetings',
+  meetings: 'support-meetings',
+  support: 'support-meetings',
+  aa: 'support-meetings',
+  na: 'support-meetings',
+  '12-step': 'support-meetings',
+
+  // Churches
+  churches: 'churches',
+  church: 'churches',
+  faith: 'churches',
+  worship: 'churches',
+  ministry: 'churches'
 };
 
 /**

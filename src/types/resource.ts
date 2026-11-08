@@ -13,7 +13,9 @@ export type ResourceCategory =
   | 'medical'
   | 'transportation'
   | 'employment-legal'
-  | 'nonprofits';
+  | 'nonprofits'
+  | 'support-meetings'
+  | 'churches';
 
 export interface Resource {
   id: string;
@@ -32,6 +34,9 @@ export interface Resource {
   email?: string;
   isEmergency?: boolean;
   tags: string[];
+  pastorName?: string;
+  denomination?: string;
+  serviceTimes?: string;
 }
 
 export interface UserFeedback {

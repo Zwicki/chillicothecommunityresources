@@ -12,7 +12,9 @@ import {
   Stethoscope, 
   Bus, 
   Briefcase, 
-  Users 
+  Users,
+  Compass,
+  Church
 } from 'lucide-react';
 import { ResourceCategory } from '../types/resource';
 
@@ -170,5 +172,23 @@ export const CATEGORIES: CategoryMeta[] = [
     description: 'Local 501(c)(3) charities, youth mentoring, developmental disabilities, humane society, and community endowments',
     badgeColor: 'bg-lime-100 text-lime-800',
     borderColor: 'border-lime-400'
+  },
+  {
+    id: 'support-meetings',
+    label: 'Support Meetings (AA, NA & Recovery)',
+    shortLabel: 'Support Meetings',
+    iconName: 'Compass',
+    description: 'Live GPS directory of AA, NA, Celebrate Recovery, SMART, and faith-based 12-step support meetings across Ross County',
+    badgeColor: 'bg-indigo-100 text-indigo-800',
+    borderColor: 'border-indigo-400'
+  },
+  {
+    id: 'churches',
+    label: 'Churches & Faith Communities',
+    shortLabel: 'Churches',
+    iconName: 'Church',
+    description: 'Comprehensive directory of churches, chapels, and faith communities in Chillicothe and Ross County with pastors and service times',
+    badgeColor: 'bg-amber-100 text-amber-900',
+    borderColor: 'border-amber-400'
   }
 ];

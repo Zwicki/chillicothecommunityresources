@@ -22,6 +22,7 @@ import { parseRouteFromPath, getPathForCategory } from './utils/categoryRoutes';
 import { AuthUser, SUPER_USER_EMAIL, isSuperUserEmail } from './types/auth';
 import { LoginModal } from './components/LoginModal';
 import { ResourceModal } from './components/ResourceModal';
+import { SupportMeetingsView } from './components/SupportMeetingsView';
 import { SearchX, Shield, RefreshCw, ChevronLeft, Printer, Plus, RotateCcw, Download } from 'lucide-react';
 
 const STORAGE_KEY = 'chillicothe_community_submissions_v1';
@@ -480,8 +481,11 @@ export const App: React.FC = () => {
       const inNotes = res.notes ? res.notes.toLowerCase().includes(query) : false;
       const inBullets = res.bulletPoints ? res.bulletPoints.some(b => b.toLowerCase().includes(query)) : false;
       const inTags = res.tags ? res.tags.some(t => t.toLowerCase().includes(query)) : false;
+      const inPastor = res.pastorName ? res.pastorName.toLowerCase().includes(query) : false;
+      const inDenom = res.denomination ? res.denomination.toLowerCase().includes(query) : false;
+      const inServices = res.serviceTimes ? res.serviceTimes.toLowerCase().includes(query) : false;
 
-      return inName || inAddress || inPhone || inCategory || inDesc || inNotes || inBullets || inTags;
+      return inName || inAddress || inPhone || inCategory || inDesc || inNotes || inBullets || inTags || inPastor || inDenom || inServices;
     });
   }, [allResources, activeCategory, searchQuery]);
 
@@ -669,8 +673,13 @@ export const App: React.FC = () => {
               </div>
             )}
 
-            {/* Resources Cards Grid */}
-            {filteredResources.length > 0 ? (
+            {/* Resources Cards Grid or Support Meetings Interactive Finder */}
+            {activeCategory === 'support-meetings' ? (
+              <SupportMeetingsView
+                isSuperUser={Boolean(currentUser?.isSuperUser)}
+                userEmail={currentUser?.email}
+              />
+            ) : filteredResources.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredResources.map((resource) => (
                   <ResourceCard

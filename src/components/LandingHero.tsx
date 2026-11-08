@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Search, MapPin, Heart, Utensils, Home, PhoneCall, Printer, X, ArrowRight, Phone } from 'lucide-react';
+import { Search, MapPin, Heart, Utensils, Home, PhoneCall, Printer, X, ArrowRight, Phone, Compass, Church } from 'lucide-react';
 import { Resource, ResourceCategory } from '../types/resource';
 
 interface LandingHeroProps {
@@ -265,6 +265,22 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           >
             <Heart className="w-3.5 h-3.5 text-emerald-400" />
             <span>Addiction Recovery / MAT</span>
+          </button>
+
+          <button
+            onClick={() => onSelectCategory('support-meetings')}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-indigo-200 border border-indigo-500/70 hover:bg-indigo-950 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
+          >
+            <Compass className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Support Meetings (AA &amp; NA)</span>
+          </button>
+
+          <button
+            onClick={() => onSelectCategory('churches')}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 text-amber-200 border border-amber-500/70 hover:bg-amber-950 transition-colors shadow-md backdrop-blur-md font-semibold cursor-pointer"
+          >
+            <Church className="w-3.5 h-3.5 text-amber-400" />
+            <span>Churches &amp; Faith</span>
           </button>
 
           <button

@@ -979,6 +979,7 @@ const EventCard: React.FC<EventCardProps> = ({
   currentUser,
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [imageError, setImageError] = useState<boolean>(false);
   const isLongDescription = (event.description?.length || 0) > 130 || event.description?.includes('\n');
   const formattedDates = formatEventDates(event.date, event.endDate);
   const isMultiDay = Boolean(event.endDate && event.endDate !== event.date);
@@ -1003,11 +1004,12 @@ const EventCard: React.FC<EventCardProps> = ({
     <div className="bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 shadow-xs hover:shadow-md transition-all overflow-hidden flex flex-col justify-between">
       <div>
         {/* Flyer / JPG Image Preview Banner (if uploaded) */}
-        {event.imageUrl && (
-          <div className="relative h-44 w-full bg-slate-900 overflow-hidden group cursor-pointer" onClick={() => onViewFlyer(event)}>
+        {event.imageUrl && !imageError && (
+          <div className="relative h-44 w-full bg-slate-100 overflow-hidden group cursor-pointer" onClick={() => onViewFlyer(event)}>
             <img
               src={event.imageUrl}
               alt={event.title}
+              onError={() => setImageError(true)}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">

@@ -10,7 +10,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Health",
     categories: ["Health", "Mental Health", "Community"],
     description: "The SPVMHC Fall Art Show is back! With the theme \"Healing Through Art\" this year's show will take place on November 5. All individuals who receive services through SPVMHC are encouraged to contribute and everyone is welcome to attend!",
-    imageUrl: "https://scontent.fosu2-2.fna.fbcdn.net/v/t39.30808-6/851101854_1835768144872327_4655498582851386672_n.jpg?stp=dst-jpg_tt6&cstp=mx734x956&ctp=s734x956&_nc_cat=110&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=XQO8SjYyFiIQ7kNvwHjwT7v&_nc_oc=Adq3a0SM89LZ2Ihjhnc3FuR6WK08dMfzpi8uzMvDWrA3enyRFAjLKPXL-yNbVKMJgByaYhQL7NTlcDQCjYTuoVyO&_nc_zt=23&_nc_ht=scontent.fosu2-2.fna&_nc_gid=PRF8hmrqVUqWV1ERTELZTw&_nc_ss=782a8&oh=00_AQRCWeM3CNrODPg_AKRl_U4-6KEYx_-L5o3V7hKbYvjXPw&oe=6AF285C0",
+    imageUrl: "/images/events/healing-art.svg",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:55:07.659Z"
   },
@@ -23,7 +23,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Community",
     categories: ["Community", "Family"],
     description: "🍂 HEY PCMP TEENS AND MENTORS!\nOur November event, Gather & Give: A Service Day, is just ONE week away!\nWe’re bringing back a favorite from last year! This month, we will come together for an afternoon of learning, serving, and giving back.\nWe’ll start by putting life skills into action, working together to prepare a full meal for 70 people! Then, we’ll head to the Ross County Community Action(OFFICIAL) Community Resource Center to serve dinner to members of our community.\nPCMP Teens & Mentors, here's the plan:\n🍽️ 1:00–3:30 PM | Cooking & Meal Prep at Paper City Coffee (shoutout to PCC for providing us the space to cook!)\n❤️ 4:00–6:00 PM | Serving Dinner at the Community Resource Center (804 Eastern Avenue)\nWe love opportunities like this because mentoring is about more than just spending time together. It's about learning practical skills and recognizing the difference we can make when we show up for others.\n***This event is only open to PCMP teens and mentors.",
-    imageUrl: "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-6/885548340_1557372419757670_2030851860014275704_n.jpg?stp=dst-jpg_tt6&cstp=mx1545x2000&ctp=s1545x2000&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=tlZeTTntCQgQ7kNvwHNtr00&_nc_oc=Adp0LLxbkLLuv8fmnkEEEcqRMeLgplKXuUgOYqDUQGlvSWtPLTbcP1blZhw8NQTpAN8AC94ml9iSF9VJfWNpx6ok&_nc_zt=23&_nc_ht=scontent.fosu2-1.fna&_nc_gid=eDYzt84AfG-vQvFOuivywA&_nc_ss=782a8&oh=00_AQThcNnl3IFupJcuQ2Lrzfgcpz9CD5BC2kxlLfFzpYwYgg&oe=6AF28745",
+    imageUrl: "/images/events/pcmp-gather-give.svg",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:53:41.351Z"
   },
@@ -36,7 +36,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Community",
     categories: ["Community", "Mental Health", "Recovery"],
     description: "What originally started as an effort to provide free grief support to those struggling with the loss of Jody Wilson has grown into something we want to extend to our entire community. 💙\n\nKnowing the impact Jody had on so many people, we believe he would have wanted this support to be available to anyone who needs it.\n\nSerenity Wellness Center will be hosting two FREE grief support groups, open to anyone navigating loss or struggling with grief.\n\nSaturday, November 7th & 14th\n11:00 AM – 1:00 PM\n\n📍 Serenity Wellness Center\n637 Central Center, Chillicothe\n\nBoth groups will be facilitated by Michelle Gilmore and Rick Fannin. Refreshments will be provided, and no registration is required.\n\nWhether your loss is recent or something you’ve been carrying for a while, you’re welcome to join us.\n\nPlease share so we can reach those who may need a little extra support right now.",
-    imageUrl: "https://scontent.fosu2-2.fna.fbcdn.net/v/t39.30808-6/883961637_1137787702376095_6395189628518437165_n.jpg?stp=dst-jpg_tt6&cstp=mx1254x1254&ctp=s1254x1254&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ZPeuE8ru1kMQ7kNvwHgB9va&_nc_oc=AdrYdbODZ6dPl9ARUcHtS_C7MIDd-3w2vcGIsTfXJgUchsX76SvnSFvlG6yctEkduG8MZ_23NP4sHF5p2shHSmI5&_nc_zt=23&_nc_ht=scontent.fosu2-2.fna&_nc_gid=hz2gVlNURfPagVjzO59X3g&_nc_ss=782a8&oh=00_AQS1Tx7HchkbYBgpiSdV3CDbcjJERHEPD0PDgQTdKEFagg&oe=6AF27136",
+    imageUrl: "/images/events/grief-support.svg",
     linkUrl: "https://www.facebook.com/share/p/1DjZyY7SYC/",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:47:30.032Z"
@@ -50,7 +50,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Food",
     categories: ["Food", "Community"],
     description: "Free cloting, food, and hygiene at 63 E. Water Street, Chillicothe on 11/5 from 10:00 AM - 2:00 PM.",
-    imageUrl: "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-6/865110670_1419748620304608_5047046077442302957_n.jpg?stp=dst-jpg_tt6&cstp=mx1341x2048&ctp=s1341x2048&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=NZSrbJQdX0AQ7kNvwFFydGd&_nc_oc=Adre60g-LEl0U8-C26dZvgjHYk2bCWXp4im-Hl9F1nUWUjVa9yiicS8W5Z6zcIUyi74L1QFytqHfoUzP7IEaeei6&_nc_zt=23&_nc_ht=scontent.fosu2-1.fna&_nc_gid=yWyqIE6NDaOiH3-Ki1RJAA&_nc_ss=782a8&oh=00_AQS6gx-P-T4N9QgQxFz2n-RAQW3MVsBVciyG918318JjPg&oe=6AF2726C",
+    imageUrl: "/images/events/free-clothing-food.svg",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:46:23.326Z"
   },
@@ -63,7 +63,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Community",
     categories: ["Community", "Mental Health", "Recovery"],
     description: "What originally started as an effort to provide free grief support to those struggling with the loss of Jody Wilson has grown into something we want to extend to our entire community. 💙\n\nKnowing the impact Jody had on so many people, we believe he would have wanted this support to be available to anyone who needs it.\n\nSerenity Wellness Center will be hosting two FREE grief support groups, open to anyone navigating loss or struggling with grief.\n\nSaturday, November 7th & 14th\n11:00 AM – 1:00 PM\n\n📍 Serenity Wellness Center\n637 Central Center, Chillicothe\n\nBoth groups will be facilitated by Michelle Gilmore and Rick Fannin. Refreshments will be provided, and no registration is required.\n\nWhether your loss is recent or something you’ve been carrying for a while, you’re welcome to join us.\n\nPlease share so we can reach those who may need a little extra support right now.",
-    imageUrl: "https://scontent.fosu2-2.fna.fbcdn.net/v/t39.30808-6/883961637_1137787702376095_6395189628518437165_n.jpg?stp=dst-jpg_tt6&cstp=mx1254x1254&ctp=s1254x1254&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ZPeuE8ru1kMQ7kNvwHgB9va&_nc_oc=AdrYdbODZ6dPl9ARUcHtS_C7MIDd-3w2vcGIsTfXJgUchsX76SvnSFvlG6yctEkduG8MZ_23NP4sHF5p2shHSmI5&_nc_zt=23&_nc_ht=scontent.fosu2-2.fna&_nc_gid=hz2gVlNURfPagVjzO59X3g&_nc_ss=782a8&oh=00_AQS1Tx7HchkbYBgpiSdV3CDbcjJERHEPD0PDgQTdKEFagg&oe=6AF27136",
+    imageUrl: "/images/events/grief-support.svg",
     linkUrl: "https://www.facebook.com/share/p/1DjZyY7SYC/",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:34:51.760Z"
@@ -77,7 +77,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Food",
     categories: ["Food", "Community"],
     description: "MARK YOUR CALENDAR…...  Thanksgiving Community Free Meal  Sunday, November 15. 12:00-1:00 🦃 Turkey/noodles, mashed potatoes, corn, green beans, dressing, cranberry salad, pumpkin pie, brownies, & drinks. Eat in or Carryout!",
-    imageUrl: "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.30808-6/892172613_1830681584749051_7559714086355141210_n.jpg?stp=dst-jpg_tt6&cstp=mx518x960&ctp=s518x960&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=BWLpX5qlonQQ7kNvwH6GygF&_nc_oc=AdpNsvwz5qa768uPYU8vZbgMXq6aLRa5sns5n2M3NX9sjHAbEkRAQIXaRuG0isVgIwoG-YOfpDbvYqx0INjxzGZE&_nc_zt=23&_nc_ht=scontent.fosu2-1.fna&_nc_gid=eynQL2n5IBr04a7PeV-xFQ&_nc_ss=782a8&oh=00_AQT_g-9JLW8HYbbhrOdiIK8tSmDuUUIN4NjGtOF6vuKAqQ&oe=6AF2715D",
+    imageUrl: "/images/events/thanksgiving-meal.svg",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:30:44.195Z"
   },
@@ -90,7 +90,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Community",
     categories: ["Community", "Family", "Mental Health"],
     description: "Autism and Special Needs Parent to Parent Support Group",
-    imageUrl: "https://scontent.fosu2-1.fna.fbcdn.net/v/t39.99422-6/885580498_1798652338067403_1168306804246022042_n.png?stp=dst-jpg_tt6&cstp=mx1545x2000&ctp=s1545x2000&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=PScTk-2WdvQQ7kNvwEfKR_9&_nc_oc=Adqluw1Py_cY58gDEB4F044uhPLBLpBFCfPqoKJX3UCQKCbWKn8yxbKRul7VSxr0u4hs8z7U4iTP_wzSSgF3nWfV&_nc_zt=14&_nc_ht=scontent.fosu2-1.fna&_nc_gid=499QKs5kyYCNINGI1D1exA&_nc_ss=782a8&oh=00_AQSVhWrxGR7xCbDgVCgABOJ59SMmnENtLZ5iUL9LE0oT-Q&oe=6AF27A7C",
+    imageUrl: "/images/events/autism-support.svg",
     linkUrl: "https://www.facebook.com/profile.php?id=100057137182799",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:25:31.314Z"
@@ -102,7 +102,7 @@ export const INITIAL_EVENTS: CommunityEvent[] = [
     category: "Community",
     categories: ["Community"],
     description: "TAKE THE CHILL OUT OF CHILLICOTHE! ❄️\nINTRODUCING OUR 1ST ANNUAL COMFORT FOR A CAUSE!❤️\nWe’re incredibly excited to announce a special community initiative here at Chillicothe Comfort Heating & Air!\nOver the next month, members of our team will be volunteering their weekends to provide completely FREE furnace safety inspections to senior citizens, veterans, and families in need throughout the Chillicothe area!\nOur community has supported us tremendously over the years, and now it’s our turn to give back! ❤️ Our goal is simple: help our neighbors stay safe and warm this winter!\n📋 HOW TO SIGN UP OR NOMINATE SOMEONE:\nYou can apply for yourself or nominate someone who could benefit from this event!\n👇 APPLY HERE:\n🌐 https://comfort4acause.netlify.app\n🚫 IMPORTANT: Applications MUST be submitted through the online form. We will NOT accept phone calls to schedule inspections. Our team will contact selected applicants directly.\n⚠️ PLEASE UNDERSTAND:\nThis is our first year hosting Comfort For A Cause, and we don’t know how many applications to expect! While we’d love to help everyone, submitting an application does NOT guarantee a visit.\nOur team will be volunteering as much time as possible to reach as many households as we can!\nWe’re proud to call Chillicothe home and hope to make this an annual tradition for years to come.\nFrom our entire Chillicothe Comfort family, THANK YOU for supporting us and allowing us to give back to the community we love! ❤️ See less",
-    imageUrl: "https://scontent.fosu2-2.fna.fbcdn.net/v/t51.82787-15/885084374_18101709350556637_6947764498759897955_n.jpg?stp=dst-jpg_tt6&cstp=mx2560x3296&ctp=s2560x3296&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=KkIj8NYww48Q7kNvwHgu3a5&_nc_oc=AdpNCrYUAFarrFyVJ7Ctf0xr-_BdSYWwuqIFSrI_5Tnr_Uk4sZ3iabpNwq9L1KvS2kgT0ZMxw7vVzzngeDxF310P&_nc_zt=23&_nc_ht=scontent.fosu2-2.fna&_nc_gid=1tnBNwAra_NibO20JdNLqw&_nc_ss=782a8&oh=00_AQR9-8nrOzNeAtBBf_tFOyk90OHaKmk8OT1zAqac1WOgWA&oe=6AF26420",
+    imageUrl: "/images/events/comfort-cause.svg",
     linkUrl: "https://comfort4acause.netlify.app",
     linkLabel: "Event Website",
     createdAt: "2026-11-05T15:20:39.986Z"

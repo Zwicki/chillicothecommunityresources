@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="50%" stop-color="#451a03"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bgGrad)"/>
+  <circle cx="680" cy="120" r="160" fill="#f59e0b" opacity="0.15"/>
+  <circle cx="120" cy="500" r="140" fill="#b45309" opacity="0.2"/>
+
+  <rect x="40" y="40" width="720" height="520" rx="24" fill="#0c0a09" fill-opacity="0.65" stroke="#f59e0b" stroke-opacity="0.3" stroke-width="2"/>
+
+  <g transform="translate(400, 95)">
+    <rect x="-155" y="-18" width="310" height="36" rx="18" fill="#78350f" fill-opacity="0.6" stroke="#fbbf24" stroke-width="1.5"/>
+    <text text-anchor="middle" y="5" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="800" fill="#fef3c7" letter-spacing="2">PAPER CITY MENTORING PROJECT</text>
+  </g>
+
+  <text x="400" y="195" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="40" font-weight="900" fill="url(#goldGrad)" letter-spacing="-0.5">Gather &amp; Give: Service Day</text>
+  <text x="400" y="235" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#d6d3d1">Teens &amp; Mentors Learning Life Skills &amp; Giving Back to Our Community</text>
+
+  <g transform="translate(120, 285)">
+    <rect width="560" height="150" rx="16" fill="#1c1917" fill-opacity="0.8" stroke="#44403c" stroke-width="1.5"/>
+    
+    <text x="35" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#fbbf24" letter-spacing="1">EVENT SCHEDULE</text>
+    <text x="35" y="70" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff">November 8, 2026</text>
+    <text x="35" y="98" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#fed7aa">🍽️ 1:00 – 3:30 PM | Cooking at Paper City Coffee</text>
+    <text x="35" y="125" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#fed7aa">❤️ 4:00 – 6:00 PM | Serving at Community Resource Center</text>
+  </g>
+
+  <text x="400" y="490" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#e7e5e4">Cooking a warm full meal for 70 community members</text>
+  <text x="400" y="515" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" fill="#a8a29e">Special youth mentoring initiative for PCMP teens &amp; mentors</text>
+</svg>

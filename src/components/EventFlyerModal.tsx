@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Calendar as CalendarIcon, 
@@ -39,6 +39,13 @@ export const EventFlyerModal: React.FC<EventFlyerModalProps> = ({
   if (!isOpen || !event) return null;
 
   const [hasCopied, setHasCopied] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [event?.id, event?.imageUrl]);
+
+  const hasValidImage = Boolean(event.imageUrl && !imageError);
 
   const handleCopyLink = async () => {
     if (!event) return;
@@ -90,7 +97,7 @@ export const EventFlyerModal: React.FC<EventFlyerModalProps> = ({
 
       <div className="flex min-h-full items-center justify-center p-3 sm:p-6 text-center">
         <div 
-          className={`relative w-full ${event.imageUrl ? 'max-w-5xl' : 'max-w-2xl'} bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200 text-left animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]`}
+          className={`relative w-full ${hasValidImage ? 'max-w-5xl' : 'max-w-2xl'} bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200 text-left animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Top Bar */}
@@ -114,14 +121,15 @@ export const EventFlyerModal: React.FC<EventFlyerModalProps> = ({
 
           {/* Modal Main Content */}
           <div className="overflow-y-auto flex-1">
-            <div className={`grid grid-cols-1 ${event.imageUrl ? 'md:grid-cols-12' : ''}`}>
+            <div className={`grid grid-cols-1 ${hasValidImage ? 'md:grid-cols-12' : ''}`}>
               
               {/* Left Column: Event Flyer / Image Preview */}
-              {event.imageUrl && (
+              {hasValidImage && (
                 <div className="md:col-span-6 bg-slate-950 flex flex-col items-center justify-center p-4 sm:p-6 border-b md:border-b-0 md:border-r border-slate-800 relative group min-h-[320px]">
                   <img
                     src={event.imageUrl}
                     alt={event.title}
+                    onError={() => setImageError(true)}
                     className="max-h-[65vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl transition-transform duration-300"
                   />
                   <a
@@ -138,7 +146,7 @@ export const EventFlyerModal: React.FC<EventFlyerModalProps> = ({
               )}
 
               {/* Right Column: Full Event Information & Description */}
-              <div className={`${event.imageUrl ? 'md:col-span-6' : 'w-full'} p-6 sm:p-8 flex flex-col justify-between bg-white`}>
+              <div className={`${hasValidImage ? 'md:col-span-6' : 'w-full'} p-6 sm:p-8 flex flex-col justify-between bg-white`}>
                 <div className="space-y-5">
                   
                   {/* Badges Bar */}

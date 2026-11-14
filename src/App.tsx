@@ -201,12 +201,33 @@ export const App: React.FC = () => {
         // Ensure all 11 default announcements from INITIAL_EVENTS are guaranteed present
         const parsedIds = new Set(parsed.map(e => e.id));
         const missing = INITIAL_EVENTS.filter(e => !parsedIds.has(e.id));
-        if (missing.length > 0) {
-          const merged = [...parsed, ...missing];
-          localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(merged));
-          return merged;
+        const merged = missing.length > 0 ? [...parsed, ...missing] : parsed;
+
+        // Auto-heal expired Facebook CDN images or missing images to permanent local SVG flyers
+        let updatedCount = 0;
+        const initialMap = new Map(INITIAL_EVENTS.map(e => [e.id, e]));
+        const healed = merged.map(ev => {
+          const initial = initialMap.get(ev.id);
+          // If this event has an expired Facebook CDN image or differs from permanent initial image
+          if (initial?.imageUrl && (!ev.imageUrl || ev.imageUrl.includes('fbcdn.net') || ev.imageUrl.includes('scontent') || ev.imageUrl !== initial.imageUrl)) {
+            updatedCount++;
+            return { ...ev, imageUrl: initial.imageUrl };
+          }
+          // Also check by title match in case ID was changed
+          if (ev.imageUrl && (ev.imageUrl.includes('fbcdn.net') || ev.imageUrl.includes('scontent'))) {
+            const match = INITIAL_EVENTS.find(i => i.title.trim().toLowerCase() === ev.title.trim().toLowerCase());
+            if (match?.imageUrl) {
+              updatedCount++;
+              return { ...ev, imageUrl: match.imageUrl };
+            }
+          }
+          return ev;
+        });
+
+        if (updatedCount > 0 || missing.length > 0) {
+          localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(healed));
         }
-        return parsed;
+        return healed;
       }
 
       // Check if user had older v1 saved in browser localStorage

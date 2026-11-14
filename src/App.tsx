@@ -241,6 +241,22 @@ export const App: React.FC = () => {
     }
   }, [events]);
 
+  // Deep-linking: If URL has ?event=<id>, automatically open that event announcement
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const eventId = params.get('event');
+      if (eventId && events.length > 0) {
+        const matched = events.find(e => e.id === eventId);
+        if (matched) {
+          setSelectedFlyerEvent(matched);
+        }
+      }
+    } catch (e) {
+      console.warn('Error reading event parameter from URL:', e);
+    }
+  }, [events]);
+
   const handleSaveEvent = (savedEvent: CommunityEvent) => {
     setEvents(prev => {
       const exists = prev.some(e => e.id === savedEvent.id);

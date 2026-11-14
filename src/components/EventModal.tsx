@@ -12,10 +12,17 @@ import {
   Trash2,
   Repeat,
   Copy,
-  Tag
+  Tag,
+  Sparkles,
+  Wand2,
+  Loader2,
+  CheckCircle2,
+  Globe,
+  Share2
 } from 'lucide-react';
 import { CommunityEvent, RecurrenceFrequency, EventCategory, getEventCategories } from '../types/event';
 import { addMonths } from '../utils/eventOccurrences';
+import { parseEventWithAI } from '../services/aiEventParser';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -64,6 +71,14 @@ export const EventModal: React.FC<EventModalProps> = ({
   const [recurrenceEnd, setRecurrenceEnd] = useState('');
   const [error, setError] = useState('');
   const [imageTab, setImageTab] = useState<'upload' | 'url'>('upload');
+
+  // AI Auto-Fill State
+  const [importUrl, setImportUrl] = useState('');
+  const [importRawText, setImportRawText] = useState('');
+  const [showRawTextInput, setShowRawTextInput] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [aiSuccessMessage, setAiSuccessMessage] = useState<string | null>(null);
+  const [aiErrorMessage, setAiErrorMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -124,6 +139,52 @@ export const EventModal: React.FC<EventModalProps> = ({
     if (newRec !== 'none' && !recurrenceEnd) {
       const baseDate = date || new Date().toISOString().split('T')[0];
       setRecurrenceEnd(addMonths(baseDate, 3));
+    }
+  };
+
+  // AI Link & Text Auto-Fill Handler
+  const handleAiAutoFill = async () => {
+    if (!importUrl.trim() && !importRawText.trim()) {
+      setAiErrorMessage('Please paste a Facebook event link or event description.');
+      return;
+    }
+
+    setIsAiLoading(true);
+    setAiErrorMessage(null);
+    setAiSuccessMessage(null);
+
+    try {
+      const parsed = await parseEventWithAI({
+        url: importUrl.trim() || undefined,
+        rawText: importRawText.trim() || undefined,
+      });
+
+      let populatedCount = 0;
+      if (parsed.title) { setTitle(parsed.title); populatedCount++; }
+      if (parsed.date) { setDate(parsed.date); populatedCount++; }
+      if (parsed.endDate) { setEndDate(parsed.endDate); populatedCount++; }
+      if (parsed.time) { setTime(parsed.time); populatedCount++; }
+      if (parsed.location) { setLocation(parsed.location); populatedCount++; }
+      if (parsed.selectedCategories && parsed.selectedCategories.length > 0) {
+        setSelectedCategories(parsed.selectedCategories);
+        populatedCount++;
+      }
+      if (parsed.description) { setDescription(parsed.description); populatedCount++; }
+      if (parsed.imageUrl) { setImageUrl(parsed.imageUrl); populatedCount++; }
+      if (parsed.linkUrl) { setLinkUrl(parsed.linkUrl); populatedCount++; }
+      if (parsed.linkLabel) { setLinkLabel(parsed.linkLabel); }
+
+      setAiSuccessMessage(`✨ Success! Auto-populated ${populatedCount} event fields with AI.`);
+      setError('');
+    } catch (err: any) {
+      if (err.message === 'FACEBOOK_LOGIN_WALL') {
+        setShowRawTextInput(true);
+        setAiErrorMessage('Facebook is blocking direct automated access to this post/link. Simply copy and paste the event text below, then click Auto-Fill!');
+      } else {
+        setAiErrorMessage(err.message || 'Could not auto-populate from link. Try pasting the event text below.');
+      }
+    } finally {
+      setIsAiLoading(false);
     }
   };
 
@@ -282,6 +343,117 @@ export const EventModal: React.FC<EventModalProps> = ({
                 <span>{error}</span>
               </div>
             )}
+
+            {/* AI Quick Auto-Fill from Facebook / Web Link Panel */}
+            <div className="p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-emerald-50/60 rounded-2xl border border-indigo-200/80 shadow-xs space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-xs">
+                    <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <span>⚡ Auto-Fill from Facebook or Web Link</span>
+                      <span className="text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                        AI Powered
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-slate-600">
+                      Copy link from Facebook or website and paste here. AI will extract title, dates, times, venue, and description.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Paste URL Input & Action Button */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <Globe className="w-4 h-4 text-blue-500" />
+                  </div>
+                  <input
+                    type="url"
+                    value={importUrl}
+                    onChange={(e) => {
+                      setImportUrl(e.target.value);
+                      if (aiErrorMessage) setAiErrorMessage(null);
+                    }}
+                    placeholder="Paste Facebook link: https://www.facebook.com/events/... or web URL"
+                    className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                    disabled={isAiLoading}
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAiAutoFill}
+                  disabled={isAiLoading || (!importUrl.trim() && !importRawText.trim())}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex-shrink-0 active:scale-98"
+                >
+                  {isAiLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Reading &amp; Parsing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="w-4 h-4 text-amber-300" />
+                      <span>Auto-Fill with AI</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Optional Raw Text Toggle (For private/login-walled Facebook links) */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowRawTextInput(!showRawTextInput)}
+                  className="text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <span>{showRawTextInput ? '− Hide text box' : '+ Or paste Facebook event text / flyer details directly'}</span>
+                </button>
+
+                {showRawTextInput && (
+                  <div className="mt-2 space-y-2">
+                    <textarea
+                      rows={3}
+                      value={importRawText}
+                      onChange={(e) => setImportRawText(e.target.value)}
+                      placeholder="Paste copied text from Facebook post, flyer, or email announcement here..."
+                      className="w-full p-2.5 text-xs bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                      disabled={isAiLoading}
+                    />
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={handleAiAutoFill}
+                        disabled={isAiLoading || (!importUrl.trim() && !importRawText.trim())}
+                        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-2xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                      >
+                        <Wand2 className="w-3.5 h-3.5 text-amber-300" />
+                        <span>Parse Text with AI</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Feedback messages */}
+              {aiSuccessMessage && (
+                <div className="p-2.5 bg-emerald-100/80 border border-emerald-300 rounded-xl text-emerald-900 text-xs font-medium flex items-center gap-2 animate-in fade-in duration-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+                  <span>{aiSuccessMessage}</span>
+                </div>
+              )}
+
+              {aiErrorMessage && (
+                <div className="p-2.5 bg-amber-100/90 border border-amber-300 rounded-xl text-amber-950 text-xs flex items-start gap-2 animate-in fade-in duration-200">
+                  <AlertCircle className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+                  <span>{aiErrorMessage}</span>
+                </div>
+              )}
+            </div>
 
             {/* Event Title */}
             <div>

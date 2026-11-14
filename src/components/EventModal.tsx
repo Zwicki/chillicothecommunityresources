@@ -142,59 +142,8 @@ export const EventModal: React.FC<EventModalProps> = ({
     }
   };
 
-  // AI Link & Text Auto-Fill Handler
-  const handleAiAutoFill = async () => {
-    if (!importUrl.trim() && !importRawText.trim()) {
-      setAiErrorMessage('Please paste a Facebook event link or event description.');
-      return;
-    }
-
-    setIsAiLoading(true);
-    setAiErrorMessage(null);
-    setAiSuccessMessage(null);
-
-    try {
-      const parsed = await parseEventWithAI({
-        url: importUrl.trim() || undefined,
-        rawText: importRawText.trim() || undefined,
-      });
-
-      let populatedCount = 0;
-      if (parsed.title) { setTitle(parsed.title); populatedCount++; }
-      if (parsed.date) { setDate(parsed.date); populatedCount++; }
-      if (parsed.endDate) { setEndDate(parsed.endDate); populatedCount++; }
-      if (parsed.time) { setTime(parsed.time); populatedCount++; }
-      if (parsed.location) { setLocation(parsed.location); populatedCount++; }
-      if (parsed.selectedCategories && parsed.selectedCategories.length > 0) {
-        setSelectedCategories(parsed.selectedCategories);
-        populatedCount++;
-      }
-      if (parsed.description) { setDescription(parsed.description); populatedCount++; }
-      if (parsed.imageUrl) { setImageUrl(parsed.imageUrl); populatedCount++; }
-      if (parsed.linkUrl) { setLinkUrl(parsed.linkUrl); populatedCount++; }
-      if (parsed.linkLabel) { setLinkLabel(parsed.linkLabel); }
-
-      setAiSuccessMessage(`✨ Success! Auto-populated ${populatedCount} event fields with AI.`);
-      setError('');
-    } catch (err: any) {
-      if (err.message === 'FACEBOOK_LOGIN_WALL') {
-        setShowRawTextInput(true);
-        setAiErrorMessage('Facebook is blocking direct automated access to this post/link. Simply copy and paste the event text below, then click Auto-Fill!');
-      } else {
-        setAiErrorMessage(err.message || 'Could not auto-populate from link. Try pasting the event text below.');
-      }
-    } finally {
-      setIsAiLoading(false);
-    }
-  };
-
-  if (!isOpen) return null;
-
-  // Handle local image file upload (converts to compressed base64 data URL)
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  // Compress image via Canvas to lightweight base64 JPEG
+  const compressAndSetImage = (file: File) => {
     if (!file.type.startsWith('image/')) {
       setError('Please select a valid image file (JPG, PNG, or WebP).');
       return;
@@ -222,6 +171,7 @@ export const EventModal: React.FC<EventModalProps> = ({
           const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
           setImageUrl(dataUrl);
           setError('');
+          setAiSuccessMessage('📷 Flyer image attached! Click Auto-Fill with AI to extract all details.');
         } else {
           setImageUrl(event.target?.result as string);
         }
@@ -229,6 +179,84 @@ export const EventModal: React.FC<EventModalProps> = ({
       img.src = event.target?.result as string;
     };
     reader.readAsDataURL(file);
+  };
+
+  // Clipboard paste handler (support Win+Shift+S or copied screenshot paste)
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith('image/')) {
+        const file = items[i].getAsFile();
+        if (file) {
+          compressAndSetImage(file);
+          break;
+        }
+      }
+    }
+  };
+
+  // AI Link, Flyer & Text Auto-Fill Handler
+  const handleAiAutoFill = async () => {
+    if (!importUrl.trim() && !importRawText.trim() && !imageUrl.trim()) {
+      setAiErrorMessage('Please paste a Facebook event link, attach a flyer image, or paste event text.');
+      return;
+    }
+
+    setIsAiLoading(true);
+    setAiErrorMessage(null);
+    setAiSuccessMessage(null);
+
+    try {
+      const parsed = await parseEventWithAI({
+        url: importUrl.trim() || undefined,
+        rawText: importRawText.trim() || undefined,
+        imageBase64: imageUrl.trim() || undefined,
+      });
+
+      let populatedCount = 0;
+      if (parsed.title) { setTitle(parsed.title); populatedCount++; }
+      if (parsed.date) { setDate(parsed.date); populatedCount++; }
+      if (parsed.endDate) { setEndDate(parsed.endDate); populatedCount++; }
+      if (parsed.time) { setTime(parsed.time); populatedCount++; }
+      if (parsed.location) { setLocation(parsed.location); populatedCount++; }
+      if (parsed.selectedCategories && parsed.selectedCategories.length > 0) {
+        setSelectedCategories(parsed.selectedCategories);
+        populatedCount++;
+      }
+      if (parsed.recurrence) {
+        setRecurrence(parsed.recurrence);
+        if (parsed.recurrence !== 'none') {
+          const baseDate = parsed.date || date || new Date().toISOString().split('T')[0];
+          setRecurrenceEnd(addMonths(baseDate, 3));
+        }
+        populatedCount++;
+      }
+      if (parsed.description) { setDescription(parsed.description); populatedCount++; }
+      if (parsed.imageUrl && !imageUrl) { setImageUrl(parsed.imageUrl); populatedCount++; }
+      if (parsed.linkUrl && !linkUrl) { setLinkUrl(parsed.linkUrl); populatedCount++; }
+      if (parsed.linkLabel) { setLinkLabel(parsed.linkLabel); }
+
+      setAiSuccessMessage(`✨ Success! Auto-populated ${populatedCount} event fields with multimodal AI.`);
+      setError('');
+    } catch (err: any) {
+      if (err.message === 'FACEBOOK_LOGIN_WALL') {
+        setShowRawTextInput(true);
+        setAiErrorMessage('Facebook is blocking direct automated reading of this post text. Please attach the flyer image above (or paste a screenshot with Ctrl+V) or paste the post text below so AI can read all details!');
+      } else {
+        setAiErrorMessage(err.message || 'Could not auto-populate. Try attaching the flyer image or pasting event text.');
+      }
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  // Handle local image file upload (converts to compressed base64 data URL)
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) compressAndSetImage(file);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -300,6 +328,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         <div 
           className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-2xl transition-all border border-slate-200 flex flex-col max-h-[92vh]"
           onClick={(e) => e.stopPropagation()}
+          onPaste={handlePaste}
         >
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
@@ -378,7 +407,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                       setImportUrl(e.target.value);
                       if (aiErrorMessage) setAiErrorMessage(null);
                     }}
-                    placeholder="Paste Facebook link: https://www.facebook.com/events/... or web URL"
+                    placeholder="Paste Facebook link: https://www.facebook.com/events/... or share link"
                     className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
                     disabled={isAiLoading}
                   />
@@ -387,13 +416,13 @@ export const EventModal: React.FC<EventModalProps> = ({
                 <button
                   type="button"
                   onClick={handleAiAutoFill}
-                  disabled={isAiLoading || (!importUrl.trim() && !importRawText.trim())}
+                  disabled={isAiLoading || (!importUrl.trim() && !importRawText.trim() && !imageUrl.trim())}
                   className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex-shrink-0 active:scale-98"
                 >
                   {isAiLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-white" />
-                      <span>Reading &amp; Parsing...</span>
+                      <span>Reading Flyer &amp; Link...</span>
                     </>
                   ) : (
                     <>
@@ -404,6 +433,57 @@ export const EventModal: React.FC<EventModalProps> = ({
                 </button>
               </div>
 
+              {/* Flyer Attachment Bar with Multimodal Vision Badge */}
+              {imageUrl ? (
+                <div className="flex items-center gap-2.5 p-2.5 bg-white/95 border border-indigo-200 rounded-xl shadow-2xs">
+                  <img src={imageUrl} alt="Attached Flyer" className="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-2xs flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-slate-900">Flyer Image Attached</span>
+                      <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800">
+                        AI Vision Ready
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 truncate">Multimodal AI extracts dates, meeting times, recurrence, and address directly from this flyer</p>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-[10px] font-bold text-blue-700 hover:text-blue-900 px-2 py-1 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors cursor-pointer"
+                    >
+                      Change
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl('')}
+                      className="p-1 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
+                      title="Remove flyer image"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between gap-2 text-[11px] text-indigo-900 bg-white/70 p-2 rounded-xl border border-indigo-100">
+                  <div className="flex items-center gap-1.5">
+                    <Upload className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                    <span>Have a flyer? AI can read all text from it!</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-xs font-bold text-blue-700 hover:text-blue-900 underline cursor-pointer"
+                    >
+                      Attach Flyer
+                    </button>
+                    <span className="text-slate-300">|</span>
+                    <span className="text-[10px] text-slate-500 font-medium">Or press <strong>Ctrl+V</strong> to paste screenshot</span>
+                  </div>
+                </div>
+              )}
+
               {/* Optional Raw Text Toggle (For private/login-walled Facebook links) */}
               <div className="pt-1">
                 <button
@@ -411,7 +491,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   onClick={() => setShowRawTextInput(!showRawTextInput)}
                   className="text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 hover:underline inline-flex items-center gap-1 cursor-pointer"
                 >
-                  <span>{showRawTextInput ? '− Hide text box' : '+ Or paste Facebook event text / flyer details directly'}</span>
+                  <span>{showRawTextInput ? '− Hide text box' : '+ Or paste Facebook post text / description'}</span>
                 </button>
 
                 {showRawTextInput && (
@@ -428,11 +508,11 @@ export const EventModal: React.FC<EventModalProps> = ({
                       <button
                         type="button"
                         onClick={handleAiAutoFill}
-                        disabled={isAiLoading || (!importUrl.trim() && !importRawText.trim())}
+                        disabled={isAiLoading || (!importUrl.trim() && !importRawText.trim() && !imageUrl.trim())}
                         className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-2xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
                       >
                         <Wand2 className="w-3.5 h-3.5 text-amber-300" />
-                        <span>Parse Text with AI</span>
+                        <span>Parse with AI</span>
                       </button>
                     </div>
                   </div>

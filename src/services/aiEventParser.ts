@@ -1,4 +1,4 @@
-import { EventCategory } from '../types/event';
+import { EventCategory, RecurrenceFrequency } from '../types/event';
 
 export interface ParsedEventData {
   title: string;
@@ -7,6 +7,8 @@ export interface ParsedEventData {
   time?: string;
   location?: string;
   selectedCategories: EventCategory[];
+  recurrence?: RecurrenceFrequency;
+  recurrenceEnd?: string;
   description: string;
   imageUrl?: string;
   linkUrl?: string;
@@ -15,9 +17,11 @@ export interface ParsedEventData {
 
 const GEMINI_CANDIDATE_MODELS = [
   'gemini-3.1-flash-lite',
+  'gemini-3.5-flash-lite',
+  'gemini-3.5-flash',
   'gemini-flash-latest',
-  'gemini-flash-lite-latest',
   'gemini-3.8-flash',
+  'gemini-flash-lite-latest',
 ];
 
 /**
@@ -27,8 +31,7 @@ export function cleanEventUrl(rawUrl: string): string {
   let url = rawUrl.trim();
   try {
     const parsed = new URL(url);
-    // Remove Facebook tracking query params
-    const trackingParams = ['fbclid', 'ti', 'acontext', 'ref', 'source', 'sfnsn', 'mibextid'];
+    const trackingParams = ['fbclid', 'ti', 'acontext', 'ref', 'source', 'sfnsn', 'mibextid', 'rdid'];
     trackingParams.forEach(p => parsed.searchParams.delete(p));
     return parsed.toString();
   } catch {
@@ -37,9 +40,16 @@ export function cleanEventUrl(rawUrl: string): string {
 }
 
 /**
+ * Checks if scraped text or url is just a Facebook login wall / bot-blocker
+ */
+function isFacebookLoginWall(text: string): boolean {
+  return /Log into Facebook|Log in to Facebook|facebook\.com\/login|Final URL: https?:\/\/[^\s]*facebook\.com\/login|Email or mobile number.*Password|Explore the things you love/i.test(text);
+}
+
+/**
  * Fetches page content using a CORS-friendly proxy reader (Jina Reader)
  */
-async function fetchPageContent(targetUrl: string): Promise<{ text: string; imageUrl?: string }> {
+async function fetchPageContent(targetUrl: string): Promise<{ text: string; imageUrl?: string; isLoginWall: boolean }> {
   const cleanUrl = cleanEventUrl(targetUrl);
   const readerUrl = `https://r.jina.ai/${cleanUrl}`;
 
@@ -63,9 +73,8 @@ async function fetchPageContent(targetUrl: string): Promise<{ text: string; imag
     const text = await res.text();
 
     // Check if Facebook blocked or redirected to login wall
-    const isLoginWall = /Log in to Facebook|You must log in to continue|Log In or Sign Up/i.test(text.slice(0, 500));
-    if (isLoginWall) {
-      throw new Error('FACEBOOK_LOGIN_WALL');
+    if (isFacebookLoginWall(text)) {
+      return { text: '', imageUrl: undefined, isLoginWall: true };
     }
 
     // Try finding OpenGraph image in markdown/headers
@@ -76,22 +85,45 @@ async function fetchPageContent(targetUrl: string): Promise<{ text: string; imag
       imageUrl = imgMatch[1];
     }
 
-    return { text: text.slice(0, 10000), imageUrl };
+    return { text: text.slice(0, 10000), imageUrl, isLoginWall: false };
   } catch (err: any) {
     clearTimeout(timeoutId);
-    if (err.message === 'FACEBOOK_LOGIN_WALL') {
-      throw err;
-    }
     console.warn('[AI Event Parser] Reader fetch notice:', err);
     throw err;
   }
 }
 
 /**
- * Call Gemini AI with candidate model cascade
+ * Call Gemini AI with candidate model cascade supporting multimodal image vision
  */
-async function callGemini(prompt: string, apiKey: string): Promise<string> {
+async function callGemini(params: {
+  prompt: string;
+  apiKey: string;
+  imageBase64?: string;
+}): Promise<string> {
+  const { prompt, apiKey, imageBase64 } = params;
   let lastError: any = null;
+
+  // Prepare parts: text prompt + optional image for Gemini Vision
+  const parts: any[] = [{ text: prompt }];
+
+  if (imageBase64 && imageBase64.trim()) {
+    let cleanBase64 = imageBase64.trim();
+    let mimeType = 'image/jpeg';
+
+    const dataUrlMatch = cleanBase64.match(/^data:(image\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
+    if (dataUrlMatch) {
+      mimeType = dataUrlMatch[1];
+      cleanBase64 = dataUrlMatch[2];
+    }
+
+    parts.push({
+      inline_data: {
+        mime_type: mimeType,
+        data: cleanBase64
+      }
+    });
+  }
 
   for (const model of GEMINI_CANDIDATE_MODELS) {
     try {
@@ -100,10 +132,10 @@ async function callGemini(prompt: string, apiKey: string): Promise<string> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          contents: [{ parts }],
           generationConfig: {
             responseMimeType: 'application/json',
-            temperature: 0.2,
+            temperature: 0.1,
           }
         })
       });
@@ -120,7 +152,7 @@ async function callGemini(prompt: string, apiKey: string): Promise<string> {
       }
     } catch (err: any) {
       lastError = err;
-      console.warn(`[AI Event Parser] Model ${model} cascade error:`, err?.message || err);
+      console.warn(`[AI Event Parser] Model ${model} cascade notice:`, err?.message || err);
       // Try next candidate model
     }
   }
@@ -129,7 +161,7 @@ async function callGemini(prompt: string, apiKey: string): Promise<string> {
 }
 
 /**
- * Fallback regex/heuristic parser if Gemini API is unreachable or blocked
+ * Fallback regex/heuristic parser if Gemini API is unreachable or offline
  */
 function heuristicParse(text: string, sourceUrl?: string, scrapedImage?: string): ParsedEventData {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
@@ -140,10 +172,8 @@ function heuristicParse(text: string, sourceUrl?: string, scrapedImage?: string)
   const dateMatch = text.match(/\b(202[4-9]-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01]))\b/)
     || text.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(202[4-9])?\b/i);
 
-  if (dateMatch) {
-    if (dateMatch[1] && dateMatch[1].includes('-')) {
-      date = dateMatch[1];
-    }
+  if (dateMatch && dateMatch[1] && dateMatch[1].includes('-')) {
+    date = dateMatch[1];
   }
 
   // Time matching
@@ -161,11 +191,18 @@ function heuristicParse(text: string, sourceUrl?: string, scrapedImage?: string)
     location = locMatch[1].trim();
   }
 
-  // Categories
+  // Recurrence
+  let recurrence: RecurrenceFrequency = 'none';
   const lower = text.toLowerCase();
+  if (lower.includes('every monday') || lower.includes('mondays') || lower.includes('every week') || lower.includes('weekly')) recurrence = 'weekly';
+  else if (lower.includes('every day') || lower.includes('daily')) recurrence = 'daily';
+  else if (lower.includes('bi-weekly') || lower.includes('every other week')) recurrence = 'biweekly';
+  else if (lower.includes('monthly') || lower.includes('every month')) recurrence = 'monthly';
+
+  // Categories
   const selectedCategories: EventCategory[] = [];
-  if (lower.includes('recover') || lower.includes('sober') || lower.includes('12-step') || lower.includes('aa') || lower.includes('na')) selectedCategories.push('Recovery');
-  if (lower.includes('mental') || lower.includes('counsel') || lower.includes('therapy') || lower.includes('wellness')) selectedCategories.push('Mental Health');
+  if (lower.includes('recover') || lower.includes('sober') || lower.includes('12-step') || lower.includes('aa') || lower.includes('na') || lower.includes('smart recovery')) selectedCategories.push('Recovery');
+  if (lower.includes('mental') || lower.includes('counsel') || lower.includes('therapy') || lower.includes('wellness') || lower.includes('support group')) selectedCategories.push('Mental Health');
   if (lower.includes('food') || lower.includes('meal') || lower.includes('pantry') || lower.includes('dinner')) selectedCategories.push('Food');
   if (lower.includes('health') || lower.includes('clinic') || lower.includes('medical') || lower.includes('dental')) selectedCategories.push('Health');
   if (lower.includes('hous') || lower.includes('shelter') || lower.includes('rent')) selectedCategories.push('Housing');
@@ -178,6 +215,7 @@ function heuristicParse(text: string, sourceUrl?: string, scrapedImage?: string)
     time,
     location,
     selectedCategories,
+    recurrence,
     description: text.slice(0, 500).trim(),
     imageUrl: scrapedImage || '',
     linkUrl: sourceUrl || '',
@@ -186,39 +224,47 @@ function heuristicParse(text: string, sourceUrl?: string, scrapedImage?: string)
 }
 
 /**
- * Main export: Parse an event from a pasted URL or pasted raw flyer text using AI
+ * Main export: Parse an event from a pasted URL, raw text, and/or flyer image using Gemini Multimodal AI
  */
 export async function parseEventWithAI(params: {
   url?: string;
   rawText?: string;
+  imageBase64?: string;
   customApiKey?: string;
 }): Promise<ParsedEventData> {
-  const { url, rawText, customApiKey } = params;
+  const { url, rawText, imageBase64, customApiKey } = params;
 
   let contentToParse = (rawText || '').trim();
   let scrapedImage: string | undefined;
+  let hasLoginWall = false;
 
   // 1. If URL is provided, fetch via proxy reader
   if (url && url.trim()) {
     try {
       const fetched = await fetchPageContent(url.trim());
-      contentToParse = `${contentToParse}\n\nURL Source: ${url}\n${fetched.text}`.trim();
-      if (fetched.imageUrl) {
-        scrapedImage = fetched.imageUrl;
+      if (fetched.isLoginWall) {
+        hasLoginWall = true;
+        // Facebook blocked automated scraping of post text with its login wall.
+        // We do NOT add the login wall text to contentToParse!
+      } else {
+        if (fetched.text) {
+          contentToParse = `${contentToParse}\n\nWebpage Text:\n${fetched.text}`.trim();
+        }
+        if (fetched.imageUrl) {
+          scrapedImage = fetched.imageUrl;
+        }
       }
-    } catch (err: any) {
-      if (err.message === 'FACEBOOK_LOGIN_WALL') {
-        throw new Error('FACEBOOK_LOGIN_WALL');
-      }
-      // If fetching fails but user provided raw text, proceed with raw text
-      if (!contentToParse) {
-        throw new Error(`Could not read webpage content from link. Please copy and paste the event text description directly.`);
-      }
+    } catch {
+      // Proxy failed or network restricted; proceed with image/raw text
     }
   }
 
-  if (!contentToParse) {
-    throw new Error('Please provide either a valid event link or paste event text.');
+  // If we have neither text nor an image, guide the user
+  if (!contentToParse && !imageBase64) {
+    if (hasLoginWall) {
+      throw new Error('FACEBOOK_LOGIN_WALL');
+    }
+    throw new Error('Please provide an event link, flyer image, or paste event description text.');
   }
 
   // 2. Identify Gemini API Key
@@ -227,38 +273,74 @@ export async function parseEventWithAI(params: {
     || localStorage.getItem('ccr_gemini_api_key') 
     || '';
 
-  // 3. If no API key or network restricted, use heuristic fallback
+  // 3. Fallback to heuristic parser if no API key is available
   if (!apiKey) {
     console.info('[AI Event Parser] No Gemini API key found, using heuristic extraction.');
-    return heuristicParse(contentToParse, url, scrapedImage);
+    return heuristicParse(contentToParse, url, scrapedImage || imageBase64);
   }
 
-  // 4. Build prompt for Gemini
-  const todayIso = new Date().toISOString().split('T')[0];
-  const prompt = `You are an expert AI event information extractor for a community calendar in Ross County / Chillicothe, Ohio.
-Extract the event details from the text below into strict, valid JSON matching this schema:
+  // 4. Build Multimodal prompt for Gemini
+  const today = new Date();
+  const todayIso = today.toISOString().split('T')[0];
+  const dayOfWeek = today.toLocaleDateString('en-US', { weekday: 'long' });
+
+  const prompt = `You are an expert AI event extractor for a community calendar in Ross County / Chillicothe, Ohio.
+Extract all event and meeting details from the attached flyer image and/or text into strict, valid JSON.
+
+Today is ${dayOfWeek}, ${todayIso}.
+
+Schema:
 {
-  "title": "Clear concise event title",
-  "date": "YYYY-MM-DD (must be a valid date; if relative like 'this Friday' or 'Nov 21', calculate relative to today: ${todayIso})",
-  "endDate": "YYYY-MM-DD or empty string if single day",
-  "time": "Time string e.g. '6:00 PM' or '10:00 AM - 2:00 PM' or empty string",
-  "location": "Facility name and street address in Chillicothe / Ross County (e.g. 'Yoctangee Park, Chillicothe, OH' or 'Brookside Church, 2215 W 4th St')",
-  "selectedCategories": ["Array from only: Recovery, Mental Health, Food, Health, Housing, Community, Family"],
-  "description": "Comprehensive, clean, helpful event description summary. Include special details like free admission, food served, contact info, or speakers.",
-  "imageUrl": "Direct URL to flyer/cover image if present in the text, else empty string",
-  "linkUrl": "${url || ''}",
-  "linkLabel": "${url?.includes('facebook.com') ? 'Facebook Event' : 'Event Page'}"
+  "title": "Clear concise event title (e.g., 'The Light House Men\\'s Meeting Group')",
+  "date": "YYYY-MM-DD (must be a valid date; if it says e.g. 'Mondays', calculate the NEXT upcoming Monday date relative to today ${todayIso})",
+  "endDate": "YYYY-MM-DD or empty string if single day or ongoing",
+  "time": "Time string e.g. '5:00 PM - 6:00 PM' or '10:00 AM - 1:00 PM'",
+  "location": "Facility name and full street address in Chillicothe / Ross County (e.g. 'The Light House, 291 S Paint St, Chillicothe, OH 45601')",
+  "selectedCategories": ["Array from ONLY: Recovery, Mental Health, Food, Health, Housing, Community, Family"],
+  "recurrence": "none, daily, weekly, biweekly, or monthly (if the flyer or text says e.g. 'Every Monday' or 'Mondays', set to 'weekly'; if it repeats monthly set to 'monthly', else 'none')",
+  "description": "Comprehensive, clean, inviting event description detailing the organization, purpose, who is welcome, and what to expect."
 }
 
-Input Text:
-${contentToParse}
+Additional context:
+- Event Link URL: ${url || 'None'}
+- Text provided:
+${contentToParse || 'Please extract all details directly from the attached flyer image.'}
 
-Respond ONLY with valid JSON. Do not include markdown code block backticks if possible, or use standard json.`;
+Respond ONLY with valid JSON. Do not include markdown code block backticks if possible.`;
 
   try {
-    const aiJsonStr = await callGemini(prompt, apiKey);
+    const aiJsonStr = await callGemini({
+      prompt,
+      apiKey,
+      imageBase64: imageBase64 || (scrapedImage?.startsWith('data:') ? scrapedImage : undefined)
+    });
+
     const cleanedJsonStr = aiJsonStr.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
-    const parsed = JSON.parse(cleanedJsonStr);
+    let parsed: any;
+    try {
+      parsed = JSON.parse(cleanedJsonStr);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        parsed = parsed[0];
+      }
+    } catch {
+      // If parsing fails, try finding JSON block
+      const match = cleanedJsonStr.match(/\{[\s\S]*\}/);
+      if (match) {
+        parsed = JSON.parse(match[0]);
+      } else {
+        throw new Error('Could not parse Gemini JSON response');
+      }
+    }
+
+    const validCategories: EventCategory[] = ['Recovery', 'Mental Health', 'Food', 'Health', 'Housing', 'Community', 'Family'];
+    const selectedCategories: EventCategory[] = Array.isArray(parsed.selectedCategories)
+      ? parsed.selectedCategories.filter((c: any) => validCategories.includes(c))
+      : ['Community'];
+
+    const validRecurrences: RecurrenceFrequency[] = ['none', 'daily', 'weekly', 'biweekly', 'monthly'];
+    const recurrence: RecurrenceFrequency = validRecurrences.includes(parsed.recurrence)
+      ? parsed.recurrence
+      : 'none';
 
     return {
       title: parsed.title || 'Community Event',
@@ -266,16 +348,15 @@ Respond ONLY with valid JSON. Do not include markdown code block backticks if po
       endDate: parsed.endDate || undefined,
       time: parsed.time || undefined,
       location: parsed.location || 'Chillicothe, OH',
-      selectedCategories: Array.isArray(parsed.selectedCategories) && parsed.selectedCategories.length > 0 
-        ? parsed.selectedCategories.filter((c: string) => ['Recovery', 'Mental Health', 'Food', 'Health', 'Housing', 'Community', 'Family'].includes(c))
-        : ['Community'],
+      selectedCategories: selectedCategories.length > 0 ? selectedCategories : ['Community'],
+      recurrence,
       description: parsed.description || contentToParse.slice(0, 400),
-      imageUrl: parsed.imageUrl || scrapedImage || undefined,
+      imageUrl: imageBase64 || scrapedImage || parsed.imageUrl || undefined,
       linkUrl: parsed.linkUrl || url || undefined,
       linkLabel: parsed.linkLabel || (url?.includes('facebook.com') ? 'Facebook Event' : 'Event Page'),
     };
   } catch (aiErr) {
     console.warn('[AI Event Parser] Gemini AI parsing error, falling back to heuristic parser:', aiErr);
-    return heuristicParse(contentToParse, url, scrapedImage);
+    return heuristicParse(contentToParse, url, scrapedImage || imageBase64);
   }
 }

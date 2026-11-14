@@ -2,6 +2,22 @@ import { CommunityEvent } from '../types/event';
 
 export const INITIAL_EVENTS: CommunityEvent[] = [
   {
+    id: "evt-lighthouse-mens-meeting",
+    title: "The Light House Men's Meeting Group",
+    date: "2026-11-16",
+    time: "5:00 PM - 6:00 PM",
+    location: "The Light House, 291 S Paint St, Chillicothe, OH 45601",
+    category: "Recovery",
+    categories: ["Recovery", "Mental Health", "Community"],
+    recurrence: "weekly",
+    recurrenceEnd: "2027-02-16",
+    description: "Join The Light House for a weekly Men's Meeting Group focused on hope, support, and recovery. This is an open topic SMART Recovery meeting where all men are welcome, including those in AA and NA. Come together to talk, support one another, grow, share, and heal in a supportive environment. You're Not Alone! Recovery is Stronger Together. All Men Welcome! Meet • Share • Heal • Build a Better Tomorrow.",
+    imageUrl: "/images/events/lighthouse-mens-meeting.svg",
+    linkUrl: "https://www.facebook.com/share/p/19cKBj6FTT/",
+    linkLabel: "Facebook Post",
+    createdAt: "2026-11-14T10:00:00.000Z"
+  },
+  {
     id: "evt-1793894107659",
     title: "Healing Through Art Show",
     date: "2026-11-05",
